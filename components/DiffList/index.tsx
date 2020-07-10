@@ -17,9 +17,10 @@ function getDisplayName(def: AnyDefinition & BareDestinyDefinition) {
 }
 
 function ForDefinitionType({ name, hashes, definitions }: DiffListProps) {
-  const type = definitions[hashes[0]];
+  const zeroth = hashes[0];
+  const def = definitions[zeroth];
 
-  switch (type.__type) {
+  switch (def?.__type) {
     case "DestinyInventoryItemDefinition":
       return (
         <InventoryItemDiffList hashes={hashes} definitions={definitions} />

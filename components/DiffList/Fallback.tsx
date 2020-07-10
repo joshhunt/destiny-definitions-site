@@ -47,7 +47,14 @@ export default function FallbackDiffList({
       <tbody>
         {hashes.map((hash) => {
           const def = definitions[hash];
-          if (!def) return null;
+          if (!def) {
+            return (
+              <tr>
+                <td>{hash}</td>
+                <td colSpan={3}>Missing data</td>
+              </tr>
+            );
+          }
 
           return (
             <tr>
