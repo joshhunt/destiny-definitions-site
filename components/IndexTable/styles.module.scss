@@ -1,0 +1,34 @@
+.subItems {
+  margin-left: 16px;
+}
+
+.item {
+  padding: 2px 8px;
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  display: flex;
+
+  &:hover {
+    background: rgba(black, 0.05);
+    .name {
+      text-decoration: underline;
+    }
+  }
+}
+
+.topItem {
+  composes: item;
+  margin-top: 16px;
+}
+
+.subItem {
+  composes: item;
+  padding-left: 16px;
+}
+
+.name {
+  flex: 1 1 auto;
+  text-transform: capitalize;
+  margin-right: 8px;
+}

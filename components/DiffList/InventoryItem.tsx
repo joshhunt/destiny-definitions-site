@@ -2,19 +2,18 @@ import {
   AnyDefinitionTable,
   AnyDefinition,
   BareDestinyDefinition,
+  ItemCategory,
+  ItemCategoryValues,
 } from "../../types";
 import BungieImage from "../BungieImage";
 
 import s from "./styles.module.scss";
 import ItemSummary from "../ItemSummary";
+import { Dictionary } from "lodash";
 
 interface InventoryItemDiffListProps {
   hashes: number[];
   definitions: AnyDefinitionTable;
-}
-
-function getIconSrc(def: AnyDefinition & BareDestinyDefinition) {
-  return def?.displayProperties?.icon;
 }
 
 export default function InventoryItemDiffList({
@@ -47,11 +46,50 @@ export default function InventoryItemDiffList({
               <td className={s.mainColumn}>
                 <ItemSummary def={def} />
               </td>
-              <td className={s.nowrap}>{def.itemTypeAndTierDisplayName}</td>
+              <td className={s.nowrap}>{def.itemTypeDisplayName}</td>
             </tr>
           );
         })}
       </tbody>
     </table>
+  );
+}
+
+interface GroupedDiffListProps {
+  name: string;
+  groupedHashes: Dictionary<number[]>;
+  definitions: AnyDefinitionTable;
+}
+
+export function GroupedDiffList({
+  groupedHashes,
+  name,
+  definitions,
+}: GroupedDiffListProps) {
+  const id = name.toLowerCase();
+
+  return (
+    <div>
+      <h3 id={id}>{name}</h3>
+
+      {Object.entries(groupedHashes)
+        .sort(
+          ([itemGroupA], [itemGroupB]) =>
+            ItemCategoryValues.indexOf(itemGroupA) -
+            ItemCategoryValues.indexOf(itemGroupB)
+        )
+        .map(([itemGroupName, hashes]) => {
+          return (
+            <>
+              <h4 id={`${id}_${itemGroupName}`}>{itemGroupName}</h4>
+
+              <InventoryItemDiffList
+                hashes={hashes}
+                definitions={definitions}
+              />
+            </>
+          );
+        })}
+    </div>
   );
 }

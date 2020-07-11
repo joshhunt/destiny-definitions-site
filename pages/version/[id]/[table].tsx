@@ -4,7 +4,7 @@ import {
   DefinitionDiff,
 } from "../../../types";
 import { GetStaticProps, GetStaticPaths } from "next";
-import { pickBy } from "lodash";
+import { pickBy, shuffle } from "lodash";
 
 import {
   getVersionsIndex,
@@ -12,8 +12,8 @@ import {
   getDefinitionForVersion,
 } from "../../../remote";
 
-import s from "./styles.module.scss";
-import DiffList from "../../../components/DiffList";
+import React from "react";
+import DefinitionDiffPage from "../../../components/DefinitionDiffPage";
 
 interface DefinitionDiffStaticProps {
   versionId: string;
@@ -22,34 +22,19 @@ interface DefinitionDiffStaticProps {
   definitions: AnyDefinitionTable;
 }
 
-export default function DefinitionDiffPage({
+export default function DefinitionDiffPageWrapper({
   versionId,
   definitionName,
   diff,
   definitions,
 }: DefinitionDiffStaticProps) {
   return (
-    <div className={s.root}>
-      <h1>Version {versionId}</h1>
-      <h2>{definitionName}</h2>
-
-      <DiffList name="Added" hashes={diff.added} definitions={definitions} />
-      <DiffList
-        name="Unclassified"
-        hashes={diff.unclassified}
-        definitions={definitions}
-      />
-      <DiffList
-        name="Removed"
-        hashes={diff.removed}
-        definitions={definitions}
-      />
-      <DiffList
-        name="Reclassified"
-        hashes={diff.reclassified}
-        definitions={definitions}
-      />
-    </div>
+    <DefinitionDiffPage
+      versionId={versionId}
+      definitionName={definitionName}
+      diff={diff}
+      definitions={definitions}
+    />
   );
 }
 
@@ -93,11 +78,24 @@ export const getStaticProps: GetStaticProps<
   const allDefinitionDiffs = await getDiffForVersion(versionId);
   if (!allDefinitionDiffs) throw new Error("missing diff data for table page");
   const diff = allDefinitionDiffs[definitionName];
-  const hashesInDiff: number[] = Object.values(diff).flatMap((v) => v); // unsure why Object.values
 
   const definitions = await getDefinitionForVersion(versionId, definitionName);
 
+  // TODO: Remove this before publishing!!!
+  if (definitionName === "DestinyInventoryItemDefinition") {
+    const weaponHashes = Object.keys(definitions)
+      .filter((itemHash) => {
+        const itemDef = definitions[itemHash] as any;
+        return itemDef.itemCategoryHashes?.includes(1);
+      })
+      .map((v) => Number(v));
+
+    diff.added.push(...shuffle(weaponHashes).slice(0, 100));
+  }
+
   if (!definitions) throw new Error("Definitions is missing");
+
+  const hashesInDiff: number[] = Object.values(diff).flatMap((v) => v); // unsure why Object.values
   const pickedDefinitions = pickBy(definitions, (v) =>
     hashesInDiff.includes(v.hash)
   ) as AnyDefinitionTable;

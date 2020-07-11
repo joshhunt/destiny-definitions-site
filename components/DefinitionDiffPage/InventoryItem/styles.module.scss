@@ -1,0 +1,15 @@
+.layout {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 32px;
+}
+
+.main {
+}
+.side {
+}
+
+.stickySide {
+  position: sticky;
+  top: 32px;
+}
