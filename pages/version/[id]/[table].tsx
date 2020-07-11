@@ -81,17 +81,17 @@ export const getStaticProps: GetStaticProps<
 
   const definitions = await getDefinitionForVersion(versionId, definitionName);
 
-  // TODO: Remove this before publishing!!!
-  if (definitionName === "DestinyInventoryItemDefinition") {
-    const weaponHashes = Object.keys(definitions)
-      .filter((itemHash) => {
-        const itemDef = definitions[itemHash] as any;
-        return itemDef.itemCategoryHashes?.includes(1);
-      })
-      .map((v) => Number(v));
+  // // TODO: Remove this before publishing!!!
+  // if (definitionName === "DestinyInventoryItemDefinition") {
+  //   const weaponHashes = Object.keys(definitions)
+  //     .filter((itemHash) => {
+  //       const itemDef = definitions[itemHash] as any;
+  //       return itemDef.itemCategoryHashes?.includes(1);
+  //     })
+  //     .map((v) => Number(v));
 
-    diff.added.push(...shuffle(weaponHashes).slice(0, 100));
-  }
+  //   diff.added.push(...shuffle(weaponHashes).slice(0, 100));
+  // }
 
   if (!definitions) throw new Error("Definitions is missing");
 
