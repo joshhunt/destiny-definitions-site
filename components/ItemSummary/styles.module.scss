@@ -35,3 +35,37 @@
     padding-right: 1ch;
   }
 }
+
+.tag {
+  font-size: 0.95em;
+  background: var(--alt-color);
+  padding: 2px 8px;
+  border-radius: 100px;
+  margin-left: 16px;
+  display: inline-block;
+
+  &[data-tag="Dummy"] {
+    background: #e74c3c;
+  }
+
+  &[data-tag="Kinetic"] {
+    background: var(--inverted-bg-color-transparent);
+  }
+
+  &[data-tag="Arc"] {
+    background: #76b6e2;
+    color: black;
+  }
+
+  &[data-tag="Solar"] {
+    background: #f0631e;
+  }
+
+  &[data-tag="Void"] {
+    background: #b185df;
+  }
+
+  & + & {
+    margin-left: 8px;
+  }
+}

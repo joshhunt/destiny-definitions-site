@@ -1,6 +1,24 @@
+/* Dark mode */
+:root {
+  --bg-color: #121212;
+  --text-color: #fafafa;
+  --alt-color: #fafafa30;
+
+  --inverted-bg-color-transparent: #fafafa40;
+}
+
+// /* Light mode */
+// :root {
+//   --bg-color: #fafafa;
+//   --text-color: #121212;
+//   --alt-color: #12121230;
+
+//   --inverted-bg-color-transparent: #12121230;
+// }
+
 body {
-  color: #121212;
-  background: #fafafa;
+  background: var(--bg-color);
+  color: var(--text-color);
   font-family: "Inter", sans-serif;
   padding: 0;
   margin: 0;

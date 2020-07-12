@@ -10,7 +10,7 @@
   display: flex;
 
   &:hover {
-    background: rgba(black, 0.05);
+    background: var(--alt-color);
     .name {
       text-decoration: underline;
     }

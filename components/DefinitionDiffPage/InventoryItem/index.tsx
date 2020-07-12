@@ -5,10 +5,11 @@ import {
   AllDestinyManifestComponentsTagged,
   AnyDefinition,
   ItemCategory,
+  ItemCategoryValues,
 } from "../../../types";
 import { ensureDefinitionType } from "../../../utils";
 import { DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
-import { GroupedDiffList } from "../../DiffList/InventoryItem";
+import { InventoryItemGroupedDiffList } from "../../DiffList/InventoryItem";
 
 import { mapValues, groupBy, sortBy } from "lodash";
 import sortItems from "./sortItems";
@@ -39,6 +40,41 @@ function categoryForItem(itemDef: ItemDefinition) {
 
   if (itemDef.itemCategoryHashes?.includes(19)) return ItemCategory.Emblem;
 
+  if (itemDef.itemCategoryHashes?.includes(41)) return ItemCategory.Shader;
+
+  if (itemDef.itemCategoryHashes?.includes(4)) return ItemCategory.Material;
+
+  if (
+    itemDef.itemCategoryHashes?.includes(2237038328) ||
+    itemDef.itemCategoryHashes?.includes(3708671066)
+  )
+    return ItemCategory.WeaponPerk;
+
+  if (itemDef.itemCategoryHashes?.includes(1112488720))
+    return ItemCategory.Finisher;
+
+  if (itemDef.itemCategoryHashes?.includes(268598612))
+    return ItemCategory.Eververse;
+
+  if (itemDef.itemCategoryHashes?.includes(208981632))
+    return ItemCategory.TransmatEffect;
+
+  if (itemDef.traitIds?.includes("inventory_filtering.bounty"))
+    return ItemCategory.Bounty;
+
+  if (
+    itemDef.itemCategoryHashes?.includes(34) ||
+    itemDef.traitIds?.includes("item_type.engram")
+  )
+    return ItemCategory.Engram;
+
+  if (
+    itemDef.itemCategoryHashes?.includes(16) ||
+    itemDef.itemCategoryHashes?.includes(53) ||
+    itemDef.traitIds?.includes("inventory_filtering.quest")
+  )
+    return ItemCategory.Quests;
+
   if (
     itemDef.itemCategoryHashes?.includes(42) ||
     itemDef.itemCategoryHashes?.includes(43)
@@ -47,9 +83,16 @@ function categoryForItem(itemDef: ItemDefinition) {
 
   if (
     itemDef.itemCategoryHashes?.includes(3124752623) ||
-    itemDef.itemCategoryHashes?.includes(1742617626)
+    itemDef.itemCategoryHashes?.includes(1742617626) ||
+    itemDef.itemSubType == 21
   )
     return ItemCategory.Ornament;
+
+  // Mods must be after ornaments
+  if (itemDef.itemCategoryHashes?.includes(59)) return ItemCategory.Mods;
+
+  if (itemDef.inventory.bucketTypeHash == 1469714392)
+    return ItemCategory.Consumable;
 
   return ItemCategory.Other;
 }
@@ -75,6 +118,7 @@ export function InventoryItemDiff({
     });
   });
 
+  console.log({ ItemCategoryValues });
   const indexData = Object.entries(groupedDiff)
     .map(([diffSectionName, groupedHashes]) => {
       return {
@@ -83,14 +127,21 @@ export function InventoryItemDiff({
           (acc, n) => acc + n.length,
           0
         ),
-        subItems: Object.entries(groupedHashes).map(
-          ([itemCategory, hashes]) => {
+        subItems: Object.entries(groupedHashes)
+          .map(([itemCategory, hashes]) => {
             return {
               name: itemCategory,
               count: hashes.length,
             };
-          }
-        ),
+          })
+          .sort((a, b) => {
+            const valueA = ItemCategoryValues.indexOf(a.name);
+            const valueB = ItemCategoryValues.indexOf(b.name);
+
+            console.log("sort", { a: a.name, b: b.name, valueA, valueB });
+
+            return valueA - valueB;
+          }),
       };
     })
     .filter((v) => v.count > 0);
@@ -102,12 +153,12 @@ export function InventoryItemDiff({
         <div className={s.main}>
           <h2>{definitionName}</h2>
 
-          <GroupedDiffList
+          <InventoryItemGroupedDiffList
             name="Added"
             groupedHashes={groupedDiff.added}
             definitions={definitions}
           />
-          <GroupedDiffList
+          <InventoryItemGroupedDiffList
             name="Unclassified"
             groupedHashes={groupedDiff.unclassified}
             definitions={definitions}

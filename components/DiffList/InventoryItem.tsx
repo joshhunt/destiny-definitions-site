@@ -4,25 +4,55 @@ import {
   BareDestinyDefinition,
   ItemCategory,
   ItemCategoryValues,
+  AllDestinyManifestComponentsTagged,
 } from "../../types";
 import BungieImage from "../BungieImage";
 
 import s from "./styles.module.scss";
 import ItemSummary from "../ItemSummary";
 import { Dictionary } from "lodash";
+import { DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
+
+type ItemDefinition = DestinyInventoryItemDefinition & {
+  __type: "DestinyInventoryItemDefinition";
+};
+
+const DAMAGE_TYPE_NAMES: { [k: string]: string } = {
+  [1]: "Kinetic",
+  [2]: "Arc",
+  [3]: "Solar",
+  [4]: "Void",
+  [5]: "Raid???",
+};
+const CLASS_TYPE_NAME: { [k: string]: string } = {
+  [1]: "Hunter",
+  [2]: "Warlock",
+  [3]: "Titan",
+};
+
+const getWeaponSlot = (itemDef: ItemDefinition) => {
+  if (itemDef.itemCategoryHashes?.includes(2)) return "Kinetic"; // kinetic
+  if (itemDef.itemCategoryHashes?.includes(3)) return "Energy"; // energy
+  if (itemDef.itemCategoryHashes?.includes(4)) return "Power"; // power
+};
 
 interface InventoryItemDiffListProps {
+  itemCategory: ItemCategory;
   hashes: number[];
   definitions: AnyDefinitionTable;
 }
 
 export default function InventoryItemDiffList({
+  itemCategory,
   hashes,
   definitions,
 }: InventoryItemDiffListProps) {
   if (hashes.length == 0) {
     return null;
   }
+
+  const isWeapon = itemCategory == ItemCategory.Weapon;
+  const isArmor = itemCategory == ItemCategory.Armor;
 
   return (
     <table className={s.table}>
@@ -31,6 +61,14 @@ export default function InventoryItemDiffList({
           <td>Hash</td>
           <td>Item</td>
           <td>Type</td>
+
+          {isWeapon && (
+            <>
+              <td>Slot</td>
+            </>
+          )}
+
+          {isArmor && <td>Class</td>}
         </tr>
       </thead>
 
@@ -47,6 +85,14 @@ export default function InventoryItemDiffList({
                 <ItemSummary def={def} />
               </td>
               <td className={s.nowrap}>{def.itemTypeDisplayName}</td>
+
+              {isWeapon && (
+                <>
+                  <td>{getWeaponSlot(def)}</td>
+                </>
+              )}
+
+              {isArmor && <>{CLASS_TYPE_NAME[def.classType]}</>}
             </tr>
           );
         })}
@@ -61,7 +107,7 @@ interface GroupedDiffListProps {
   definitions: AnyDefinitionTable;
 }
 
-export function GroupedDiffList({
+export function InventoryItemGroupedDiffList({
   groupedHashes,
   name,
   definitions,
@@ -69,7 +115,7 @@ export function GroupedDiffList({
   const id = name.toLowerCase();
 
   return (
-    <div>
+    <div className={s.topLevelDiff}>
       <h3 id={id}>{name}</h3>
 
       {Object.entries(groupedHashes)
@@ -79,15 +125,18 @@ export function GroupedDiffList({
             ItemCategoryValues.indexOf(itemGroupB)
         )
         .map(([itemGroupName, hashes]) => {
+          const itemCategory = itemGroupName as ItemCategory;
+
           return (
-            <>
+            <div className={s.secondLevelDiff}>
               <h4 id={`${id}_${itemGroupName}`}>{itemGroupName}</h4>
 
               <InventoryItemDiffList
+                itemCategory={itemCategory}
                 hashes={hashes}
                 definitions={definitions}
               />
-            </>
+            </div>
           );
         })}
     </div>

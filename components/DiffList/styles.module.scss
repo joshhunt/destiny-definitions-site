@@ -14,7 +14,8 @@
   }
 
   td {
-    border-bottom: 1px solid rgba(black, 0.2);
+    border-bottom: 1px solid;
+    border-color: var(--alt-color);
     padding: 5px;
     width: 1%;
     vertical-align: top;
@@ -31,4 +32,21 @@
 
 .prewrap {
   white-space: pre-wrap;
+}
+
+.topLevelDiff {
+  margin-bottom: 64px;
+
+  h3,
+  h4 {
+    margin: 8px 0;
+  }
+
+  h3 {
+    margin-top: 32px;
+  }
+}
+
+.secondLevelDiff {
+  margin-bottom: 32px;
 }

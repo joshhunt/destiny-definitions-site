@@ -7,10 +7,18 @@ type ItemDefinition = DestinyInventoryItemDefinition & {
 };
 type ItemDefinitions = AllDestinyManifestComponentsTagged["DestinyInventoryItemDefinition"];
 
+const noNameSorter = (itemDef: ItemDefinition) =>
+  itemDef.displayProperties.name == ""
+    ? Number.MAX_SAFE_INTEGER + 1
+    : Number.MIN_SAFE_INTEGER;
+
 const isDummySorter = (itemDef: ItemDefinition) =>
   itemDef.itemCategoryHashes?.includes(3109687656)
-    ? Number.MAX_SAFE_INTEGER
+    ? Number.MAX_SAFE_INTEGER + 2
     : Number.MIN_SAFE_INTEGER;
+
+const isClassified = (itemDef: ItemDefinition) =>
+  itemDef.redacted ? Number.MAX_SAFE_INTEGER : Number.MIN_SAFE_INTEGER;
 
 const itemTierSorter = (itemDef: ItemDefinition) =>
   (itemDef.inventory?.tierType || 0) * -1;
@@ -28,13 +36,19 @@ const weaponSlotSorter = (itemDef: ItemDefinition) => {
 const weaponTypeSorter = (itemDef: ItemDefinition) =>
   itemDef.traitIds?.find((v) => v.includes("weapon_type."));
 
+const damageTypeSorter = (itemDef: ItemDefinition) =>
+  (itemDef.damageTypes || [])[0];
+
 // This is the array to add new sorters to!!
 const ITEM_SORTERS = [
+  isClassified,
+  noNameSorter,
   isDummySorter,
   itemTierSorter,
-  itemClassSorter,
   weaponSlotSorter,
   weaponTypeSorter,
+  damageTypeSorter,
+  itemClassSorter,
 ];
 
 /*

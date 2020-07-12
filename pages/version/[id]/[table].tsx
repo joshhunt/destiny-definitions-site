@@ -14,6 +14,7 @@ import {
 
 import React from "react";
 import DefinitionDiffPage from "../../../components/DefinitionDiffPage";
+import { DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 
 interface DefinitionDiffStaticProps {
   versionId: string;
@@ -81,17 +82,27 @@ export const getStaticProps: GetStaticProps<
 
   const definitions = await getDefinitionForVersion(versionId, definitionName);
 
-  // TODO: Remove this before publishing!!!
-  if (definitionName === "DestinyInventoryItemDefinition") {
-    const weaponHashes = Object.keys(definitions)
-      .filter((itemHash) => {
-        const itemDef = definitions[itemHash] as any;
-        return itemDef.itemCategoryHashes?.includes(1);
-      })
-      .map((v) => Number(v));
+  // // TODO: Remove this before publishing!!!
+  // if (definitionName === "DestinyInventoryItemDefinition") {
+  //   const weaponHashes = Object.keys(definitions)
+  //     .filter((itemHash) => {
+  //       // const itemDef = definitions[itemHash] as DestinyInventoryItemDefinition;
+  //       // return itemDef.itemCategoryHashes?.includes(1);
+  //       return true;
+  //     })
+  //     .map((v) => Number(v));
 
-    diff.added.push(...shuffle(weaponHashes).slice(0, 50));
-  }
+  //   diff.added.push(...shuffle(weaponHashes).slice(0, 5000));
+
+  //   // const redacted = Object.keys(definitions)
+  //   //   .filter((itemHash) => {
+  //   //     const itemDef = definitions[itemHash] as DestinyInventoryItemDefinition;
+  //   //     return itemDef.redacted ? true : false;
+  //   //   })
+  //   //   .map((v) => Number(v));
+
+  //   // diff.unclassified.push(...shuffle(redacted));
+  // }
 
   if (!definitions) throw new Error("Definitions is missing");
 
