@@ -27,7 +27,7 @@ const DAMAGE_TYPE_NAMES: { [k: string]: string } = {
 const CLASS_TYPE_NAME: { [k: string]: string } = {
   [1]: "Hunter",
   [2]: "Warlock",
-  [3]: "Titan",
+  [0]: "Titan",
 };
 
 const getWeaponSlot = (itemDef: ItemDefinition) => {
@@ -54,12 +54,22 @@ export default function InventoryItemDiffList({
   const isWeapon = itemCategory == ItemCategory.Weapon;
   const isArmor = itemCategory == ItemCategory.Armor;
 
+  const hasScreenshot = hashes.some((itemHash) => {
+    const def = definitions[itemHash];
+    return (
+      def && def.__type == "DestinyInventoryItemDefinition" && def.screenshot
+    );
+  });
+
   return (
     <table className={s.table}>
       <thead>
         <tr>
           <td>Hash</td>
           <td>Item</td>
+
+          {hasScreenshot && <td>Screenshot</td>}
+
           <td>Type</td>
 
           {isWeapon && (
@@ -84,6 +94,18 @@ export default function InventoryItemDiffList({
               <td className={s.mainColumn}>
                 <ItemSummary def={def} />
               </td>
+
+              {hasScreenshot && (
+                <td>
+                  {def.screenshot && (
+                    <BungieImage
+                      className={s.screenshotPreview}
+                      src={def.screenshot}
+                    />
+                  )}
+                </td>
+              )}
+
               <td className={s.nowrap}>{def.itemTypeDisplayName}</td>
 
               {isWeapon && (
@@ -92,7 +114,7 @@ export default function InventoryItemDiffList({
                 </>
               )}
 
-              {isArmor && <>{CLASS_TYPE_NAME[def.classType]}</>}
+              {isArmor && <td>{CLASS_TYPE_NAME[def.classType]}</td>}
             </tr>
           );
         })}

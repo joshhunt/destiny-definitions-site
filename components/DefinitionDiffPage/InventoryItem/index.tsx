@@ -118,7 +118,6 @@ export function InventoryItemDiff({
     });
   });
 
-  console.log({ ItemCategoryValues });
   const indexData = Object.entries(groupedDiff)
     .map(([diffSectionName, groupedHashes]) => {
       return {
@@ -135,12 +134,10 @@ export function InventoryItemDiff({
             };
           })
           .sort((a, b) => {
-            const valueA = ItemCategoryValues.indexOf(a.name);
-            const valueB = ItemCategoryValues.indexOf(b.name);
-
-            console.log("sort", { a: a.name, b: b.name, valueA, valueB });
-
-            return valueA - valueB;
+            return (
+              ItemCategoryValues.indexOf(a.name) -
+              ItemCategoryValues.indexOf(b.name)
+            );
           }),
       };
     })
