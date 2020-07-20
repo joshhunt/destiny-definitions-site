@@ -144,40 +144,37 @@ export function InventoryItemDiff({
     .filter((v) => v.count > 0);
 
   return (
-    <>
-      <h1>Version {versionId}</h1>
-      <div className={s.layout}>
-        <div className={s.main}>
-          <h2>{definitionName}</h2>
+    <div className={s.layout}>
+      <div className={s.main}>
+        <h2>{definitionName}</h2>
 
-          <InventoryItemGroupedDiffList
-            name="Added"
-            groupedHashes={groupedDiff.added}
-            definitions={definitions}
-          />
-          <InventoryItemGroupedDiffList
-            name="Unclassified"
-            groupedHashes={groupedDiff.unclassified}
-            definitions={definitions}
-          />
-          <DiffList
-            name="Removed"
-            hashes={diff.removed}
-            definitions={definitions}
-          />
-          <DiffList
-            name="Reclassified"
-            hashes={diff.reclassified}
-            definitions={definitions}
-          />
-        </div>
+        <InventoryItemGroupedDiffList
+          name="Added"
+          groupedHashes={groupedDiff.added}
+          definitions={definitions}
+        />
+        <InventoryItemGroupedDiffList
+          name="Unclassified"
+          groupedHashes={groupedDiff.unclassified}
+          definitions={definitions}
+        />
+        <DiffList
+          name="Removed"
+          hashes={diff.removed}
+          definitions={definitions}
+        />
+        <DiffList
+          name="Reclassified"
+          hashes={diff.reclassified}
+          definitions={definitions}
+        />
+      </div>
 
-        <div className={s.side}>
-          <div className={s.stickySide}>
-            <IndexTable data={indexData} />
-          </div>
+      <div className={s.side}>
+        <div className={s.stickySide}>
+          <IndexTable data={indexData} />
         </div>
       </div>
-    </>
+    </div>
   );
 }

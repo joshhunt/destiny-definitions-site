@@ -53,6 +53,10 @@ export default function DefinitionDiffPage({
 }: DefinitionDiffStaticProps) {
   return (
     <div className={s.root}>
+      <h1>Release July 7 2020</h1>
+
+      <p>Bungie version {versionId}</p>
+
       <ContentForDefinitionType
         versionId={versionId}
         definitionName={definitionName}
