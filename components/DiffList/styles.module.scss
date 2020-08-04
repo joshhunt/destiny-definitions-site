@@ -24,6 +24,12 @@
   td.mainColumn {
     width: 99%;
   }
+
+  tr:hover {
+    td {
+      background: var(--hover-color);
+    }
+  }
 }
 
 .nowrap {

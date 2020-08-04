@@ -11,6 +11,7 @@ interface DefinitionDiffStaticProps {
   definitionName: string;
   diff: DefinitionDiff;
   definitions: AnyDefinitionTable;
+  previousDefinitions: AnyDefinitionTable | null;
 }
 
 function ContentForDefinitionType({
@@ -18,11 +19,12 @@ function ContentForDefinitionType({
   definitionName,
   diff,
   definitions,
+  previousDefinitions,
 }: DefinitionDiffStaticProps) {
   const zeroth: number = Object.values(diff).find((v) => v[0])[0];
   const def = definitions[zeroth];
 
-  switch (def?.__type) {
+  switch (definitionName) {
     case "DestinyInventoryItemDefinition":
       return (
         <InventoryItemDiff
@@ -30,6 +32,7 @@ function ContentForDefinitionType({
           definitionName={definitionName}
           diff={diff}
           definitions={definitions}
+          previousDefinitions={previousDefinitions}
         />
       );
 
@@ -40,6 +43,7 @@ function ContentForDefinitionType({
           definitionName={definitionName}
           diff={diff}
           definitions={definitions}
+          previousDefinitions={previousDefinitions}
         />
       );
   }
@@ -50,6 +54,7 @@ export default function DefinitionDiffPage({
   definitionName,
   diff,
   definitions,
+  previousDefinitions,
 }: DefinitionDiffStaticProps) {
   return (
     <div className={s.root}>
@@ -62,6 +67,7 @@ export default function DefinitionDiffPage({
         definitionName={definitionName}
         diff={diff}
         definitions={definitions}
+        previousDefinitions={previousDefinitions}
       />
     </div>
   );

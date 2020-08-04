@@ -4,7 +4,7 @@ import {
   DefinitionDiff,
 } from "../../../types";
 import { GetStaticProps, GetStaticPaths } from "next";
-import { pickBy, shuffle } from "lodash";
+import { pickBy } from "lodash";
 
 import {
   getVersionsIndex,
@@ -21,6 +21,7 @@ interface DefinitionDiffStaticProps {
   definitionName: string;
   diff: DefinitionDiff;
   definitions: AnyDefinitionTable;
+  previousDefinitions: AnyDefinitionTable | null;
 }
 
 export default function DefinitionDiffPageWrapper({
@@ -28,6 +29,7 @@ export default function DefinitionDiffPageWrapper({
   definitionName,
   diff,
   definitions,
+  previousDefinitions,
 }: DefinitionDiffStaticProps) {
   return (
     <DefinitionDiffPage
@@ -35,6 +37,7 @@ export default function DefinitionDiffPageWrapper({
       definitionName={definitionName}
       diff={diff}
       definitions={definitions}
+      previousDefinitions={previousDefinitions}
     />
   );
 }
@@ -42,7 +45,7 @@ export default function DefinitionDiffPageWrapper({
 interface Params {
   id: string;
   table: string;
-  [key: string]: string;
+  [key: string]: any;
 }
 
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
@@ -51,8 +54,10 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
 
   const diffsForVersion: DiffsByVersion = {};
 
-  for (const version of data) {
+  for (const versionIndex in data) {
+    const version = data[versionIndex];
     const diffData = await getDiffForVersion(version.version);
+
     diffsForVersion[version.version] = diffData;
   }
 
@@ -62,7 +67,10 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
     return Object.entries(diffData)
       .filter(([, diffData]) => Object.values(diffData).some((v) => v.length))
       .map(([table]) => ({
-        params: { id: version.version, table },
+        params: {
+          id: version.version,
+          table,
+        },
       }));
   });
 
@@ -74,13 +82,37 @@ export const getStaticProps: GetStaticProps<
   Params
 > = async (context) => {
   const versionId = context.params?.id ?? "";
+  // const previousId = context.params?.previousVersionId ?? null;
   const definitionName = context.params?.table ?? "";
+
+  const allVersions = await getVersionsIndex();
+  const currentVersionIndex = allVersions?.findIndex(
+    (v) => v.version === versionId
+  );
+  const previousId =
+    currentVersionIndex &&
+    allVersions &&
+    allVersions[currentVersionIndex - 1].version;
 
   const allDefinitionDiffs = await getDiffForVersion(versionId);
   if (!allDefinitionDiffs) throw new Error("missing diff data for table page");
   const diff = allDefinitionDiffs[definitionName];
-
   const definitions = await getDefinitionForVersion(versionId, definitionName);
+
+  const removedHashes = [...diff.removed, ...diff.reclassified];
+  const previousDefinitions =
+    removedHashes.length > 0 && previousId
+      ? await getDefinitionForVersion(previousId, definitionName)
+      : null;
+
+  console.log({
+    condition: removedHashes.length > 0 && previousId,
+    previousId,
+    removedHashes,
+    previousDefinitions: `${
+      Object.keys(previousDefinitions || {}).length
+    } keys`,
+  });
 
   // // TODO: Remove this before publishing!!!
   // if (definitionName === "DestinyInventoryItemDefinition") {
@@ -106,10 +138,16 @@ export const getStaticProps: GetStaticProps<
 
   if (!definitions) throw new Error("Definitions is missing");
 
-  const hashesInDiff: number[] = Object.values(diff).flatMap((v) => v); // unsure why Object.values
+  const hashesInDiff: number[] = Object.values(diff).flatMap((v) => v); // unsure why Object.values loses type :(
   const pickedDefinitions = pickBy(definitions, (v) =>
     hashesInDiff.includes(v.hash)
   ) as AnyDefinitionTable;
+
+  const prevPickedDefinitions =
+    previousDefinitions &&
+    (pickBy(previousDefinitions, (v) =>
+      removedHashes.includes(v.hash)
+    ) as AnyDefinitionTable);
 
   return {
     props: {
@@ -117,6 +155,7 @@ export const getStaticProps: GetStaticProps<
       definitionName,
       diff,
       definitions: pickedDefinitions,
+      previousDefinitions: prevPickedDefinitions || null,
     },
   };
 };

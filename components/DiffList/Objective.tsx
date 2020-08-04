@@ -7,8 +7,9 @@ import {
 import BungieImage from "../BungieImage";
 
 import s from "./styles.module.scss";
+import { DestinyObjectiveDefinition } from "bungie-api-ts/destiny2";
 
-interface FallbackDiffListProps {
+interface ObjectiveDiffListProps {
   hashes: number[];
   definitions: AnyDefinitionTable;
 }
@@ -25,10 +26,10 @@ function getDescription(def: AnyDefinition & BareDestinyDefinition) {
   return def?.displayProperties?.description;
 }
 
-export default function FallbackDiffList({
+export default function ObjectiveDiffList({
   hashes,
   definitions,
-}: FallbackDiffListProps) {
+}: ObjectiveDiffListProps) {
   if (hashes.length == 0) {
     return null;
   }
@@ -38,15 +39,15 @@ export default function FallbackDiffList({
       <thead>
         <tr>
           <td>Hash</td>
-          <td>Icon</td>
-          <td>Name</td>
-          <td>Description</td>
+          <td>Progress description</td>
+          <td>Target</td>
         </tr>
       </thead>
 
       <tbody>
         {hashes.map((hash) => {
-          const def = definitions[hash];
+          const def = definitions[hash] as DestinyObjectiveDefinition | null;
+
           if (!def) {
             return (
               <tr>
@@ -59,12 +60,9 @@ export default function FallbackDiffList({
           return (
             <tr>
               <td>{hash}</td>
-              <td>
-                <BungieImage className={s.icon} src={getIconSrc(def)} />
-              </td>
-              <td className={s.nowrap}>{getDisplayName(def)}</td>
+              <td className={s.nowrap}>{def.progressDescription}</td>
               <td className={cx(s.mainColumn, s.prewrap)}>
-                {getDescription(def)}
+                {def.completionValue}
               </td>
             </tr>
           );

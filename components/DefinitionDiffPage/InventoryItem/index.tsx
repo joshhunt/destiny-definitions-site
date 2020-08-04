@@ -27,6 +27,7 @@ interface FallbackDiffList {
   definitionName: string;
   diff: DefinitionDiff;
   definitions: AnyDefinitionTable;
+  previousDefinitions: AnyDefinitionTable | null;
 }
 
 function categoryForItem(itemDef: ItemDefinition) {
@@ -97,21 +98,29 @@ function categoryForItem(itemDef: ItemDefinition) {
   return ItemCategory.Other;
 }
 
+const ifNeedsPrevDefs = (s: string) => s === "removed" || s === "reclassified";
+
 export function InventoryItemDiff({
-  versionId,
   definitionName,
   diff,
   definitions: _defs,
+  previousDefinitions: _previousDefs,
 }: FallbackDiffList) {
   // TODO: find a better way to do this
   ensureDefinitionType(_defs, "DestinyInventoryItemDefinition");
-  const definitions = _defs as ItemDefinitions;
 
-  const groupedDiff = mapValues(diff, (hashes) => {
-    const sortedHashes = sortItems(hashes, definitions);
+  const definitions = _defs as ItemDefinitions;
+  const previousDefinitions = (_previousDefs as ItemDefinitions) || definitions;
+
+  const groupedDiff = mapValues(diff, (hashes, diffSectionName) => {
+    const definitionsForType = ifNeedsPrevDefs(diffSectionName)
+      ? previousDefinitions
+      : definitions;
+
+    const sortedHashes = sortItems(hashes, definitionsForType);
 
     return groupBy(sortedHashes, (itemHash) => {
-      const itemDef = definitions[itemHash];
+      const itemDef = definitionsForType[itemHash];
       if (!itemDef) return "other";
 
       return categoryForItem(itemDef);
@@ -158,15 +167,15 @@ export function InventoryItemDiff({
           groupedHashes={groupedDiff.unclassified}
           definitions={definitions}
         />
-        <DiffList
+        <InventoryItemGroupedDiffList
           name="Removed"
-          hashes={diff.removed}
-          definitions={definitions}
+          groupedHashes={groupedDiff.removed}
+          definitions={previousDefinitions}
         />
         <DiffList
           name="Reclassified"
           hashes={diff.reclassified}
-          definitions={definitions}
+          definitions={previousDefinitions}
         />
       </div>
 

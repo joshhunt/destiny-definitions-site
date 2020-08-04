@@ -6,6 +6,7 @@ interface FallbackDiffList {
   definitionName: string;
   diff: DefinitionDiff;
   definitions: AnyDefinitionTable;
+  previousDefinitions: AnyDefinitionTable | null;
 }
 
 export function FallbackDiff({
@@ -13,6 +14,7 @@ export function FallbackDiff({
   definitionName,
   diff,
   definitions,
+  previousDefinitions,
 }: FallbackDiffList) {
   return (
     <>
@@ -27,12 +29,12 @@ export function FallbackDiff({
       <DiffList
         name="Removed"
         hashes={diff.removed}
-        definitions={definitions}
+        definitions={previousDefinitions || definitions}
       />
       <DiffList
         name="Reclassified"
         hashes={diff.reclassified}
-        definitions={definitions}
+        definitions={previousDefinitions || definitions}
       />
     </>
   );

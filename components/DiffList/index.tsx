@@ -4,7 +4,7 @@ import {
   BareDestinyDefinition,
 } from "../../types";
 import FallbackDiffList from "./Fallback";
-import InventoryItemDiffList from "./InventoryItem";
+import ObjectiveDiffList from "./Objective";
 
 interface DiffListProps {
   name: string;
@@ -21,6 +21,8 @@ function ForDefinitionType({ name, hashes, definitions }: DiffListProps) {
   const def = definitions[zeroth];
 
   switch (def?.__type) {
+    case "DestinyObjectiveDefinition":
+      return <ObjectiveDiffList hashes={hashes} definitions={definitions} />;
     default:
       return <FallbackDiffList hashes={hashes} definitions={definitions} />;
   }
