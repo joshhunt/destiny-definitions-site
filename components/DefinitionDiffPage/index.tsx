@@ -1,13 +1,20 @@
 import { pickBy } from "lodash";
 
 import s from "./styles.module.scss";
-import { DefinitionDiff, AnyDefinitionTable } from "../../types";
+import {
+  DefinitionDiff,
+  AnyDefinitionTable,
+  ManifestVersion,
+} from "../../types";
 import DiffList from "../DiffList";
 import { FallbackDiff } from "./Fallback";
 import { InventoryItemDiff } from "./InventoryItem";
+import { format } from "date-fns";
+import { friendlyDiffName } from "../../lib/utils";
 
 interface DefinitionDiffStaticProps {
   versionId: string;
+  manifestVersion: ManifestVersion;
   definitionName: string;
   diff: DefinitionDiff;
   definitions: AnyDefinitionTable;
@@ -16,6 +23,7 @@ interface DefinitionDiffStaticProps {
 
 function ContentForDefinitionType({
   versionId,
+  manifestVersion,
   definitionName,
   diff,
   definitions,
@@ -29,6 +37,7 @@ function ContentForDefinitionType({
       return (
         <InventoryItemDiff
           versionId={versionId}
+          manifestVersion={manifestVersion}
           definitionName={definitionName}
           diff={diff}
           definitions={definitions}
@@ -51,6 +60,7 @@ function ContentForDefinitionType({
 
 export default function DefinitionDiffPage({
   versionId,
+  manifestVersion,
   definitionName,
   diff,
   definitions,
@@ -58,12 +68,16 @@ export default function DefinitionDiffPage({
 }: DefinitionDiffStaticProps) {
   return (
     <div className={s.root}>
-      <h2>Release July 7 2020</h2>
+      <h2>
+        {friendlyDiffName(definitionName)},{" "}
+        {format(new Date(manifestVersion.createdAt), "E do MMM, u")}
+      </h2>
 
       <p>Bungie version {versionId}</p>
 
       <ContentForDefinitionType
         versionId={versionId}
+        manifestVersion={manifestVersion}
         definitionName={definitionName}
         diff={diff}
         definitions={definitions}

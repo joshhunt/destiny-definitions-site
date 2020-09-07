@@ -6,6 +6,7 @@ import {
   AnyDefinition,
   ItemCategory,
   ItemCategoryValues,
+  ManifestVersion,
 } from "../../../types";
 import { ensureDefinitionType } from "../../../utils";
 import { DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
@@ -24,6 +25,7 @@ type ItemDefinitions = AllDestinyManifestComponentsTagged["DestinyInventoryItemD
 
 interface FallbackDiffList {
   versionId: string;
+  manifestVersion: ManifestVersion;
   definitionName: string;
   diff: DefinitionDiff;
   definitions: AnyDefinitionTable;
@@ -110,9 +112,10 @@ export function InventoryItemDiff({
   previousDefinitions: _previousDefs,
 }: FallbackDiffList) {
   // TODO: find a better way to do this
-  ensureDefinitionType(_defs, "DestinyInventoryItemDefinition");
-
-  const definitions = _defs as ItemDefinitions;
+  const definitions = ensureDefinitionType<ItemDefinitions>(
+    _defs,
+    "DestinyInventoryItemDefinition"
+  );
   const previousDefinitions = (_previousDefs as ItemDefinitions) || definitions;
 
   const groupedDiff = mapValues(diff, (hashes, diffSectionName) => {
@@ -158,8 +161,6 @@ export function InventoryItemDiff({
   return (
     <div className={s.layout}>
       <div className={s.main}>
-        <h3>{definitionName}</h3>
-
         {groupHasItems(groupedDiff.added) && (
           <InventoryItemGroupedDiffList
             name="Added"

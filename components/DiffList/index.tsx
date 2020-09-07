@@ -35,7 +35,7 @@ export default function DiffList({ name, hashes, definitions }: DiffListProps) {
 
   return (
     <div>
-      <h3>{name}</h3>
+      <h4>{name}</h4>
 
       <ForDefinitionType
         name={name}

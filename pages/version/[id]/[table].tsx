@@ -2,6 +2,7 @@ import {
   DiffsByVersion,
   AnyDefinitionTable,
   DefinitionDiff,
+  ManifestVersion,
 } from "../../../types";
 import { GetStaticProps, GetStaticPaths } from "next";
 import { pickBy } from "lodash";
@@ -18,6 +19,7 @@ import { DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 
 interface DefinitionDiffStaticProps {
   versionId: string;
+  manifestVersion: ManifestVersion;
   definitionName: string;
   diff: DefinitionDiff;
   definitions: AnyDefinitionTable;
@@ -26,6 +28,7 @@ interface DefinitionDiffStaticProps {
 
 export default function DefinitionDiffPageWrapper({
   versionId,
+  manifestVersion,
   definitionName,
   diff,
   definitions,
@@ -34,6 +37,7 @@ export default function DefinitionDiffPageWrapper({
   return (
     <DefinitionDiffPage
       versionId={versionId}
+      manifestVersion={manifestVersion}
       definitionName={definitionName}
       diff={diff}
       definitions={definitions}
@@ -94,6 +98,14 @@ export const getStaticProps: GetStaticProps<
     allVersions &&
     allVersions[currentVersionIndex - 1].version;
 
+  const manifestVersion = currentVersionIndex
+    ? allVersions?.[currentVersionIndex]
+    : undefined;
+
+  if (!manifestVersion) {
+    throw new Error(`Unable to find manifestVersion for version ${versionId}`);
+  }
+
   const allDefinitionDiffs = await getDiffForVersion(versionId);
   if (!allDefinitionDiffs) throw new Error("missing diff data for table page");
   const diff = allDefinitionDiffs[definitionName];
@@ -104,15 +116,6 @@ export const getStaticProps: GetStaticProps<
     removedHashes.length > 0 && previousId
       ? await getDefinitionForVersion(previousId, definitionName)
       : null;
-
-  console.log({
-    condition: removedHashes.length > 0 && previousId,
-    previousId,
-    removedHashes,
-    previousDefinitions: `${
-      Object.keys(previousDefinitions || {}).length
-    } keys`,
-  });
 
   // // TODO: Remove this before publishing!!!
   // if (definitionName === "DestinyInventoryItemDefinition") {
@@ -151,7 +154,8 @@ export const getStaticProps: GetStaticProps<
 
   return {
     props: {
-      versionId: versionId,
+      versionId,
+      manifestVersion,
       definitionName,
       diff,
       definitions: pickedDefinitions,

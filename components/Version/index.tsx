@@ -7,6 +7,7 @@ import { ManifestVersion, AllDefinitionDiffs } from "../../types";
 import Link from "next/link";
 
 import s from "./styles.module.scss";
+import Icon from "../Icon";
 
 interface VersionProps {
   manifestVersion: ManifestVersion;
@@ -39,7 +40,10 @@ export default function Version({
         <Link href={`/version/[id]`} as={`/version/${manifestVersion.version}`}>
           <a className={commonStyles.invisibleLink}>
             {headingPrefix}
-            {format(new Date(manifestVersion.createdAt), "E do MMM, u")}
+            {format(new Date(manifestVersion.createdAt), "E do MMM, u")}{" "}
+            <sup>
+              <Icon name="link" />
+            </sup>
           </a>
         </Link>
       </h2>

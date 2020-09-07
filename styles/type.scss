@@ -72,15 +72,23 @@ hr,
 // a, b, i, strong, em, small, code {
 //   line-height: 0;
 // }
+small,
 sub,
 sup {
   line-height: 0;
   position: relative;
   vertical-align: baseline;
+  font-size: 0.5em;
 }
+
 sup {
-  top: -0.5em;
+  top: -1em;
 }
+
 sub {
-  bottom: -0.25em;
+  bottom: -0.5em;
+}
+
+.svg-inline--fa.fa-w-16 {
+  width: 1em;
 }

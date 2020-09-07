@@ -138,9 +138,9 @@ export function InventoryItemGroupedDiffList({
 
   return (
     <div className={s.topLevelDiff}>
-      <h4 className={s.title} id={id}>
+      <h3 className={s.title} id={id}>
         {name}
-      </h4>
+      </h3>
 
       {Object.entries(groupedHashes)
         .sort(
@@ -153,9 +153,9 @@ export function InventoryItemGroupedDiffList({
 
           return (
             <div className={s.secondLevelDiff}>
-              <h5 className={s.itemGroupTitle} id={`${id}_${itemGroupName}`}>
+              <h4 className={s.itemGroupTitle} id={`${id}_${itemGroupName}`}>
                 {itemGroupName}
-              </h5>
+              </h4>
 
               <InventoryItemDiffList
                 itemCategory={itemCategory}

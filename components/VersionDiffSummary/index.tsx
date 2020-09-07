@@ -4,16 +4,11 @@ import Link from "next/link";
 
 import s from "./styles.module.scss";
 import commonStyles from "../../styles/common.module.scss";
+import { friendlyDiffName } from "../../lib/utils";
 
 interface VersionDiffSummaryProps {
   version: string;
   allDefinitionDiffs: AllDefinitionDiffs;
-}
-
-function friendlyDiffName(name: string) {
-  const match = name.match(/Destiny(\w+)Definition/);
-
-  return match ? match[1] : name;
 }
 
 export default function VersionDiffSummary({

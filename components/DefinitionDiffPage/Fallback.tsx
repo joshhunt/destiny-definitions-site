@@ -18,8 +18,6 @@ export function FallbackDiff({
 }: FallbackDiffList) {
   return (
     <>
-      <h2>{definitionName}</h2>
-
       <DiffList name="Added" hashes={diff.added} definitions={definitions} />
       <DiffList
         name="Unclassified"
