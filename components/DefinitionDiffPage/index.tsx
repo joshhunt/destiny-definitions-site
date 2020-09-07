@@ -6,7 +6,6 @@ import {
   AnyDefinitionTable,
   ManifestVersion,
 } from "../../types";
-import DiffList from "../DiffList";
 import { FallbackDiff } from "./Fallback";
 import { InventoryItemDiff } from "./InventoryItem";
 import { format } from "date-fns";
