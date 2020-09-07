@@ -1,3 +1,22 @@
 .root {
   margin: 32px;
+  margin-top: 0;
+}
+
+.versionList {
+  display: inline-block;
+}
+
+.version {
+  font-size: 16px;
+
+  & + & {
+    border-top: 1px solid var(--alt-color);
+    margin-top: 48px;
+    padding-top: 48px;
+  }
+}
+
+.versionTitle {
+  margin-top: 0;
 }

@@ -1,3 +1,5 @@
+@import "../styles/type.scss";
+
 /* Dark mode */
 :root {
   --bg-color: #121212;
@@ -22,7 +24,11 @@ body {
   background: var(--bg-color);
   color: var(--text-color);
   font-family: "Inter", sans-serif;
-  padding: 0;
-  margin: 0;
   overflow-x: hidden;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
 }

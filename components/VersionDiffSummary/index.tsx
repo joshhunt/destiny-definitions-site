@@ -3,7 +3,7 @@ import { AllDefinitionDiffs } from "../../types";
 import Link from "next/link";
 
 import s from "./styles.module.scss";
-import commonStyles from "../../common.module.scss";
+import commonStyles from "../../styles/common.module.scss";
 
 interface VersionDiffSummaryProps {
   version: string;

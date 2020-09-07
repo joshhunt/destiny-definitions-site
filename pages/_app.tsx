@@ -1,6 +1,8 @@
 import Head from "next/head";
 import { AppProps } from "next/app";
 
+import SiteHeader from "../components/SiteHeader";
+
 import "./common.scss";
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -14,6 +16,8 @@ export default function App({ Component, pageProps }: AppProps) {
           rel="stylesheet"
         ></link>
       </Head>
+
+      <SiteHeader />
 
       <Component {...pageProps} />
     </>

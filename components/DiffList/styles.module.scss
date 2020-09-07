@@ -1,3 +1,10 @@
+.title {
+  position: sticky;
+  top: 0;
+  background: var(--bg-color);
+  padding: 8px 0;
+}
+
 .icon {
   width: 50px;
   height: auto;
@@ -25,7 +32,7 @@
     width: 99%;
   }
 
-  tr:hover {
+  tbody tr:hover {
     td {
       background: var(--hover-color);
     }

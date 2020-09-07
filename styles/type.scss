@@ -1,0 +1,89 @@
+html,
+.root {
+  font-size: 16px;
+  line-height: 22px;
+}
+body,
+.article {
+  font-family: sans-serif;
+  font-size: 16px;
+  line-height: 22px;
+}
+h1,
+.h1 {
+  font-size: 86px;
+  line-height: 88px;
+  margin-top: 22px;
+  margin-bottom: 44px;
+}
+h2,
+.h2 {
+  font-size: 61px;
+  line-height: 66px;
+  margin-top: 32px;
+  margin-bottom: 33px;
+}
+h3,
+.h3 {
+  font-size: 44px;
+  line-height: 44px;
+  margin-top: 22px;
+  margin-bottom: 0px;
+}
+h4,
+.h4 {
+  font-size: 31px;
+  line-height: 44px;
+  margin-top: 22px;
+  margin-bottom: 0px;
+}
+h5,
+.h5 {
+  font-size: 22px;
+  line-height: 22px;
+  margin-top: 22px;
+  margin-bottom: 0px;
+}
+p,
+ul,
+ol,
+pre,
+table,
+blockquote {
+  margin: 22px 0;
+}
+ul ul,
+ol ol,
+ul ol,
+ol ul {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+/* Let's make sure all's aligned */
+hr,
+.hr {
+  border: 1px solid;
+  margin: -1px 0;
+}
+// a,
+// b,
+// i,
+// strong,
+// em,
+// small,
+// code {
+//   line-height: 0;
+// }
+sub,
+sup {
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+sup {
+  top: -0.5em;
+}
+sub {
+  bottom: -0.25em;
+}

@@ -11,7 +11,7 @@ import { ensureDefinitionType } from "../../../utils";
 import { DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 import { InventoryItemGroupedDiffList } from "../../DiffList/InventoryItem";
 
-import { mapValues, groupBy, sortBy } from "lodash";
+import { mapValues, groupBy, sortBy, Dictionary } from "lodash";
 import sortItems from "./sortItems";
 import IndexTable from "../../IndexTable";
 
@@ -100,6 +100,9 @@ function categoryForItem(itemDef: ItemDefinition) {
 
 const ifNeedsPrevDefs = (s: string) => s === "removed" || s === "reclassified";
 
+const groupHasItems = (group: Dictionary<number[]>) =>
+  Object.values(group).some((v) => v.length);
+
 export function InventoryItemDiff({
   definitionName,
   diff,
@@ -155,28 +158,36 @@ export function InventoryItemDiff({
   return (
     <div className={s.layout}>
       <div className={s.main}>
-        <h2>{definitionName}</h2>
+        <h3>{definitionName}</h3>
 
-        <InventoryItemGroupedDiffList
-          name="Added"
-          groupedHashes={groupedDiff.added}
-          definitions={definitions}
-        />
-        <InventoryItemGroupedDiffList
-          name="Unclassified"
-          groupedHashes={groupedDiff.unclassified}
-          definitions={definitions}
-        />
-        <InventoryItemGroupedDiffList
-          name="Removed"
-          groupedHashes={groupedDiff.removed}
-          definitions={previousDefinitions}
-        />
-        <DiffList
-          name="Reclassified"
-          hashes={diff.reclassified}
-          definitions={previousDefinitions}
-        />
+        {groupHasItems(groupedDiff.added) && (
+          <InventoryItemGroupedDiffList
+            name="Added"
+            groupedHashes={groupedDiff.added}
+            definitions={definitions}
+          />
+        )}
+        {groupHasItems(groupedDiff.unclassified) && (
+          <InventoryItemGroupedDiffList
+            name="Unclassified"
+            groupedHashes={groupedDiff.unclassified}
+            definitions={definitions}
+          />
+        )}
+        {groupHasItems(groupedDiff.removed) && (
+          <InventoryItemGroupedDiffList
+            name="Removed"
+            groupedHashes={groupedDiff.removed}
+            definitions={previousDefinitions}
+          />
+        )}
+        {groupHasItems(groupedDiff.reclassified) && (
+          <DiffList
+            name="Reclassified"
+            hashes={diff.reclassified}
+            definitions={previousDefinitions}
+          />
+        )}
       </div>
 
       <div className={s.side}>
