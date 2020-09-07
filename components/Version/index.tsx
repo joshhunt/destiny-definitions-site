@@ -34,6 +34,15 @@ export default function Version({
   diff,
   headingPrefix,
 }: VersionProps) {
+  const hasChanges = Object.values(diff).some((item) => {
+    const thisCount = Object.values(item).reduce(
+      (acc2, item2) => item2.length + acc2,
+      0
+    );
+
+    return thisCount > 0;
+  });
+
   return (
     <div className={s.version}>
       <h2 className={s.versionTitle}>
@@ -52,10 +61,16 @@ export default function Version({
         {format(dateFromVersion(manifestVersion.version), "E do MMM, p")}
       </p>
 
-      <VersionDiffSummary
-        version={manifestVersion.version}
-        allDefinitionDiffs={diff}
-      />
+      {hasChanges ? (
+        <VersionDiffSummary
+          version={manifestVersion.version}
+          allDefinitionDiffs={diff}
+        />
+      ) : (
+        <p>
+          <em>Nothing changed in this version</em>
+        </p>
+      )}
     </div>
   );
 }
