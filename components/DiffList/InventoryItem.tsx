@@ -153,7 +153,9 @@ export function InventoryItemGroupedDiffList({
 
           return (
             <div className={s.secondLevelDiff}>
-              <h5 id={`${id}_${itemGroupName}`}>{itemGroupName}</h5>
+              <h5 className={s.itemGroupTitle} id={`${id}_${itemGroupName}`}>
+                {itemGroupName}
+              </h5>
 
               <InventoryItemDiffList
                 itemCategory={itemCategory}

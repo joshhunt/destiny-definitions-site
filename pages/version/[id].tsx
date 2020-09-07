@@ -4,6 +4,7 @@ import { GetStaticProps, GetStaticPaths } from "next";
 import s from "./styles.module.scss";
 import { getVersionsIndex, getDiffForVersion } from "../../remote";
 import VersionDiffSummary from "../../components/VersionDiffSummary";
+import Version from "../../components/Version";
 
 interface VersionIndexStaticProps {
   version: ManifestVersion;
@@ -14,18 +15,17 @@ export default function VersionIndex({
   version,
   allDefinitionDiffs,
 }: VersionIndexStaticProps) {
+  if (!allDefinitionDiffs) {
+    return null;
+  }
+
   return (
     <div className={s.root}>
-      <h1>Version {version?.version}</h1>
-
-      {allDefinitionDiffs ? (
-        <VersionDiffSummary
-          version={version.version}
-          allDefinitionDiffs={allDefinitionDiffs}
-        />
-      ) : (
-        <p>No diffs for this version</p>
-      )}
+      <Version
+        manifestVersion={version}
+        diff={allDefinitionDiffs}
+        headingPrefix="Released "
+      />
     </div>
   );
 }

@@ -8,6 +8,7 @@ import VersionDiffSummary from "../components/VersionDiffSummary";
 
 import commonStyles from "../styles/common.module.scss";
 import s from "./indexStyles.module.scss";
+import Version from "../components/Version";
 
 interface HomeStaticProps {
   versions: ManifestVersion[];
@@ -17,7 +18,6 @@ interface HomeStaticProps {
 export default function Home({ versions, diffsForVersion }: HomeStaticProps) {
   return (
     <div className={s.root}>
-      <h2>Versions</h2>
       <div className={s.versionList}>
         {versions.map((manifestVersion) => {
           const diff = diffsForVersion[manifestVersion.version];
@@ -27,26 +27,11 @@ export default function Home({ versions, diffsForVersion }: HomeStaticProps) {
           }
 
           return (
-            <div className={s.version} key={manifestVersion.version}>
-              <h3 className={s.versionTitle}>
-                <Link
-                  href={`/version/[id]`}
-                  as={`/version/${manifestVersion.version}`}
-                >
-                  <a className={commonStyles.invisibleLink}>
-                    {format(new Date(manifestVersion.createdAt), "E do MMM, u")}
-                  </a>
-                </Link>
-              </h3>
-              <p>
-                Bungie version <code>{manifestVersion.version}</code>.
-              </p>
-
-              <VersionDiffSummary
-                version={manifestVersion.version}
-                allDefinitionDiffs={diff}
-              />
-            </div>
+            <Version
+              key={manifestVersion.version}
+              manifestVersion={manifestVersion}
+              diff={diff}
+            />
           );
         })}
       </div>
