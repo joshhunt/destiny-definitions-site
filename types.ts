@@ -68,6 +68,15 @@ export interface DefinitionDiff {
   reclassified: number[];
 }
 
+export type DiffGroup = Record<ItemCategory, number[]>;
+
+export type PossiblyGroupedDiff = {
+  removed: DiffGroup | number[];
+  added: DiffGroup | number[];
+  unclassified: DiffGroup | number[];
+  reclassified: DiffGroup | number[];
+};
+
 export type AllDefinitionDiffs = {
   [name: string]: DefinitionDiff;
 };
@@ -110,254 +119,312 @@ export type BasicDefinitionTable = {
   [hash: number]: BareDestinyDefinition | null;
 };
 
+export type DestinyPlaceDefinitionTagged = DestinyPlaceDefinition & {
+  __type: "DestinyPlaceDefinition";
+};
+export type DestinyActivityDefinitionTagged = DestinyActivityDefinition & {
+  __type: "DestinyActivityDefinition";
+};
+export type DestinyActivityTypeDefinitionTagged = DestinyActivityTypeDefinition & {
+  __type: "DestinyActivityTypeDefinition";
+};
+export type DestinyClassDefinitionTagged = DestinyClassDefinition & {
+  __type: "DestinyClassDefinition";
+};
+export type DestinyGenderDefinitionTagged = DestinyGenderDefinition & {
+  __type: "DestinyGenderDefinition";
+};
+export type DestinyInventoryBucketDefinitionTagged = DestinyInventoryBucketDefinition & {
+  __type: "DestinyInventoryBucketDefinition";
+};
+export type DestinyRaceDefinitionTagged = DestinyRaceDefinition & {
+  __type: "DestinyRaceDefinition";
+};
+export type DestinyTalentGridDefinitionTagged = DestinyTalentGridDefinition & {
+  __type: "DestinyTalentGridDefinition";
+};
+export type DestinyUnlockDefinitionTagged = DestinyUnlockDefinition & {
+  __type: "DestinyUnlockDefinition";
+};
+export type DestinyMaterialRequirementSetDefinitionTagged = DestinyMaterialRequirementSetDefinition & {
+  __type: "DestinyMaterialRequirementSetDefinition";
+};
+export type DestinySandboxPerkDefinitionTagged = DestinySandboxPerkDefinition & {
+  __type: "DestinySandboxPerkDefinition";
+};
+export type DestinyStatGroupDefinitionTagged = DestinyStatGroupDefinition & {
+  __type: "DestinyStatGroupDefinition";
+};
+export type DestinyProgressionMappingDefinitionTagged = DestinyProgressionMappingDefinition & {
+  __type: "DestinyProgressionMappingDefinition";
+};
+export type DestinyFactionDefinitionTagged = DestinyFactionDefinition & {
+  __type: "DestinyFactionDefinition";
+};
+export type DestinyVendorGroupDefinitionTagged = DestinyVendorGroupDefinition & {
+  __type: "DestinyVendorGroupDefinition";
+};
+export type DestinyRewardSourceDefinitionTagged = DestinyRewardSourceDefinition & {
+  __type: "DestinyRewardSourceDefinition";
+};
+export type DestinyUnlockValueDefinitionTagged = DestinyUnlockValueDefinition & {
+  __type: "DestinyUnlockValueDefinition";
+};
+export type DestinyItemCategoryDefinitionTagged = DestinyItemCategoryDefinition & {
+  __type: "DestinyItemCategoryDefinition";
+};
+export type DestinyDamageTypeDefinitionTagged = DestinyDamageTypeDefinition & {
+  __type: "DestinyDamageTypeDefinition";
+};
+export type DestinyActivityModeDefinitionTagged = DestinyActivityModeDefinition & {
+  __type: "DestinyActivityModeDefinition";
+};
+export type DestinyActivityGraphDefinitionTagged = DestinyActivityGraphDefinition & {
+  __type: "DestinyActivityGraphDefinition";
+};
+export type DestinyCollectibleDefinitionTagged = DestinyCollectibleDefinition & {
+  __type: "DestinyCollectibleDefinition";
+};
+export type DestinyStatDefinitionTagged = DestinyStatDefinition & {
+  __type: "DestinyStatDefinition";
+};
+export type DestinyItemTierTypeDefinitionTagged = DestinyItemTierTypeDefinition & {
+  __type: "DestinyItemTierTypeDefinition";
+};
+export type DestinyMetricDefinitionTagged = DestinyMetricDefinition & {
+  __type: "DestinyMetricDefinition";
+};
+export type DestinyPlugSetDefinitionTagged = DestinyPlugSetDefinition & {
+  __type: "DestinyPlugSetDefinition";
+};
+export type DestinyPowerCapDefinitionTagged = DestinyPowerCapDefinition & {
+  __type: "DestinyPowerCapDefinition";
+};
+export type DestinyPresentationNodeDefinitionTagged = DestinyPresentationNodeDefinition & {
+  __type: "DestinyPresentationNodeDefinition";
+};
+export type DestinyRecordDefinitionTagged = DestinyRecordDefinition & {
+  __type: "DestinyRecordDefinition";
+};
+export type DestinyDestinationDefinitionTagged = DestinyDestinationDefinition & {
+  __type: "DestinyDestinationDefinition";
+};
+export type DestinyEquipmentSlotDefinitionTagged = DestinyEquipmentSlotDefinition & {
+  __type: "DestinyEquipmentSlotDefinition";
+};
+export type DestinyInventoryItemDefinitionTagged = DestinyInventoryItemDefinition & {
+  __type: "DestinyInventoryItemDefinition";
+};
+export type DestinyLocationDefinitionTagged = DestinyLocationDefinition & {
+  __type: "DestinyLocationDefinition";
+};
+export type DestinyLoreDefinitionTagged = DestinyLoreDefinition & {
+  __type: "DestinyLoreDefinition";
+};
+export type DestinyObjectiveDefinitionTagged = DestinyObjectiveDefinition & {
+  __type: "DestinyObjectiveDefinition";
+};
+export type DestinyProgressionDefinitionTagged = DestinyProgressionDefinition & {
+  __type: "DestinyProgressionDefinition";
+};
+export type DestinyProgressionLevelRequirementDefinitionTagged = DestinyProgressionLevelRequirementDefinition & {
+  __type: "DestinyProgressionLevelRequirementDefinition";
+};
+export type DestinySeasonDefinitionTagged = DestinySeasonDefinition & {
+  __type: "DestinySeasonDefinition";
+};
+export type DestinySeasonPassDefinitionTagged = DestinySeasonPassDefinition & {
+  __type: "DestinySeasonPassDefinition";
+};
+export type DestinySocketCategoryDefinitionTagged = DestinySocketCategoryDefinition & {
+  __type: "DestinySocketCategoryDefinition";
+};
+export type DestinySocketTypeDefinitionTagged = DestinySocketTypeDefinition & {
+  __type: "DestinySocketTypeDefinition";
+};
+export type DestinyTraitDefinitionTagged = DestinyTraitDefinition & {
+  __type: "DestinyTraitDefinition";
+};
+export type DestinyTraitCategoryDefinitionTagged = DestinyTraitCategoryDefinition & {
+  __type: "DestinyTraitCategoryDefinition";
+};
+export type DestinyVendorDefinitionTagged = DestinyVendorDefinition & {
+  __type: "DestinyVendorDefinition";
+};
+export type DestinyMilestoneDefinitionTagged = DestinyMilestoneDefinition & {
+  __type: "DestinyMilestoneDefinition";
+};
+export type DestinyActivityModifierDefinitionTagged = DestinyActivityModifierDefinition & {
+  __type: "DestinyActivityModifierDefinition";
+};
+export type DestinyReportReasonCategoryDefinitionTagged = DestinyReportReasonCategoryDefinition & {
+  __type: "DestinyReportReasonCategoryDefinition";
+};
+export type DestinyArtifactDefinitionTagged = DestinyArtifactDefinition & {
+  __type: "DestinyArtifactDefinition";
+};
+export type DestinyBreakerTypeDefinitionTagged = DestinyBreakerTypeDefinition & {
+  __type: "DestinyBreakerTypeDefinition";
+};
+export type DestinyChecklistDefinitionTagged = DestinyChecklistDefinition & {
+  __type: "DestinyChecklistDefinition";
+};
+export type DestinyEnergyTypeDefinitionTagged = DestinyEnergyTypeDefinition & {
+  __type: "DestinyEnergyTypeDefinition";
+};
+
 export interface AllDestinyManifestComponentsTagged {
   DestinyPlaceDefinition: {
-    [hash: string]: DestinyPlaceDefinition & {
-      __type: "DestinyPlaceDefinition";
-    };
+    [hash: string]: DestinyPlaceDefinitionTagged;
   };
   DestinyActivityDefinition: {
-    [hash: string]: DestinyActivityDefinition & {
-      __type: "DestinyActivityDefinition";
-    };
+    [hash: string]: DestinyActivityDefinitionTagged;
   };
   DestinyActivityTypeDefinition: {
-    [hash: string]: DestinyActivityTypeDefinition & {
-      __type: "DestinyActivityTypeDefinition";
-    };
+    [hash: string]: DestinyActivityTypeDefinitionTagged;
   };
   DestinyClassDefinition: {
-    [hash: string]: DestinyClassDefinition & {
-      __type: "DestinyClassDefinition";
-    };
+    [hash: string]: DestinyClassDefinitionTagged;
   };
   DestinyGenderDefinition: {
-    [hash: string]: DestinyGenderDefinition & {
-      __type: "DestinyGenderDefinition";
-    };
+    [hash: string]: DestinyGenderDefinitionTagged;
   };
   DestinyInventoryBucketDefinition: {
-    [hash: string]: DestinyInventoryBucketDefinition & {
-      __type: "DestinyInventoryBucketDefinition";
-    };
+    [hash: string]: DestinyInventoryBucketDefinitionTagged;
   };
   DestinyRaceDefinition: {
-    [hash: string]: DestinyRaceDefinition & { __type: "DestinyRaceDefinition" };
+    [hash: string]: DestinyRaceDefinitionTagged;
   };
   DestinyTalentGridDefinition: {
-    [hash: string]: DestinyTalentGridDefinition & {
-      __type: "DestinyTalentGridDefinition";
-    };
+    [hash: string]: DestinyTalentGridDefinitionTagged;
   };
   DestinyUnlockDefinition: {
-    [hash: string]: DestinyUnlockDefinition & {
-      __type: "DestinyUnlockDefinition";
-    };
+    [hash: string]: DestinyUnlockDefinitionTagged;
   };
   DestinyMaterialRequirementSetDefinition: {
-    [hash: string]: DestinyMaterialRequirementSetDefinition & {
-      __type: "DestinyMaterialRequirementSetDefinition";
-    };
+    [hash: string]: DestinyMaterialRequirementSetDefinitionTagged;
   };
   DestinySandboxPerkDefinition: {
-    [hash: string]: DestinySandboxPerkDefinition & {
-      __type: "DestinySandboxPerkDefinition";
-    };
+    [hash: string]: DestinySandboxPerkDefinitionTagged;
   };
   DestinyStatGroupDefinition: {
-    [hash: string]: DestinyStatGroupDefinition & {
-      __type: "DestinyStatGroupDefinition";
-    };
+    [hash: string]: DestinyStatGroupDefinitionTagged;
   };
   DestinyProgressionMappingDefinition: {
-    [hash: string]: DestinyProgressionMappingDefinition & {
-      __type: "DestinyProgressionMappingDefinition";
-    };
+    [hash: string]: DestinyProgressionMappingDefinitionTagged;
   };
   DestinyFactionDefinition: {
-    [hash: string]: DestinyFactionDefinition & {
-      __type: "DestinyFactionDefinition";
-    };
+    [hash: string]: DestinyFactionDefinitionTagged;
   };
   DestinyVendorGroupDefinition: {
-    [hash: string]: DestinyVendorGroupDefinition & {
-      __type: "DestinyVendorGroupDefinition";
-    };
+    [hash: string]: DestinyVendorGroupDefinitionTagged;
   };
   DestinyRewardSourceDefinition: {
-    [hash: string]: DestinyRewardSourceDefinition & {
-      __type: "DestinyRewardSourceDefinition";
-    };
+    [hash: string]: DestinyRewardSourceDefinitionTagged;
   };
   DestinyUnlockValueDefinition: {
-    [hash: string]: DestinyUnlockValueDefinition & {
-      __type: "DestinyUnlockValueDefinition";
-    };
+    [hash: string]: DestinyUnlockValueDefinitionTagged;
   };
   DestinyItemCategoryDefinition: {
-    [hash: string]: DestinyItemCategoryDefinition & {
-      __type: "DestinyItemCategoryDefinition";
-    };
+    [hash: string]: DestinyItemCategoryDefinitionTagged;
   };
   DestinyDamageTypeDefinition: {
-    [hash: string]: DestinyDamageTypeDefinition & {
-      __type: "DestinyDamageTypeDefinition";
-    };
+    [hash: string]: DestinyDamageTypeDefinitionTagged;
   };
   DestinyActivityModeDefinition: {
-    [hash: string]: DestinyActivityModeDefinition & {
-      __type: "DestinyActivityModeDefinition";
-    };
+    [hash: string]: DestinyActivityModeDefinitionTagged;
   };
   DestinyActivityGraphDefinition: {
-    [hash: string]: DestinyActivityGraphDefinition & {
-      __type: "DestinyActivityGraphDefinition";
-    };
+    [hash: string]: DestinyActivityGraphDefinitionTagged;
   };
   DestinyCollectibleDefinition: {
-    [hash: string]: DestinyCollectibleDefinition & {
-      __type: "DestinyCollectibleDefinition";
-    };
+    [hash: string]: DestinyCollectibleDefinitionTagged;
   };
   DestinyStatDefinition: {
-    [hash: string]: DestinyStatDefinition & { __type: "DestinyStatDefinition" };
+    [hash: string]: DestinyStatDefinitionTagged;
   };
   DestinyItemTierTypeDefinition: {
-    [hash: string]: DestinyItemTierTypeDefinition & {
-      __type: "DestinyItemTierTypeDefinition";
-    };
+    [hash: string]: DestinyItemTierTypeDefinitionTagged;
   };
   DestinyMetricDefinition: {
-    [hash: string]: DestinyMetricDefinition & {
-      __type: "DestinyMetricDefinition";
-    };
+    [hash: string]: DestinyMetricDefinitionTagged;
   };
   DestinyPlugSetDefinition: {
-    [hash: string]: DestinyPlugSetDefinition & {
-      __type: "DestinyPlugSetDefinition";
-    };
+    [hash: string]: DestinyPlugSetDefinitionTagged;
   };
   DestinyPowerCapDefinition: {
-    [hash: string]: DestinyPowerCapDefinition & {
-      __type: "DestinyPowerCapDefinition";
-    };
+    [hash: string]: DestinyPowerCapDefinitionTagged;
   };
   DestinyPresentationNodeDefinition: {
-    [hash: string]: DestinyPresentationNodeDefinition & {
-      __type: "DestinyPresentationNodeDefinition";
-    };
+    [hash: string]: DestinyPresentationNodeDefinitionTagged;
   };
   DestinyRecordDefinition: {
-    [hash: string]: DestinyRecordDefinition & {
-      __type: "DestinyRecordDefinition";
-    };
+    [hash: string]: DestinyRecordDefinitionTagged;
   };
   DestinyDestinationDefinition: {
-    [hash: string]: DestinyDestinationDefinition & {
-      __type: "DestinyDestinationDefinition";
-    };
+    [hash: string]: DestinyDestinationDefinitionTagged;
   };
   DestinyEquipmentSlotDefinition: {
-    [hash: string]: DestinyEquipmentSlotDefinition & {
-      __type: "DestinyEquipmentSlotDefinition";
-    };
+    [hash: string]: DestinyEquipmentSlotDefinitionTagged;
   };
   DestinyInventoryItemDefinition: {
-    [hash: string]: DestinyInventoryItemDefinition & {
-      __type: "DestinyInventoryItemDefinition";
-    };
+    [hash: string]: DestinyInventoryItemDefinitionTagged;
   };
   DestinyLocationDefinition: {
-    [hash: string]: DestinyLocationDefinition & {
-      __type: "DestinyLocationDefinition";
-    };
+    [hash: string]: DestinyLocationDefinitionTagged;
   };
   DestinyLoreDefinition: {
-    [hash: string]: DestinyLoreDefinition & { __type: "DestinyLoreDefinition" };
+    [hash: string]: DestinyLoreDefinitionTagged;
   };
   DestinyObjectiveDefinition: {
-    [hash: string]: DestinyObjectiveDefinition & {
-      __type: "DestinyObjectiveDefinition";
-    };
+    [hash: string]: DestinyObjectiveDefinitionTagged;
   };
   DestinyProgressionDefinition: {
-    [hash: string]: DestinyProgressionDefinition & {
-      __type: "DestinyProgressionDefinition";
-    };
+    [hash: string]: DestinyProgressionDefinitionTagged;
   };
   DestinyProgressionLevelRequirementDefinition: {
-    [hash: string]: DestinyProgressionLevelRequirementDefinition & {
-      __type: "DestinyProgressionLevelRequirementDefinition";
-    };
+    [hash: string]: DestinyProgressionLevelRequirementDefinitionTagged;
   };
   DestinySeasonDefinition: {
-    [hash: string]: DestinySeasonDefinition & {
-      __type: "DestinySeasonDefinition";
-    };
+    [hash: string]: DestinySeasonDefinitionTagged;
   };
   DestinySeasonPassDefinition: {
-    [hash: string]: DestinySeasonPassDefinition & {
-      __type: "DestinySeasonPassDefinition";
-    };
+    [hash: string]: DestinySeasonPassDefinitionTagged;
   };
   DestinySocketCategoryDefinition: {
-    [hash: string]: DestinySocketCategoryDefinition & {
-      __type: "DestinySocketCategoryDefinition";
-    };
+    [hash: string]: DestinySocketCategoryDefinitionTagged;
   };
   DestinySocketTypeDefinition: {
-    [hash: string]: DestinySocketTypeDefinition & {
-      __type: "DestinySocketTypeDefinition";
-    };
+    [hash: string]: DestinySocketTypeDefinitionTagged;
   };
   DestinyTraitDefinition: {
-    [hash: string]: DestinyTraitDefinition & {
-      __type: "DestinyTraitDefinition";
-    };
+    [hash: string]: DestinyTraitDefinitionTagged;
   };
   DestinyTraitCategoryDefinition: {
-    [hash: string]: DestinyTraitCategoryDefinition & {
-      __type: "DestinyTraitCategoryDefinition";
-    };
+    [hash: string]: DestinyTraitCategoryDefinitionTagged;
   };
   DestinyVendorDefinition: {
-    [hash: string]: DestinyVendorDefinition & {
-      __type: "DestinyVendorDefinition";
-    };
+    [hash: string]: DestinyVendorDefinitionTagged;
   };
   DestinyMilestoneDefinition: {
-    [hash: string]: DestinyMilestoneDefinition & {
-      __type: "DestinyMilestoneDefinition";
-    };
+    [hash: string]: DestinyMilestoneDefinitionTagged;
   };
   DestinyActivityModifierDefinition: {
-    [hash: string]: DestinyActivityModifierDefinition & {
-      __type: "DestinyActivityModifierDefinition";
-    };
+    [hash: string]: DestinyActivityModifierDefinitionTagged;
   };
   DestinyReportReasonCategoryDefinition: {
-    [hash: string]: DestinyReportReasonCategoryDefinition & {
-      __type: "DestinyReportReasonCategoryDefinition";
-    };
+    [hash: string]: DestinyReportReasonCategoryDefinitionTagged;
   };
   DestinyArtifactDefinition: {
-    [hash: string]: DestinyArtifactDefinition & {
-      __type: "DestinyArtifactDefinition";
-    };
+    [hash: string]: DestinyArtifactDefinitionTagged;
   };
   DestinyBreakerTypeDefinition: {
-    [hash: string]: DestinyBreakerTypeDefinition & {
-      __type: "DestinyBreakerTypeDefinition";
-    };
+    [hash: string]: DestinyBreakerTypeDefinitionTagged;
   };
   DestinyChecklistDefinition: {
-    [hash: string]: DestinyChecklistDefinition & {
-      __type: "DestinyChecklistDefinition";
-    };
+    [hash: string]: DestinyChecklistDefinitionTagged;
   };
   DestinyEnergyTypeDefinition: {
-    [hash: string]: DestinyEnergyTypeDefinition & {
-      __type: "DestinyEnergyTypeDefinition";
-    };
+    [hash: string]: DestinyEnergyTypeDefinitionTagged;
   };
 }

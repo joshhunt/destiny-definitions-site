@@ -1,5 +1,5 @@
 import { DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
-import { AllDestinyManifestComponentsTagged } from "../../../types";
+import { AllDestinyManifestComponentsTagged } from "../../types";
 import { sortBy } from "lodash";
 
 type ItemDefinition = DestinyInventoryItemDefinition & {
@@ -27,6 +27,10 @@ const itemClassSorter = (itemDef: ItemDefinition) => {
   return itemDef.classType;
 };
 
+const rpmSorter = (itemDef: ItemDefinition) => {
+  return itemDef.stats?.stats?.[4284893193]?.value;
+};
+
 const weaponSlotSorter = (itemDef: ItemDefinition) => {
   if (itemDef.itemCategoryHashes?.includes(2)) return 1; // kinetic
   if (itemDef.itemCategoryHashes?.includes(3)) return 2; // energy
@@ -48,6 +52,7 @@ const ITEM_SORTERS = [
   weaponSlotSorter,
   weaponTypeSorter,
   damageTypeSorter,
+  rpmSorter,
   itemClassSorter,
 ];
 

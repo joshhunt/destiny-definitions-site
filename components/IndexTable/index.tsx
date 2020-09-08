@@ -1,13 +1,16 @@
 import s from "./styles.module.scss";
+import { Fragment } from "react";
 
 interface IndexTableProps {
   data: {
     name: string;
     count: number;
-    subItems: {
-      name: string;
-      count: number;
-    }[];
+    subItems:
+      | null
+      | {
+          name: string;
+          count: number;
+        }[];
   }[];
 }
 
@@ -16,15 +19,16 @@ export default function IndexTable({ data }: IndexTableProps) {
     <div>
       {data.map((topLevel) => {
         return (
-          <>
+          <Fragment key={topLevel.name}>
             <a className={s.topItem} href={`#${topLevel.name}`}>
               <div className={s.name}>{topLevel.name}</div>
               <div className={s.count}>{topLevel.count}</div>
             </a>
 
-            {topLevel.subItems.map((subItem) => {
+            {topLevel.subItems?.map((subItem) => {
               return (
                 <a
+                  key={subItem.name}
                   className={s.subItem}
                   href={`#${topLevel.name}_${subItem.name}`}
                 >
@@ -33,7 +37,7 @@ export default function IndexTable({ data }: IndexTableProps) {
                 </a>
               );
             })}
-          </>
+          </Fragment>
         );
       })}
     </div>

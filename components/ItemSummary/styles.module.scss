@@ -41,12 +41,14 @@
 }
 
 .tag {
-  font-size: 0.95em;
+  font-size: 0.9em;
   background: var(--alt-color);
-  padding: 2px 8px;
+  padding: 3px 8px;
   border-radius: 100px;
   margin-left: 16px;
   display: inline-block;
+  line-height: 1;
+  border: 1px solid transparent;
 
   &[data-tag="Dummy"] {
     background: #e74c3c;
@@ -72,4 +74,11 @@
   & + & {
     margin-left: 8px;
   }
+}
+
+.emptyTag {
+  composes: tag;
+  background: none;
+  border: 1px solid var(--alt-color);
+  margin-top: -2px;
 }

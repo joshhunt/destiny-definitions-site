@@ -37,7 +37,7 @@ const getWeaponSlot = (itemDef: ItemDefinition) => {
 };
 
 interface InventoryItemDiffListProps {
-  itemCategory: ItemCategory;
+  itemCategory: string;
   hashes: number[];
   definitions: AnyDefinitionTable;
 }
@@ -89,7 +89,7 @@ export default function InventoryItemDiffList({
             return null;
 
           return (
-            <tr>
+            <tr key={hash}>
               <td>{hash}</td>
               <td className={s.mainColumn}>
                 <ItemSummary def={def} />

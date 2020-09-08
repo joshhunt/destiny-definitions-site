@@ -3,14 +3,14 @@
 }
 
 .item {
-  padding: 2px 8px;
+  padding: 2px 8px 2px 0;
   display: block;
   color: inherit;
   text-decoration: none;
   display: flex;
 
   &:hover {
-    background: var(--alt-color);
+    // background: var(--alt-color);
     .name {
       text-decoration: underline;
     }
@@ -19,16 +19,27 @@
 
 .topItem {
   composes: item;
-  margin-top: 16px;
+  font-weight: 500;
 }
 
 .subItem {
   composes: item;
   padding-left: 16px;
+  margin-left: 16px;
+  border-left: 1px solid var(--alt-color);
 }
 
 .name {
   flex: 1 1 auto;
   text-transform: capitalize;
   margin-right: 8px;
+}
+
+.topItem + .subItem {
+  padding-top: 0;
+  margin-top: 4px;
+}
+
+.subItem + .topItem {
+  margin-top: 32px;
 }

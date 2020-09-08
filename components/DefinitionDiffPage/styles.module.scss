@@ -1,9 +1,20 @@
 .root {
   margin: 32px;
+  display: grid;
+  grid-template-columns: 1fr 250px;
+  gap: 32px;
+}
+
+.pageTitle {
+  margin-top: 0;
 }
 
 .versionId {
-  // font-size: 0.75em;
   font-family: monospace;
   font-weight: normal;
+}
+
+.stickySide {
+  position: sticky;
+  top: 32px;
 }

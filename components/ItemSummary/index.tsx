@@ -7,8 +7,12 @@ interface ItemSummaryProps {
   def: DestinyInventoryItemDefinition;
 }
 
+const RPM_STAT_HASH = 4284893193;
+
 export default function ItemSummary({ def }: ItemSummaryProps) {
   const tags = getItemTags(def);
+
+  const rpmStat = def.stats?.stats?.[RPM_STAT_HASH]?.value;
 
   return (
     <div className={s.itemSummary}>
@@ -22,11 +26,13 @@ export default function ItemSummary({ def }: ItemSummaryProps) {
             {def.displayProperties.name || <em>No name</em>}
           </span>
 
-          {tags.map((t) => (
-            <span className={s.tag} data-tag={t}>
+          {tags.map((t, index) => (
+            <span key={index} className={s.tag} data-tag={t}>
               {t}
             </span>
           ))}
+
+          {rpmStat && <span className={s.emptyTag}>{rpmStat} RPM</span>}
         </div>
 
         {def.displayProperties.description && (
