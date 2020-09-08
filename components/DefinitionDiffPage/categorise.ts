@@ -76,6 +76,9 @@ export function categoryForItem(itemDef: DestinyInventoryItemDefinitionTagged) {
   if (itemDef.itemCategoryHashes?.includes(1112488720))
     return ItemCategory.Finisher;
 
+  if (itemDef.itemCategoryHashes?.includes(1404791674))
+    return ItemCategory.GhostProjection;
+
   if (itemDef.itemCategoryHashes?.includes(268598612))
     return ItemCategory.Eververse;
 

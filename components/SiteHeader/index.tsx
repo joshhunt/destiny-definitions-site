@@ -12,7 +12,7 @@ export default function SiteHeader() {
       <h1 className={s.title}>
         <Link href={`/`} as={`/`}>
           <a className={commonStyles.invisibleLink}>
-            Destiny definition archive
+            Destiny Definitions Archive
           </a>
         </Link>
       </h1>

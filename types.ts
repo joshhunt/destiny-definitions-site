@@ -109,6 +109,7 @@ export enum ItemCategory {
   Engram = "Engram",
   WeaponPerk = "Weapon Perk",
   TransmatEffect = "Transmat effect",
+  GhostProjection = "Ghost Projection",
   Eververse = "Eververse",
   Other = "Other",
 }

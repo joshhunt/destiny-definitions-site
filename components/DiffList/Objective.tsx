@@ -4,12 +4,13 @@ import {
   AnyDefinition,
   BareDestinyDefinition,
 } from "../../types";
-import BungieImage from "../BungieImage";
 
 import s from "./styles.module.scss";
 import { DestinyObjectiveDefinition } from "bungie-api-ts/destiny2";
+import HashLink from "../HashLink";
 
 interface ObjectiveDiffListProps {
+  definitionName: string;
   hashes: number[];
   definitions: AnyDefinitionTable;
 }
@@ -27,6 +28,7 @@ function getDescription(def: AnyDefinition & BareDestinyDefinition) {
 }
 
 export default function ObjectiveDiffList({
+  definitionName,
   hashes,
   definitions,
 }: ObjectiveDiffListProps) {
@@ -59,7 +61,9 @@ export default function ObjectiveDiffList({
 
           return (
             <tr>
-              <td>{hash}</td>
+              <td>
+                <HashLink hash={hash} definitionName={definitionName} />
+              </td>
               <td className={s.nowrap}>{def.progressDescription}</td>
               <td className={cx(s.mainColumn, s.prewrap)}>
                 {def.completionValue}

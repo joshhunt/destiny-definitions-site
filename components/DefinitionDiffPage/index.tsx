@@ -74,24 +74,28 @@ export default function DefinitionDiffPage({
           name="Added"
           hashes={groupedDiff.added}
           definitions={definitions}
+          definitionName={definitionName}
         />
 
         <DiffList
           name="Unclassified"
           hashes={groupedDiff.unclassified}
           definitions={definitions}
+          definitionName={definitionName}
         />
 
         <DiffList
           name="Removed"
           hashes={groupedDiff.removed}
           definitions={previousDefinitions || definitions}
+          definitionName={definitionName}
         />
 
         <DiffList
           name="Reclassified"
           hashes={groupedDiff.reclassified}
           definitions={previousDefinitions || definitions}
+          definitionName={definitionName}
         />
       </div>
 

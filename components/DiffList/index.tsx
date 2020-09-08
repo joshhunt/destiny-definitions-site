@@ -6,6 +6,7 @@ import {
   BareDestinyDefinition,
   DiffGroup,
   ItemCategory,
+  ItemCategoryValues,
 } from "../../types";
 
 import FallbackDiffList from "./Fallback";
@@ -16,42 +17,61 @@ interface DiffListProps {
   name: string;
   hashes: DiffGroup | number[];
   definitions: AnyDefinitionTable;
+  definitionName: string;
 }
 interface ForDefinitionTypeProps {
-  name: string;
   hashes: number[];
   definitions: AnyDefinitionTable;
   itemCategory?: string;
+  definitionName: string;
 }
 
 function ForDefinitionType({
-  name,
   itemCategory,
   hashes,
   definitions,
+  definitionName,
 }: ForDefinitionTypeProps) {
   const zeroth = hashes[0];
   const def = definitions[zeroth];
 
   switch (def?.__type) {
     case "DestinyObjectiveDefinition":
-      return <ObjectiveDiffList hashes={hashes} definitions={definitions} />;
+      return (
+        <ObjectiveDiffList
+          definitionName={definitionName}
+          hashes={hashes}
+          definitions={definitions}
+        />
+      );
     case "DestinyInventoryItemDefinition":
       return (
         <InventoryItemDiffList
+          definitionName={definitionName}
           itemCategory={itemCategory || ItemCategory.Other}
           hashes={hashes}
           definitions={definitions}
         />
       );
     default:
-      return <FallbackDiffList hashes={hashes} definitions={definitions} />;
+      return (
+        <FallbackDiffList
+          definitionName={definitionName}
+          hashes={hashes}
+          definitions={definitions}
+        />
+      );
   }
 }
 
 const NO_CATEGORY = "NO_CATEGORY";
 
-export default function DiffList({ name, hashes, definitions }: DiffListProps) {
+export default function DiffList({
+  name,
+  hashes,
+  definitions,
+  definitionName,
+}: DiffListProps) {
   const groupedHashes = Array.isArray(hashes)
     ? { [NO_CATEGORY]: hashes }
     : hashes;
@@ -64,18 +84,22 @@ export default function DiffList({ name, hashes, definitions }: DiffListProps) {
 
   const id = name.toLowerCase();
 
+  const sortedGroups = Object.entries(groupedHashes).sort((a, b) => {
+    return ItemCategoryValues.indexOf(a[0]) - ItemCategoryValues.indexOf(b[0]);
+  });
+
   return (
     <div>
       <h3 id={id}>{name}</h3>
 
-      {Object.entries(groupedHashes).map(([category, hashes]) => (
+      {sortedGroups.map(([category, hashes]) => (
         <Fragment key={category}>
           {category !== NO_CATEGORY && (
             <h4 id={`${id}_${category}`}>{category}</h4>
           )}
 
           <ForDefinitionType
-            name={name}
+            definitionName={definitionName}
             hashes={hashes}
             definitions={definitions}
             itemCategory={category}

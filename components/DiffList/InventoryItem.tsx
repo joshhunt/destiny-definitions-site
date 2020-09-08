@@ -12,6 +12,7 @@ import s from "./styles.module.scss";
 import ItemSummary from "../ItemSummary";
 import { Dictionary } from "lodash";
 import { DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
+import HashLink from "../HashLink";
 
 type ItemDefinition = DestinyInventoryItemDefinition & {
   __type: "DestinyInventoryItemDefinition";
@@ -37,12 +38,14 @@ const getWeaponSlot = (itemDef: ItemDefinition) => {
 };
 
 interface InventoryItemDiffListProps {
+  definitionName: string;
   itemCategory: string;
   hashes: number[];
   definitions: AnyDefinitionTable;
 }
 
 export default function InventoryItemDiffList({
+  definitionName,
   itemCategory,
   hashes,
   definitions,
@@ -90,7 +93,9 @@ export default function InventoryItemDiffList({
 
           return (
             <tr key={hash}>
-              <td>{hash}</td>
+              <td>
+                <HashLink hash={hash} definitionName={definitionName} />
+              </td>
               <td className={s.mainColumn}>
                 <ItemSummary def={def} />
               </td>

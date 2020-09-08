@@ -7,10 +7,12 @@ import {
 import BungieImage from "../BungieImage";
 
 import s from "./styles.module.scss";
+import HashLink from "../HashLink";
 
 interface FallbackDiffListProps {
   hashes: number[];
   definitions: AnyDefinitionTable;
+  definitionName: string;
 }
 
 function getDisplayName(def: AnyDefinition & BareDestinyDefinition) {
@@ -28,6 +30,7 @@ function getDescription(def: AnyDefinition & BareDestinyDefinition) {
 export default function FallbackDiffList({
   hashes,
   definitions,
+  definitionName,
 }: FallbackDiffListProps) {
   if (hashes.length == 0) {
     return null;
@@ -52,7 +55,7 @@ export default function FallbackDiffList({
     <table className={s.table}>
       <thead>
         <tr>
-          <td>Hash</td>
+          <td className={s.shrink}>Hash</td>
           {hasIcon && <td>Icon</td>}
           {hasName && <td>Name</td>}
           {hasDescription && <td>Description</td>}
@@ -65,7 +68,7 @@ export default function FallbackDiffList({
           if (!def) {
             return (
               <tr>
-                <td>{hash}</td>
+                <td className={s.shrink}>{hash}</td>
                 <td colSpan={3}>Missing data</td>
               </tr>
             );
@@ -73,7 +76,9 @@ export default function FallbackDiffList({
 
           return (
             <tr>
-              <td>{hash}</td>
+              <td className={s.shrink}>
+                <HashLink hash={hash} definitionName={definitionName} />
+              </td>
               {hasIcon && (
                 <td>
                   <BungieImage className={s.icon} src={getIconSrc(def)} />
