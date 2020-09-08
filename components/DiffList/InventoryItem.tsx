@@ -18,13 +18,6 @@ type ItemDefinition = DestinyInventoryItemDefinition & {
   __type: "DestinyInventoryItemDefinition";
 };
 
-const DAMAGE_TYPE_NAMES: { [k: string]: string } = {
-  [1]: "Kinetic",
-  [2]: "Arc",
-  [3]: "Solar",
-  [4]: "Void",
-  [5]: "Raid???",
-};
 const CLASS_TYPE_NAME: { [k: string]: string } = {
   [1]: "Hunter",
   [2]: "Warlock",
@@ -125,51 +118,5 @@ export default function InventoryItemDiffList({
         })}
       </tbody>
     </table>
-  );
-}
-
-interface GroupedDiffListProps {
-  name: string;
-  groupedHashes: Dictionary<number[]>;
-  definitions: AnyDefinitionTable;
-}
-
-export function InventoryItemGroupedDiffList({
-  groupedHashes,
-  name,
-  definitions,
-}: GroupedDiffListProps) {
-  const id = name.toLowerCase();
-
-  return (
-    <div className={s.topLevelDiff}>
-      <h3 className={s.title} id={id}>
-        {name}
-      </h3>
-
-      {Object.entries(groupedHashes)
-        .sort(
-          ([itemGroupA], [itemGroupB]) =>
-            ItemCategoryValues.indexOf(itemGroupA) -
-            ItemCategoryValues.indexOf(itemGroupB)
-        )
-        .map(([itemGroupName, hashes]) => {
-          const itemCategory = itemGroupName as ItemCategory;
-
-          return (
-            <div className={s.secondLevelDiff}>
-              <h4 className={s.itemGroupTitle} id={`${id}_${itemGroupName}`}>
-                {itemGroupName}
-              </h4>
-
-              <InventoryItemDiffList
-                itemCategory={itemCategory}
-                hashes={hashes}
-                definitions={definitions}
-              />
-            </div>
-          );
-        })}
-    </div>
   );
 }
