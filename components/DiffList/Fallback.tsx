@@ -33,14 +33,29 @@ export default function FallbackDiffList({
     return null;
   }
 
+  const hasIcon = hashes.some((hash) => {
+    const def = definitions[hash] as BareDestinyDefinition;
+    return def?.displayProperties?.icon;
+  });
+
+  const hasName = hashes.some((hash) => {
+    const def = definitions[hash];
+    return getDisplayName(def);
+  });
+
+  const hasDescription = hashes.some((hash) => {
+    const def = definitions[hash] as BareDestinyDefinition;
+    return def?.displayProperties?.description;
+  });
+
   return (
     <table className={s.table}>
       <thead>
         <tr>
           <td>Hash</td>
-          <td>Icon</td>
-          <td>Name</td>
-          <td>Description</td>
+          {hasIcon && <td>Icon</td>}
+          {hasName && <td>Name</td>}
+          {hasDescription && <td>Description</td>}
         </tr>
       </thead>
 
@@ -59,13 +74,17 @@ export default function FallbackDiffList({
           return (
             <tr>
               <td>{hash}</td>
-              <td>
-                <BungieImage className={s.icon} src={getIconSrc(def)} />
-              </td>
-              <td className={s.nowrap}>{getDisplayName(def)}</td>
-              <td className={cx(s.mainColumn, s.prewrap)}>
-                {getDescription(def)}
-              </td>
+              {hasIcon && (
+                <td>
+                  <BungieImage className={s.icon} src={getIconSrc(def)} />
+                </td>
+              )}
+              {hasName && <td className={s.nowrap}>{getDisplayName(def)}</td>}
+              {hasDescription && (
+                <td className={cx(s.mainColumn, s.prewrap)}>
+                  {getDescription(def)}
+                </td>
+              )}
             </tr>
           );
         })}
