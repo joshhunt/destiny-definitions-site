@@ -5,6 +5,7 @@ import Link from "next/link";
 import s from "./styles.module.scss";
 import commonStyles from "../../styles/common.module.scss";
 import { friendlyDiffName } from "../../lib/utils";
+import definitionsMetadata from "../definitionsMetadata";
 
 interface VersionDiffSummaryProps {
   id: string;
@@ -28,26 +29,36 @@ export default function VersionDiffSummary({
 
       <tbody>
         {Object.entries(allDefinitionDiffs)
+          .sort(([tableNameA], [tableNameB]) => {
+            const aIndex = definitionsMetadata[tableNameA].index;
+            const bIndex = definitionsMetadata[tableNameB].index;
+
+            return aIndex - bIndex;
+          })
           .filter(([tableName, diffs]) =>
             Object.values(diffs).some((vv) => vv.length)
           )
-          .map(([tableName, diffs]) => (
-            <tr key={tableName}>
-              <td>
-                <Link
-                  href="/version/[id]/[table]"
-                  as={`/version/${id}/${tableName}`}
-                >
-                  <a className={commonStyles.link}>
-                    {friendlyDiffName(tableName)}
-                  </a>
-                </Link>
-              </td>
-              <td>{diffs.added.length}</td>
-              <td>{diffs.unclassified.length}</td>
-              <td>{diffs.removed.length}</td>
-            </tr>
-          ))}
+          .map(([tableName, diffs]) => {
+            const meta = definitionsMetadata[tableName];
+
+            return (
+              <tr key={tableName} className={meta.junk ? s.junkRow : ""}>
+                <td>
+                  <Link
+                    href="/version/[id]/[table]"
+                    as={`/version/${id}/${tableName}`}
+                  >
+                    <a className={commonStyles.link}>
+                      {friendlyDiffName(tableName)}
+                    </a>
+                  </Link>
+                </td>
+                <td>{diffs.added.length}</td>
+                <td>{diffs.unclassified.length}</td>
+                <td>{diffs.removed.length}</td>
+              </tr>
+            );
+          })}
       </tbody>
     </table>
   );
