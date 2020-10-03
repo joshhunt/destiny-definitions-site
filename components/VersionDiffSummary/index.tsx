@@ -7,12 +7,12 @@ import commonStyles from "../../styles/common.module.scss";
 import { friendlyDiffName } from "../../lib/utils";
 
 interface VersionDiffSummaryProps {
-  version: string;
+  id: string;
   allDefinitionDiffs: AllDefinitionDiffs;
 }
 
 export default function VersionDiffSummary({
-  version,
+  id,
   allDefinitionDiffs,
 }: VersionDiffSummaryProps) {
   return (
@@ -36,7 +36,7 @@ export default function VersionDiffSummary({
               <td>
                 <Link
                   href="/version/[id]/[table]"
-                  as={`/version/${version}/${tableName}`}
+                  as={`/version/${id}/${tableName}`}
                 >
                   <a className={commonStyles.link}>
                     {friendlyDiffName(tableName)}

@@ -46,7 +46,7 @@ export default function Version({
   return (
     <div className={s.version}>
       <h2 className={s.versionTitle}>
-        <Link href={`/version/[id]`} as={`/version/${manifestVersion.version}`}>
+        <Link href={`/version/[id]`} as={`/version/${manifestVersion.id}`}>
           <a className={commonStyles.invisibleLink}>
             {headingPrefix}
             {format(new Date(manifestVersion.createdAt), "E do MMM, u")}{" "}
@@ -56,16 +56,26 @@ export default function Version({
           </a>
         </Link>
       </h2>
-      <p>
-        Bungie version <code>{manifestVersion.version}</code>, built{" "}
-        {format(dateFromVersion(manifestVersion.version), "E do MMM, p")}
-      </p>
+
+      <table className={s.table}>
+        <tbody>
+          <tr>
+            <td>ID</td>
+            <td>
+              <code>{manifestVersion.id}</code>
+            </td>
+          </tr>
+          <tr>
+            <td>Bungie version</td>
+            <td>
+              <code>{manifestVersion.version}</code>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
       {hasChanges ? (
-        <VersionDiffSummary
-          version={manifestVersion.version}
-          allDefinitionDiffs={diff}
-        />
+        <VersionDiffSummary id={manifestVersion.id} allDefinitionDiffs={diff} />
       ) : (
         <p>
           <em>Nothing changed in this version</em>

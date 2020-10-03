@@ -55,6 +55,7 @@ import {
 } from "bungie-api-ts/destiny2";
 
 export interface ManifestVersion {
+  id: string;
   version: string;
   s3Key: string;
   createdAt: Date;
@@ -81,7 +82,7 @@ export type AllDefinitionDiffs = {
   [name: string]: DefinitionDiff;
 };
 
-export type DiffsByVersion = { [version: string]: AllDefinitionDiffs | null };
+export type DiffsByVersion = { [id: string]: AllDefinitionDiffs | undefined };
 
 export type AnyDefinitionTable = AllDestinyManifestComponentsTagged[keyof AllDestinyManifestComponentsTagged];
 export type AnyDefinition = AnyDefinitionTable[keyof AnyDefinitionTable];

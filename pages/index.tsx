@@ -20,7 +20,7 @@ export default function Home({ versions, diffsForVersion }: HomeStaticProps) {
     <div className={s.root}>
       <div className={s.versionList}>
         {versions.map((manifestVersion) => {
-          const diff = diffsForVersion[manifestVersion.version];
+          const diff = diffsForVersion[manifestVersion.id];
 
           if (!diff) {
             return null;
@@ -28,7 +28,7 @@ export default function Home({ versions, diffsForVersion }: HomeStaticProps) {
 
           return (
             <Version
-              key={manifestVersion.version}
+              key={manifestVersion.id}
               manifestVersion={manifestVersion}
               diff={diff}
             />
@@ -49,8 +49,8 @@ export const getStaticProps: GetStaticProps<HomeStaticProps> = async (
   const diffsForVersion: DiffsByVersion = {};
 
   for (const manifestVersion of data) {
-    const diffData = await getDiffForVersion(manifestVersion.version);
-    diffsForVersion[manifestVersion.version] = diffData;
+    const diffData = await getDiffForVersion(manifestVersion.id);
+    diffsForVersion[manifestVersion.id] = diffData;
   }
 
   return {

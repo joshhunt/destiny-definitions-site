@@ -60,19 +60,19 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
 
   for (const versionIndex in data) {
     const version = data[versionIndex];
-    const diffData = await getDiffForVersion(version.version);
+    const diffData = await getDiffForVersion(version.id);
 
-    diffsForVersion[version.version] = diffData;
+    diffsForVersion[version.id] = diffData;
   }
 
   const paths = data.flatMap((version) => {
-    const diffData = diffsForVersion[version.version] ?? {};
+    const diffData = diffsForVersion[version.id] ?? {};
 
     return Object.entries(diffData)
       .filter(([, diffData]) => Object.values(diffData).some((v) => v.length))
       .map(([table]) => ({
         params: {
-          id: version.version,
+          id: version.id,
           table,
         },
       }));
@@ -90,13 +90,11 @@ export const getStaticProps: GetStaticProps<
   const definitionName = context.params?.table ?? "";
 
   const allVersions = await getVersionsIndex();
-  const currentVersionIndex = allVersions?.findIndex(
-    (v) => v.version === versionId
-  );
+  const currentVersionIndex = allVersions?.findIndex((v) => v.id === versionId);
   const previousId =
     currentVersionIndex &&
     allVersions &&
-    allVersions[currentVersionIndex - 1].version;
+    allVersions[currentVersionIndex - 1].id;
 
   const manifestVersion = currentVersionIndex
     ? allVersions?.[currentVersionIndex]

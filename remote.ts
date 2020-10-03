@@ -24,7 +24,7 @@ const getPath = async (name: string) => {
 async function getCachedData<T>(
   localCacheFile: string,
   remoteUrl: string
-): Promise<T | null> {
+): Promise<T | undefined> {
   const localCachePath = await getPath(localCacheFile);
 
   try {
@@ -35,7 +35,7 @@ async function getCachedData<T>(
 
   console.log("FETCHED", localCachePath);
   const res = await fetch(remoteUrl);
-  const data: T | null = res.ok ? await res.json() : null;
+  const data: T | undefined = res.ok ? await res.json() : undefined;
   await fs.writeJSON(localCachePath, data);
 
   return data;
@@ -48,10 +48,10 @@ export async function getVersionsIndex() {
   );
 }
 
-export async function getDiffForVersion(version: string) {
+export async function getDiffForVersion(id: string) {
   return getCachedData<AllDefinitionDiffs>(
-    `${version}__diff.json`,
-    `https://destiny-definitions.s3-eu-west-1.amazonaws.com/versions/${version}/diff.json`
+    `${id}__diff.json`,
+    `https://destiny-definitions.s3-eu-west-1.amazonaws.com/versions/${id}/diff.json`
   );
 }
 

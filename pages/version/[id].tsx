@@ -8,7 +8,7 @@ import Version from "../../components/Version";
 
 interface VersionIndexStaticProps {
   version: ManifestVersion;
-  allDefinitionDiffs: null | AllDefinitionDiffs;
+  allDefinitionDiffs: undefined | AllDefinitionDiffs;
 }
 
 export default function VersionIndex({
@@ -35,7 +35,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   const paths =
     data?.map((version) => ({
-      params: { id: version.version },
+      params: { id: version.id },
     })) ?? [];
 
   return { paths, fallback: false };
@@ -45,10 +45,10 @@ export const getStaticProps: GetStaticProps<VersionIndexStaticProps> = async (
   context
 ) => {
   const data = await getVersionsIndex();
-  const version = data?.find((v) => v.version === context?.params?.id);
+  const version = data?.find((v) => v.id === context?.params?.id);
   if (!version) throw new Error("Unable to find manifest version for page");
 
-  const allDefinitionDiffs = await getDiffForVersion(version.version);
+  const allDefinitionDiffs = await getDiffForVersion(version.id);
 
   return {
     props: {
