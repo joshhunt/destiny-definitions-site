@@ -1,22 +1,14 @@
 import {
   AnyDefinitionTable,
-  AnyDefinition,
-  BareDestinyDefinition,
+  DestinyInventoryItemDefinitionTagged,
   ItemCategory,
-  ItemCategoryValues,
-  AllDestinyManifestComponentsTagged,
 } from "../../types";
 import BungieImage from "../BungieImage";
-
-import s from "./styles.module.scss";
 import ItemSummary from "../ItemSummary";
-import { Dictionary } from "lodash";
-import { DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 import HashLink from "../HashLink";
 
-type ItemDefinition = DestinyInventoryItemDefinition & {
-  __type: "DestinyInventoryItemDefinition";
-};
+import s from "./styles.module.scss";
+import { isAllInventoryItems } from "../../lib/utils";
 
 const CLASS_TYPE_NAME: { [k: string]: string } = {
   [1]: "Hunter",
@@ -24,7 +16,7 @@ const CLASS_TYPE_NAME: { [k: string]: string } = {
   [0]: "Titan",
 };
 
-const getWeaponSlot = (itemDef: ItemDefinition) => {
+const getWeaponSlot = (itemDef: DestinyInventoryItemDefinitionTagged) => {
   if (itemDef.itemCategoryHashes?.includes(2)) return "Kinetic"; // kinetic
   if (itemDef.itemCategoryHashes?.includes(3)) return "Energy"; // energy
   if (itemDef.itemCategoryHashes?.includes(4)) return "Power"; // power
@@ -47,14 +39,18 @@ export default function InventoryItemDiffList({
     return null;
   }
 
+  if (!isAllInventoryItems(definitions)) {
+    throw new Error(
+      "Fail to assert that all definitions are DestinyInventoryItemDefinition"
+    );
+  }
+
   const isWeapon = itemCategory == ItemCategory.Weapon;
   const isArmor = itemCategory == ItemCategory.Armor;
 
   const hasScreenshot = hashes.some((itemHash) => {
     const def = definitions[itemHash];
-    return (
-      def && def.__type == "DestinyInventoryItemDefinition" && def.screenshot
-    );
+    return def && def.screenshot;
   });
 
   return (
@@ -81,16 +77,18 @@ export default function InventoryItemDiffList({
       <tbody>
         {hashes.map((hash) => {
           const def = definitions[hash];
-          if (!def || def.__type !== "DestinyInventoryItemDefinition")
+          if (!def) {
             return null;
+          }
 
           return (
             <tr key={hash}>
               <td>
                 <HashLink hash={hash} definitionName={definitionName} />
               </td>
+
               <td className={s.mainColumn}>
-                <ItemSummary def={def} />
+                <ItemSummary def={def} definitions={definitions} />
               </td>
 
               {hasScreenshot && (

@@ -1,0 +1,24 @@
+.root {
+  display: flex;
+  font-size: 0.95em;
+  margin-bottom: 16px;
+}
+
+.accessory {
+  flex: 0;
+  margin-right: 8px;
+}
+
+.icon {
+  width: 30px;
+  height: auto;
+}
+
+.main {
+  flex: 1;
+}
+
+.name {
+  font-weight: 600;
+  margin-bottom: 0;
+}

@@ -115,28 +115,6 @@ export const getStaticProps: GetStaticProps<
       ? await getDefinitionForVersion(previousId, definitionName)
       : null;
 
-  // TODO: Remove this before publishing!!!
-  // if (definitionName === "DestinyInventoryItemDefinition") {
-  //   const weaponHashes = Object.keys(definitions)
-  //     .filter((itemHash) => {
-  //       const itemDef = definitions[itemHash] as DestinyInventoryItemDefinition;
-  //       // return itemDef.itemCategoryHashes?.includes(1);
-  //       return true;
-  //     })
-  //     .map((v) => Number(v));
-
-  //   diff.added.push(...shuffle(weaponHashes).slice(0, 5000));
-
-  //   const redacted = Object.keys(definitions)
-  //     .filter((itemHash) => {
-  //       const itemDef = definitions[itemHash] as DestinyInventoryItemDefinition;
-  //       return itemDef.redacted ? true : false;
-  //     })
-  //     .map((v) => Number(v));
-
-  //   diff.unclassified.push(...shuffle(redacted));
-  // }
-
   if (!definitions) throw new Error("Definitions is missing");
 
   const hashesInDiff: number[] = Object.values(diff).flatMap((v) => v); // unsure why Object.values loses type :(
