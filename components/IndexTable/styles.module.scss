@@ -43,3 +43,63 @@
 .subItem + .topItem {
   margin-top: 32px;
 }
+
+.otherTables {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--alt-color);
+}
+
+.countCell {
+  padding-left: 1ch !important;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.countCellAdded {
+  composes: countCell;
+  color: #66bb6a;
+}
+
+.countCellRemoved {
+  composes: countCell;
+  color: #ef5350;
+}
+
+.countCellUnclassified {
+  composes: countCell;
+  color: #2196f3;
+}
+
+.countCellReclassified {
+  composes: countCell;
+  color: #ef5350;
+}
+
+.otherTablesTable {
+  width: 100%;
+  margin-bottom: 64px;
+
+  td {
+    padding: 0;
+  }
+
+  td:first-of-type {
+    width: 100%;
+    max-width: 0;
+  }
+}
+
+.otherTableName {
+  composes: topItem;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+  padding: 0;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

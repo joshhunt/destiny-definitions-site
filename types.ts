@@ -91,6 +91,10 @@ export type AllDefinitionDiffs = {
   [name: string]: DefinitionDiff;
 };
 
+export type VersionDiffCounts = (Record<keyof DefinitionDiff, number> & {
+  tableName: string;
+})[];
+
 export type DiffsByVersion = { [id: string]: AllDefinitionDiffs | undefined };
 
 export type AnyDefinitionTable = AllDestinyManifestComponentsTagged[keyof AllDestinyManifestComponentsTagged];

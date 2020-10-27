@@ -1,7 +1,7 @@
 .root {
   margin: 32px;
   display: grid;
-  grid-template-columns: 1fr 250px;
+  grid-template-columns: 1fr 280px;
   gap: 32px;
 }
 
@@ -17,4 +17,9 @@
 .stickySide {
   position: sticky;
   top: 32px;
+
+  max-height: 100vh;
+  overflow: auto;
+  margin-right: -16px;
+  padding-right: 16px;
 }

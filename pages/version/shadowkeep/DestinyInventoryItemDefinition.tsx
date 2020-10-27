@@ -44,6 +44,7 @@ export default function DefinitionDiffPageWrapper({
       diff={diff}
       definitions={definitions}
       previousDefinitions={previousDefinitions}
+      versionDiffCounts={[]}
     />
   );
 }

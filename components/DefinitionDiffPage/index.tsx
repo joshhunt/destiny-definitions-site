@@ -3,6 +3,7 @@ import {
   AnyDefinitionTable,
   ManifestVersion,
   ItemCategoryValues,
+  VersionDiffCounts,
 } from "../../types";
 import { format } from "date-fns";
 import { friendlyDiffName } from "../../lib/utils";
@@ -19,6 +20,7 @@ interface DefinitionDiffStaticProps {
   diff: DefinitionDiff;
   definitions: AnyDefinitionTable;
   previousDefinitions: AnyDefinitionTable | null;
+  versionDiffCounts: VersionDiffCounts;
 }
 
 export default function DefinitionDiffPage({
@@ -28,6 +30,7 @@ export default function DefinitionDiffPage({
   diff,
   definitions,
   previousDefinitions,
+  versionDiffCounts,
 }: DefinitionDiffStaticProps) {
   const groupedDiff = doGrouping(
     diff,
@@ -98,7 +101,11 @@ export default function DefinitionDiffPage({
 
       <div className={s.side}>
         <div className={s.stickySide}>
-          <IndexTable data={indexData} />
+          <IndexTable
+            versionId={versionId}
+            data={indexData}
+            versionDiffCounts={versionDiffCounts}
+          />
         </div>
       </div>
     </div>

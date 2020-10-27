@@ -3,9 +3,12 @@ import {
   AnyDefinitionTable,
   DefinitionDiff,
   ManifestVersion,
+  Breadcrumb,
+  VersionDiffCounts,
+  AllDefinitionDiffs,
 } from "../../../types";
 import { GetStaticProps, GetStaticPaths } from "next";
-import { pickBy } from "lodash";
+import { mapValues, pickBy } from "lodash";
 
 import {
   getVersionsIndex,
@@ -16,6 +19,7 @@ import {
 import React from "react";
 import DefinitionDiffPage from "../../../components/DefinitionDiffPage";
 import { format } from "date-fns";
+import definitionsMetadata from "../../../components/definitionsMetadata";
 
 interface DefinitionDiffStaticProps {
   versionId: string;
@@ -24,6 +28,8 @@ interface DefinitionDiffStaticProps {
   diff: DefinitionDiff;
   definitions: AnyDefinitionTable;
   previousDefinitions: AnyDefinitionTable | null;
+  breadcrumbs: Breadcrumb[];
+  versionDiffCounts: VersionDiffCounts;
 }
 
 export default function DefinitionDiffPageWrapper({
@@ -33,6 +39,7 @@ export default function DefinitionDiffPageWrapper({
   diff,
   definitions,
   previousDefinitions,
+  versionDiffCounts,
 }: DefinitionDiffStaticProps) {
   return (
     <DefinitionDiffPage
@@ -42,6 +49,7 @@ export default function DefinitionDiffPageWrapper({
       diff={diff}
       definitions={definitions}
       previousDefinitions={previousDefinitions}
+      versionDiffCounts={versionDiffCounts}
     />
   );
 }
@@ -81,6 +89,26 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
   return { paths, fallback: false };
 };
 
+function createDiffCouts(
+  allDefDiffs: AllDefinitionDiffs,
+  excludeTable?: string
+): VersionDiffCounts {
+  return Object.entries(allDefDiffs)
+    .sort(([tableNameA], [tableNameB]) => {
+      const aIndex = definitionsMetadata[tableNameA].index;
+      const bIndex = definitionsMetadata[tableNameB].index;
+
+      return aIndex - bIndex;
+    })
+    .filter(([tableName, diffs]) =>
+      Object.values(diffs).some((vv) => vv.length > 0)
+    )
+    .map(([tableName, diffs]) => ({
+      tableName,
+      ...mapValues(diffs, (v) => v.length),
+    }));
+}
+
 export const getStaticProps: GetStaticProps<
   DefinitionDiffStaticProps,
   Params
@@ -107,6 +135,8 @@ export const getStaticProps: GetStaticProps<
   if (!allDefinitionDiffs) throw new Error("missing diff data for table page");
   const diff = allDefinitionDiffs[definitionName];
   const definitions = await getDefinitionForVersion(versionId, definitionName);
+
+  const versionDiffCounts = createDiffCouts(allDefinitionDiffs);
 
   const removedHashes = [...diff.removed, ...diff.reclassified];
   const previousDefinitions =
@@ -143,6 +173,7 @@ export const getStaticProps: GetStaticProps<
       definitions: pickedDefinitions,
       previousDefinitions: prevPickedDefinitions || null,
       breadcrumbs,
+      versionDiffCounts,
     },
   };
 };

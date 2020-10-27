@@ -1,7 +1,12 @@
 import s from "./styles.module.scss";
 import { Fragment } from "react";
+import Link from "next/link";
+import { VersionDiffCounts } from "../../types";
+import { friendlyDiffName } from "../../lib/utils";
 
 interface IndexTableProps {
+  versionDiffCounts: VersionDiffCounts;
+  versionId: string;
   data: {
     name: string;
     count: number;
@@ -14,9 +19,13 @@ interface IndexTableProps {
   }[];
 }
 
-export default function IndexTable({ data }: IndexTableProps) {
+export default function IndexTable({
+  data,
+  versionId,
+  versionDiffCounts,
+}: IndexTableProps) {
   return (
-    <div>
+    <div className={s.root}>
       {data.map((topLevel) => {
         return (
           <Fragment key={topLevel.name}>
@@ -40,6 +49,48 @@ export default function IndexTable({ data }: IndexTableProps) {
           </Fragment>
         );
       })}
+
+      <div className={s.otherTables}>
+        <table className={s.otherTablesTable}>
+          <tbody>
+            {versionDiffCounts.map((diff) => (
+              <tr key={diff.tableName}>
+                <td>
+                  <Link href={`/version/${versionId}/${diff.tableName}`}>
+                    <a className={s.otherTableName}>
+                      {friendlyDiffName(diff.tableName)}
+                    </a>
+                  </Link>
+                </td>
+                {diff.added > 0 ? (
+                  <td className={s.countCellAdded}>+{diff.added}</td>
+                ) : (
+                  <td />
+                )}
+                {diff.unclassified > 0 ? (
+                  <td className={s.countCellUnclassified}>
+                    +{diff.unclassified}
+                  </td>
+                ) : (
+                  <td />
+                )}
+                {diff.removed > 0 ? (
+                  <td className={s.countCellRemoved}>-{diff.removed}</td>
+                ) : (
+                  <td />
+                )}
+                {diff.reclassified > 0 ? (
+                  <td className={s.countCellReclassified}>
+                    -{diff.reclassified}
+                  </td>
+                ) : (
+                  <td />
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
