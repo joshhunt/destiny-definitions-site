@@ -43,17 +43,20 @@ const weaponTypeSorter = (itemDef: ItemDefinition) =>
 const damageTypeSorter = (itemDef: ItemDefinition) =>
   (itemDef.damageTypes || [])[0];
 
+const indexSorter = (itemDef: ItemDefinition) => itemDef.index;
+
 // This is the array to add new sorters to!!
 const ITEM_SORTERS = [
   isClassified,
   noNameSorter,
   isDummySorter,
-  itemTierSorter,
-  weaponSlotSorter,
-  weaponTypeSorter,
-  damageTypeSorter,
-  rpmSorter,
-  itemClassSorter,
+  // itemTierSorter,
+  // weaponSlotSorter,
+  // weaponTypeSorter,
+  // damageTypeSorter,
+  // rpmSorter,
+  indexSorter,
+  // itemClassSorter,
 ];
 
 /*
