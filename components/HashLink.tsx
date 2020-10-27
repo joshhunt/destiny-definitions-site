@@ -16,7 +16,8 @@ export default function HashLink({
       target="_blank"
       rel="noreferrer"
       href={`https://data.destinysets.com/i/${friendlyDiffName(
-        definitionName
+        definitionName,
+        false
       )}:${hash}`}
     >
       {hash}
