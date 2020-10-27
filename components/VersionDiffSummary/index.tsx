@@ -44,10 +44,7 @@ export default function VersionDiffSummary({
             return (
               <tr key={tableName} className={meta.junk ? s.junkRow : ""}>
                 <td>
-                  <Link
-                    href="/version/[id]/[table]"
-                    as={`/version/${id}/${tableName}`}
-                  >
+                  <Link href={`/version/${id}/${tableName}`}>
                     <a className={commonStyles.link}>
                       {friendlyDiffName(tableName)}
                     </a>

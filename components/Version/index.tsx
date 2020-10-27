@@ -48,7 +48,7 @@ export default function Version({
   return (
     <div className={s.version}>
       <h2 className={s.versionTitle}>
-        <Link href={`/version/[id]`} as={`/version/${manifestVersion.id}`}>
+        <Link href={`/version/${manifestVersion.id}`}>
           <a className={commonStyles.invisibleLink}>
             {headingPrefix}
             {format(new Date(manifestVersion.createdAt), "E do MMM, u")}{" "}
