@@ -60,7 +60,7 @@ const grantDamageTypes = (item: DestinyInventoryItemDefinition) =>
 
 const grantClassifiedBucket = (item: DestinyInventoryItemDefinition) => {
   const bucketName =
-    item.redacted && item.inventory.bucketTypeHash
+    item.redacted && item.inventory?.bucketTypeHash
       ? BUCKET_NAMES[item.inventory.bucketTypeHash]
       : null;
 

@@ -117,7 +117,7 @@ export function categoryForItem(itemDef: DestinyInventoryItemDefinitionTagged) {
   // Mods must be after ornaments
   if (itemDef.itemCategoryHashes?.includes(59)) return ItemCategory.Mods;
 
-  if (itemDef.inventory.bucketTypeHash == 1469714392)
+  if (itemDef.inventory?.bucketTypeHash == 1469714392)
     return ItemCategory.Consumable;
 
   return ItemCategory.Other;
