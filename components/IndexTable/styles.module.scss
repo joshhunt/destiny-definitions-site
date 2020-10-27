@@ -51,9 +51,10 @@
 }
 
 .countCell {
-  padding-left: 1ch !important;
+  padding-left: 0.75ch !important;
   text-align: right;
   font-variant-numeric: tabular-nums;
+  font-size: 0.9em;
 }
 
 .countCellAdded {

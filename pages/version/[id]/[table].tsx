@@ -89,10 +89,7 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
   return { paths, fallback: false };
 };
 
-function createDiffCouts(
-  allDefDiffs: AllDefinitionDiffs,
-  excludeTable?: string
-): VersionDiffCounts {
+function createDiffCounts(allDefDiffs: AllDefinitionDiffs): VersionDiffCounts {
   return Object.entries(allDefDiffs)
     .sort(([tableNameA], [tableNameB]) => {
       const aIndex = definitionsMetadata[tableNameA].index;
@@ -136,7 +133,9 @@ export const getStaticProps: GetStaticProps<
   const diff = allDefinitionDiffs[definitionName];
   const definitions = await getDefinitionForVersion(versionId, definitionName);
 
-  const versionDiffCounts = createDiffCouts(allDefinitionDiffs);
+  const versionDiffCounts = createDiffCounts(allDefinitionDiffs).filter(
+    (v) => v.tableName !== definitionName
+  );
 
   const removedHashes = [...diff.removed, ...diff.reclassified];
   const previousDefinitions =
