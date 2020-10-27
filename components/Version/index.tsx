@@ -1,13 +1,15 @@
 import React from "react";
-import VersionDiffSummary from "../VersionDiffSummary";
 import { format, parse } from "date-fns";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLink } from "@fortawesome/free-solid-svg-icons";
+
+import VersionDiffSummary from "../VersionDiffSummary";
 import commonStyles from "../../styles/common.module.scss";
 import { ManifestVersion, AllDefinitionDiffs } from "../../types";
 import Link from "next/link";
 
 import s from "./styles.module.scss";
-import Icon from "../Icon";
 
 interface VersionProps {
   manifestVersion: ManifestVersion;
@@ -51,7 +53,7 @@ export default function Version({
             {headingPrefix}
             {format(new Date(manifestVersion.createdAt), "E do MMM, u")}{" "}
             <sup>
-              <Icon name="link" />
+              <FontAwesomeIcon icon={faLink} />
             </sup>
           </a>
         </Link>

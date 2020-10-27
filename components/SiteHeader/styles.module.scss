@@ -11,3 +11,16 @@
   margin: 0;
   line-height: 1.4;
 }
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+}
+
+.childCrumb {
+  font-size: 20px;
+}
+
+.seperator {
+  margin: 0 1em;
+}

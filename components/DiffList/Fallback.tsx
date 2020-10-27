@@ -67,7 +67,7 @@ export default function FallbackDiffList({
           const def = definitions[hash];
           if (!def) {
             return (
-              <tr>
+              <tr key={hash}>
                 <td className={s.shrink}>{hash}</td>
                 <td colSpan={3}>Missing data</td>
               </tr>
@@ -75,7 +75,7 @@ export default function FallbackDiffList({
           }
 
           return (
-            <tr>
+            <tr key={hash}>
               <td className={s.shrink}>
                 <HashLink hash={hash} definitionName={definitionName} />
               </td>

@@ -54,6 +54,15 @@ import {
   DestinyEnergyTypeDefinition,
 } from "bungie-api-ts/destiny2";
 
+export interface Breadcrumb {
+  label: string;
+  to: string;
+}
+
+export interface PageProps extends Record<string, any> {
+  breadcrumbs?: Breadcrumb[];
+}
+
 export interface ManifestVersion {
   id: string;
   version: string;

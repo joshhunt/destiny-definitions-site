@@ -3,7 +3,15 @@ import {
   DestinyInventoryItemDefinitionTagged,
 } from "../types";
 
+import _tableNameMappings from "./tableNameMappings.json";
+
+const tableNameMappings = _tableNameMappings as Record<string, string>;
+
 export function friendlyDiffName(name: string) {
+  if (tableNameMappings[name]) {
+    return tableNameMappings[name];
+  }
+
   const match = name.match(/Destiny(\w+)Definition/);
 
   return match ? match[1] : name;

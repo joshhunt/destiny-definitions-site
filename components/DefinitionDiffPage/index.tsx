@@ -65,10 +65,7 @@ export default function DefinitionDiffPage({
   return (
     <div className={s.root}>
       <div className={s.main}>
-        <h2 className={s.pageTitle}>
-          {friendlyDiffName(definitionName)},{" "}
-          {format(new Date(manifestVersion.createdAt), "E do MMM, u")}
-        </h2>
+        <h2 className={s.pageTitle}>{friendlyDiffName(definitionName)}</h2>
 
         <DiffList
           name="Added"

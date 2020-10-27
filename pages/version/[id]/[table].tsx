@@ -5,7 +5,7 @@ import {
   ManifestVersion,
 } from "../../../types";
 import { GetStaticProps, GetStaticPaths } from "next";
-import { pickBy, shuffle } from "lodash";
+import { pickBy } from "lodash";
 
 import {
   getVersionsIndex,
@@ -15,7 +15,7 @@ import {
 
 import React from "react";
 import DefinitionDiffPage from "../../../components/DefinitionDiffPage";
-import { DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
+import { format } from "date-fns";
 
 interface DefinitionDiffStaticProps {
   versionId: string;
@@ -86,7 +86,6 @@ export const getStaticProps: GetStaticProps<
   Params
 > = async (context) => {
   const versionId = context.params?.id ?? "";
-  // const previousId = context.params?.previousVersionId ?? null;
   const definitionName = context.params?.table ?? "";
 
   const allVersions = await getVersionsIndex();
@@ -128,6 +127,13 @@ export const getStaticProps: GetStaticProps<
       removedHashes.includes(v.hash)
     ) as AnyDefinitionTable);
 
+  const breadcrumbs = [
+    {
+      label: format(new Date(manifestVersion.createdAt), "E do MMM, u"),
+      to: `/version/${versionId}`,
+    },
+  ];
+
   return {
     props: {
       versionId,
@@ -136,6 +142,7 @@ export const getStaticProps: GetStaticProps<
       diff,
       definitions: pickedDefinitions,
       previousDefinitions: prevPickedDefinitions || null,
+      breadcrumbs,
     },
   };
 };
