@@ -14,6 +14,10 @@
   // z-index: 1;
 }
 
+.diffListRoot {
+  margin-top: 64px;
+}
+
 .icon {
   width: 50px;
   height: auto;
@@ -78,4 +82,8 @@
 
 .screenshotPreview {
   height: 50px;
+}
+
+table + .groupTitle {
+  margin-top: 32px;
 }

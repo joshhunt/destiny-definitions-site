@@ -1,4 +1,4 @@
-import { mapValues, groupBy } from "lodash";
+import { mapValues, groupBy, sortBy } from "lodash";
 
 import {
   ItemCategory,
@@ -49,7 +49,16 @@ export function doGrouping(
     return groupedDiff;
   }
 
-  return diff;
+  return mapValues(diff, (ddd) =>
+    sortBy(ddd, [
+      (hash) =>
+        _definitions[hash]?.redacted
+          ? Number.MAX_SAFE_INTEGER
+          : Number.MIN_SAFE_INTEGER,
+
+      (hash) => _definitions[hash]?.index,
+    ])
+  );
 }
 
 export function categoryForItem(itemDef: DestinyInventoryItemDefinitionTagged) {

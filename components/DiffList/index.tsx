@@ -13,6 +13,8 @@ import FallbackDiffList from "./Fallback";
 import ObjectiveDiffList from "./Objective";
 import InventoryItemDiffList from "./InventoryItem";
 
+import s from "./styles.module.scss";
+
 interface DiffListProps {
   name: string;
   hashes: DiffGroup | number[];
@@ -89,13 +91,15 @@ export default function DiffList({
   });
 
   return (
-    <div>
+    <div className={s.diffListRoot}>
       <h3 id={id}>{name}</h3>
 
       {sortedGroups.map(([category, hashes]) => (
         <Fragment key={category}>
           {category !== NO_CATEGORY && (
-            <h4 id={`${id}_${category}`}>{category}</h4>
+            <h4 className={s.groupTitle} id={`${id}_${category}`}>
+              {category}
+            </h4>
           )}
 
           <ForDefinitionType
