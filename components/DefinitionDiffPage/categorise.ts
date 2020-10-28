@@ -99,7 +99,7 @@ export function categoryForItem(itemDef: DestinyInventoryItemDefinitionTagged) {
     itemDef.itemCategoryHashes?.includes(53) ||
     itemDef.traitIds?.includes("inventory_filtering.quest")
   )
-    return ItemCategory.Quests;
+    return ItemCategory.Quest;
 
   if (
     itemDef.itemCategoryHashes?.includes(42) ||
@@ -115,10 +115,13 @@ export function categoryForItem(itemDef: DestinyInventoryItemDefinitionTagged) {
     return ItemCategory.Ornament;
 
   // Mods must be after ornaments
-  if (itemDef.itemCategoryHashes?.includes(59)) return ItemCategory.Mods;
+  if (itemDef.itemCategoryHashes?.includes(59)) return ItemCategory.Mod;
 
   if (itemDef.inventory?.bucketTypeHash == 1469714392)
     return ItemCategory.Consumable;
+
+  if (itemDef.seasonHash || itemDef.itemCategoryHashes?.includes(1378222069))
+    return ItemCategory.SeasonalArtifact;
 
   return ItemCategory.Other;
 }

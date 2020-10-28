@@ -50,7 +50,7 @@ const ITEM_SORTERS = [
   isClassified,
   noNameSorter,
   isDummySorter,
-  // itemTierSorter,
+  itemTierSorter,
   // weaponSlotSorter,
   // weaponTypeSorter,
   // damageTypeSorter,
