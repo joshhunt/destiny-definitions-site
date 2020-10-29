@@ -84,6 +84,14 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
 
   const diffsForVersion: DiffsByVersion = {};
 
+  data.push({
+    id: "test",
+    version: "777.77.77.77.777-7",
+    s3Key: "versions/test/manifest.json",
+    createdAt: new Date("2020-07-14T18:38:58.037Z"),
+    updatedAt: new Date("2020-10-03T14:44:27.390Z"),
+  });
+
   for (const versionIndex in data) {
     const version = data[versionIndex];
     const diffData = await getDiffForVersion(version.id);
@@ -94,7 +102,7 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
   const paths = data.flatMap((version) => {
     const diffData = diffsForVersion[version.id] ?? {};
 
-    const base = Object.entries(diffData)
+    return Object.entries(diffData)
       .filter(([, diffData]) => Object.values(diffData).some((v) => v.length))
       .map(([table]) => ({
         params: {
@@ -102,20 +110,6 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
           table,
         },
       }));
-
-    if (base.length === 0) {
-      return base;
-    }
-
-    return [
-      ...base,
-      // {
-      //   params: {
-      //     id: version.id,
-      //     table: "DestinyVendorDefinition",
-      //   },
-      // },
-    ];
   });
 
   return { paths, fallback: false };
@@ -189,6 +183,16 @@ export const getStaticProps: GetStaticProps<
   const definitionName = context.params?.table ?? "";
 
   const allVersions = await getVersionsIndex();
+
+  allVersions &&
+    allVersions.push({
+      id: "test",
+      version: "777.77.77.77.777-7",
+      s3Key: "versions/test/manifest.json",
+      createdAt: ("2020-07-14T18:38:58.037Z" as unknown) as Date,
+      updatedAt: ("2020-10-03T14:44:27.390Z" as unknown) as Date,
+    });
+
   const currentVersionIndex = allVersions?.findIndex((v) => v.id === versionId);
   const previousId =
     currentVersionIndex &&

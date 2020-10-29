@@ -4,6 +4,7 @@ import {
   DestinyActivityDefinitionTagged,
 } from "../../types";
 import BungieImage from "../BungieImage";
+import { DiffHashLink } from "../HashLink";
 import Interpose from "../Interpose";
 import BaseDiffList from "./BaseDiffList";
 
@@ -59,8 +60,28 @@ export default function ActivityDiffList({
               </Interpose>
             ),
           ],
-          ["Destination", destinationDef?.displayProperties.name],
-          ["Place", placeDef?.displayProperties.name],
+          [
+            "Destination",
+            destinationDef && (
+              <DiffHashLink
+                definitionName="DestinyDestinationDefinition"
+                hash={destinationDef.hash}
+              >
+                {destinationDef.displayProperties.name}
+              </DiffHashLink>
+            ),
+          ],
+          [
+            "Place",
+            placeDef && (
+              <DiffHashLink
+                definitionName="DestinyPlaceDefinition"
+                hash={placeDef.hash}
+              >
+                {placeDef.displayProperties.name}
+              </DiffHashLink>
+            ),
+          ],
           [
             "PGCR Image",
             def?.pgcrImage && (

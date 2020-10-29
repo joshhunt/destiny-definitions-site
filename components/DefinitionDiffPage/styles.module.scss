@@ -23,3 +23,15 @@
   margin-right: -16px;
   padding-right: 16px;
 }
+
+.stickySide::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+  background-color: transparent;
+  margin-top: 10px;
+}
+
+.stickySide::-webkit-scrollbar-thumb {
+  background-color: var(--alt-color);
+  border-radius: 2.5px;
+}

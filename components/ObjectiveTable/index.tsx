@@ -19,14 +19,14 @@ const ObjectiveTable: React.FC<ObjectiveTableProps> = ({
 
           if (!def) {
             return (
-              <tr>
+              <tr key={hash}>
                 <td colSpan={2}>Unknown objective {hash}</td>
               </tr>
             );
           }
 
           return (
-            <tr>
+            <tr key={hash}>
               <td className={s.objective}>
                 {def.progressDescription ||
                   def.displayProperties.name ||
