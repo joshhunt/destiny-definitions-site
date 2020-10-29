@@ -181,61 +181,33 @@ const ChildrenList: React.FC<ChildrenListProps> = ({
         </>
       )}
 
-      {records.length > 0 && (
-        <>
-          <div className={s.bold}>Triumphs</div>
-          <ul className={s.childList}>
-            {records.map((child) => (
-              <li key={child.recordHash} className={s.childItem}>
-                <DiffHashLink
-                  definitionName="DestinyRecordDefinition"
-                  hash={child.recordHash}
-                >
-                  <InlineChild definition={recordDefs?.[child.recordHash]} />
-                </DiffHashLink>
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
+      <List
+        childrenList={presentationNodes}
+        definitions={presentationNodeDefinitions}
+        definitionName="DestinyPresentationNodeDefinition"
+        selectHash={(child) => child.presentationNodeHash}
+      />
 
-      {collectibles.length > 0 && (
-        <>
-          <div className={s.bold}>Collectibles</div>
-          <ul className={s.childList}>
-            {collectibles.map((child) => (
-              <li key={child.collectibleHash} className={s.childItem}>
-                <DiffHashLink
-                  definitionName="DestinyCollectibleDefinition"
-                  hash={child.collectibleHash}
-                >
-                  <InlineChild
-                    definition={collectibleDefs?.[child.collectibleHash]}
-                  />
-                </DiffHashLink>
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
+      <List
+        childrenList={records}
+        definitions={recordDefs}
+        definitionName="DestinyRecordDefinition"
+        selectHash={(child) => child.recordHash}
+      />
 
-      {metrics.length > 0 && (
-        <>
-          <div className={s.bold}>Metrics</div>
-          <ul className={s.childList}>
-            {metrics.map((child) => (
-              <li key={child.metricHash} className={s.childItem}>
-                <DiffHashLink
-                  definitionName="DestinyMetricDefinition"
-                  hash={child.metricHash}
-                >
-                  <InlineChild definition={metricDefs?.[child.metricHash]} />
-                </DiffHashLink>
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
+      <List
+        childrenList={collectibles}
+        definitions={collectibleDefs}
+        definitionName="DestinyCollectibleDefinition"
+        selectHash={(child) => child.collectibleHash}
+      />
+
+      <List
+        childrenList={metrics}
+        definitions={metricDefs}
+        definitionName="DestinyMetricDefinition"
+        selectHash={(child) => child.metricHash}
+      />
     </>
   );
 };
@@ -246,19 +218,20 @@ type PresentationNodeChildren =
   | DestinyPresentationNodeCollectibleChildEntry
   | DestinyPresentationNodeMetricChildEntry;
 
-interface ListProps<T = PresentationNodeChildren> {
+interface ListProps<T> {
   childrenList: T[];
-  definitionName: keyof AnyDefinitionTable;
-  definitions: AnyDefinitionTable;
+  definitionName: string;
+  definitions: AnyDefinitionTable | undefined;
   selectHash: (child: T) => number;
 }
 
-const List: React.FC<ListProps> = ({
+function List<T extends PresentationNodeChildren>({
   childrenList,
   definitions,
+  definitionName,
   selectHash,
-}) => {
-  return (
+}: ListProps<T>) {
+  return childrenList.length > 0 ? (
     <>
       <div className={s.bold}>Triumphs</div>
       <ul className={s.childList}>
@@ -266,12 +239,16 @@ const List: React.FC<ListProps> = ({
           const hash = selectHash(child);
 
           return (
-            <DiffHashLink definitionName="DestinyRecordDefinition" hash={hash}>
-              <InlineChild definition={definitions?.[hash]} />
-            </DiffHashLink>
+            <li key={hash} className={s.childItem}>
+              <DiffHashLink definitionName={definitionName} hash={hash}>
+                <InlineChild definition={definitions?.[hash]} />
+              </DiffHashLink>
+            </li>
           );
         })}
       </ul>
     </>
+  ) : (
+    <></>
   );
-};
+}

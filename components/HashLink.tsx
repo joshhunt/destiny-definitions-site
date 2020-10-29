@@ -46,7 +46,7 @@ export const DiffHashLink: React.FC<HashLinkProps> = ({
   }
 
   return (
-    <Link href={`/version/${versionId}/${definitionName}#${hash}`}>
+    <Link href={`/version/${versionId}/${definitionName}#hash_${hash}`}>
       <a className={commonStyles.link}>{children}</a>
     </Link>
   );
