@@ -6,9 +6,11 @@ import {
   Breadcrumb,
   VersionDiffCounts,
   AllDefinitionDiffs,
+  AllDestinyManifestComponentsTagged,
+  DefinitionTableName,
 } from "../../../types";
 import { GetStaticProps, GetStaticPaths } from "next";
-import { mapValues, pickBy } from "lodash";
+import { mapValues, shuffle } from "lodash";
 
 import {
   getVersionsIndex,
@@ -20,6 +22,7 @@ import React from "react";
 import DefinitionDiffPage from "../../../components/DefinitionDiffPage";
 import { format } from "date-fns";
 import definitionsMetadata from "../../../components/definitionsMetadata";
+import { DiffDataProvider } from "../../../components/diffDataContext";
 
 interface DefinitionDiffStaticProps {
   versionId: string;
@@ -30,6 +33,8 @@ interface DefinitionDiffStaticProps {
   previousDefinitions: AnyDefinitionTable | null;
   breadcrumbs: Breadcrumb[];
   versionDiffCounts: VersionDiffCounts;
+  otherDefinitions: Partial<AllDestinyManifestComponentsTagged>;
+  allDefinitionDiffs: AllDefinitionDiffs;
 }
 
 export default function DefinitionDiffPageWrapper({
@@ -40,17 +45,30 @@ export default function DefinitionDiffPageWrapper({
   definitions,
   previousDefinitions,
   versionDiffCounts,
+  otherDefinitions,
+  allDefinitionDiffs,
 }: DefinitionDiffStaticProps) {
+  const contextValue = React.useMemo(
+    () => ({
+      versionDiff: allDefinitionDiffs,
+      versionId,
+    }),
+    [allDefinitionDiffs, versionId]
+  );
+
   return (
-    <DefinitionDiffPage
-      versionId={versionId}
-      manifestVersion={manifestVersion}
-      definitionName={definitionName}
-      diff={diff}
-      definitions={definitions}
-      previousDefinitions={previousDefinitions}
-      versionDiffCounts={versionDiffCounts}
-    />
+    <DiffDataProvider value={contextValue}>
+      <DefinitionDiffPage
+        versionId={versionId}
+        manifestVersion={manifestVersion}
+        definitionName={definitionName}
+        diff={diff}
+        definitions={definitions}
+        previousDefinitions={previousDefinitions}
+        versionDiffCounts={versionDiffCounts}
+        otherDefinitions={otherDefinitions}
+      />
+    </DiffDataProvider>
   );
 }
 
@@ -76,7 +94,7 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
   const paths = data.flatMap((version) => {
     const diffData = diffsForVersion[version.id] ?? {};
 
-    return Object.entries(diffData)
+    const base = Object.entries(diffData)
       .filter(([, diffData]) => Object.values(diffData).some((v) => v.length))
       .map(([table]) => ({
         params: {
@@ -84,6 +102,20 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
           table,
         },
       }));
+
+    if (base.length === 0) {
+      return base;
+    }
+
+    return [
+      ...base,
+      // {
+      //   params: {
+      //     id: version.id,
+      //     table: "DestinyVendorDefinition",
+      //   },
+      // },
+    ];
   });
 
   return { paths, fallback: false };
@@ -104,6 +136,49 @@ function createDiffCounts(allDefDiffs: AllDefinitionDiffs): VersionDiffCounts {
       tableName,
       ...mapValues(diffs, (v) => v.length),
     }));
+}
+
+const DEFINITION_DEPENDENCIES: Record<string, DefinitionTableName[]> = {
+  DestinyInventoryItemDefinition: [
+    "DestinyObjectiveDefinition",
+    "DestinyCollectibleDefinition",
+  ],
+
+  DestinyPresentationNodeDefinition: [
+    "DestinyRecordDefinition",
+    "DestinyCollectibleDefinition",
+    "DestinyMetricDefinition",
+  ],
+
+  DestinyRecordDefinition: ["DestinyObjectiveDefinition"],
+
+  DestinyActivityDefinition: [
+    "DestinyDestinationDefinition",
+    "DestinyPlaceDefinition",
+  ],
+
+  DestinyDestinationDefinition: ["DestinyPlaceDefinition"],
+
+  DestinyVendorDefinition: ["DestinyDestinationDefinition"],
+};
+
+async function getDefinitionDependencies(
+  versionId: string,
+  thisDefinitionName: string
+) {
+  const dependencies = DEFINITION_DEPENDENCIES[thisDefinitionName] || [];
+
+  const datas = await Promise.all(
+    dependencies.map((n) => getDefinitionForVersion(versionId, n))
+  );
+
+  const keyed: Record<string, AnyDefinitionTable> = {};
+
+  for (const index in datas) {
+    keyed[dependencies[index]] = datas[index];
+  }
+
+  return keyed as Partial<AllDestinyManifestComponentsTagged>;
 }
 
 export const getStaticProps: GetStaticProps<
@@ -131,7 +206,21 @@ export const getStaticProps: GetStaticProps<
   const allDefinitionDiffs = await getDiffForVersion(versionId);
   if (!allDefinitionDiffs) throw new Error("missing diff data for table page");
   const diff = allDefinitionDiffs[definitionName];
+
   const definitions = await getDefinitionForVersion(versionId, definitionName);
+  if (!definitions) throw new Error("Definitions is missing");
+
+  // TEST STUFF - START
+  // const testHashes = shuffle(definitions)
+  //   .slice(0, 100)
+  //   .map((h) => h.hash);
+  // diff.added = diff.added.concat(testHashes);
+  // TEST STUFF - END
+
+  const otherDefinitions = await getDefinitionDependencies(
+    versionId,
+    definitionName
+  );
 
   const versionDiffCounts = createDiffCounts(allDefinitionDiffs).filter(
     (v) => v.tableName !== definitionName
@@ -142,19 +231,6 @@ export const getStaticProps: GetStaticProps<
     removedHashes.length > 0 && previousId
       ? await getDefinitionForVersion(previousId, definitionName)
       : null;
-
-  if (!definitions) throw new Error("Definitions is missing");
-
-  const hashesInDiff: number[] = Object.values(diff).flatMap((v) => v); // unsure why Object.values loses type :(
-  const pickedDefinitions = pickBy(definitions, (v) =>
-    hashesInDiff.includes(v.hash)
-  ) as AnyDefinitionTable;
-
-  const prevPickedDefinitions =
-    previousDefinitions &&
-    (pickBy(previousDefinitions, (v) =>
-      removedHashes.includes(v.hash)
-    ) as AnyDefinitionTable);
 
   const breadcrumbs = [
     {
@@ -169,10 +245,12 @@ export const getStaticProps: GetStaticProps<
       manifestVersion,
       definitionName,
       diff,
-      definitions: pickedDefinitions,
-      previousDefinitions: prevPickedDefinitions || null,
+      definitions,
+      previousDefinitions,
       breadcrumbs,
       versionDiffCounts,
+      otherDefinitions,
+      allDefinitionDiffs,
     },
   };
 };

@@ -12,6 +12,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 import "./common.scss";
 
 import { PageProps } from "../types";
+import React from "react";
 
 config.autoAddCss = false;
 
@@ -33,6 +34,7 @@ export default function App({ Component, pageProps }: AppProps) {
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
           rel="stylesheet"
         ></link>
+        <script src="/smoothScroll.js" />
       </Head>
 
       <SiteHeader breadcrumbs={pageProps.breadcrumbs} />

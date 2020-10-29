@@ -1,5 +1,8 @@
 import {
+  AllDestinyManifestComponentsTagged,
+  AnyDefinition,
   AnyDefinitionTable,
+  BareDestinyDefinition,
   DestinyInventoryItemDefinitionTagged,
 } from "../types";
 
@@ -23,4 +26,31 @@ export function isAllInventoryItems(
   return Object.values(defs).every(
     (d) => d.__type === "DestinyInventoryItemDefinition"
   );
+}
+
+export function castDefinitions<T>(
+  defs: AnyDefinitionTable,
+  tableName: keyof AllDestinyManifestComponentsTagged
+) {
+  const isValid = Object.values(defs).every((d) => d.__type === tableName);
+
+  if (!isValid) {
+    throw new Error(
+      `Tried to cast table to ${tableName} but they're not all that type`
+    );
+  }
+
+  return (defs as unknown) as T;
+}
+
+export function getDisplayName(def: AnyDefinition & BareDestinyDefinition) {
+  return def?.displayProperties?.name;
+}
+
+export function getIconSrc(def: AnyDefinition & BareDestinyDefinition) {
+  return def?.displayProperties?.icon;
+}
+
+export function getDescription(def: AnyDefinition & BareDestinyDefinition) {
+  return def?.displayProperties?.description;
 }

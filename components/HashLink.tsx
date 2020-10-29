@@ -2,17 +2,20 @@ import React from "react";
 
 import commonStyles from "../styles/common.module.scss";
 import { friendlyDiffName } from "../lib/utils";
+import { useDiffData } from "./diffDataContext";
+import { DefinitionDiff } from "../types";
+import Link from "next/link";
 
-export default function HashLink({
-  hash,
-  definitionName,
-}: {
+interface HashLinkProps {
   hash: number;
   definitionName: string;
-}) {
+}
+
+export default function HashLink({ hash, definitionName }: HashLinkProps) {
   return (
     <a
       className={commonStyles.link}
+      id={`hash_${hash}`}
       target="_blank"
       rel="noreferrer"
       href={`https://data.destinysets.com/i/${friendlyDiffName(
@@ -24,3 +27,27 @@ export default function HashLink({
     </a>
   );
 }
+
+function diffContainsHash(diff: DefinitionDiff | undefined, hash: number) {
+  return Object.values(diff || {}).some((v) => v.includes(hash));
+}
+
+export const DiffHashLink: React.FC<HashLinkProps> = ({
+  hash,
+  definitionName,
+  children,
+}) => {
+  const { versionId, versionDiff } = useDiffData();
+  const isInDiff =
+    versionDiff && diffContainsHash(versionDiff[definitionName], hash);
+
+  if (!isInDiff) {
+    return <>{children}</>;
+  }
+
+  return (
+    <Link href={`/version/${versionId}/${definitionName}#${hash}`}>
+      {children}
+    </Link>
+  );
+};

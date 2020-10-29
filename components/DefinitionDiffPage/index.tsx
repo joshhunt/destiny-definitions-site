@@ -4,6 +4,7 @@ import {
   ManifestVersion,
   ItemCategoryValues,
   VersionDiffCounts,
+  AllDestinyManifestComponentsTagged,
 } from "../../types";
 import { format } from "date-fns";
 import { friendlyDiffName } from "../../lib/utils";
@@ -21,6 +22,7 @@ interface DefinitionDiffStaticProps {
   definitions: AnyDefinitionTable;
   previousDefinitions: AnyDefinitionTable | null;
   versionDiffCounts: VersionDiffCounts;
+  otherDefinitions: Partial<AllDestinyManifestComponentsTagged>;
 }
 
 export default function DefinitionDiffPage({
@@ -31,6 +33,7 @@ export default function DefinitionDiffPage({
   definitions,
   previousDefinitions,
   versionDiffCounts,
+  otherDefinitions,
 }: DefinitionDiffStaticProps) {
   const groupedDiff = doGrouping(
     diff,
@@ -75,6 +78,7 @@ export default function DefinitionDiffPage({
           hashes={groupedDiff.added}
           definitions={definitions}
           definitionName={definitionName}
+          otherDefinitions={otherDefinitions}
         />
 
         <DiffList
@@ -82,6 +86,7 @@ export default function DefinitionDiffPage({
           hashes={groupedDiff.unclassified}
           definitions={definitions}
           definitionName={definitionName}
+          otherDefinitions={otherDefinitions}
         />
 
         <DiffList
@@ -89,6 +94,8 @@ export default function DefinitionDiffPage({
           hashes={groupedDiff.removed}
           definitions={previousDefinitions || definitions}
           definitionName={definitionName}
+          otherDefinitions={otherDefinitions}
+          useFallback
         />
 
         <DiffList
@@ -96,6 +103,8 @@ export default function DefinitionDiffPage({
           hashes={groupedDiff.reclassified}
           definitions={previousDefinitions || definitions}
           definitionName={definitionName}
+          otherDefinitions={otherDefinitions}
+          useFallback
         />
       </div>
 

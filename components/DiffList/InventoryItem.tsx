@@ -1,4 +1,5 @@
 import {
+  AllDestinyManifestComponentsTagged,
   AnyDefinitionTable,
   DestinyInventoryItemDefinitionTagged,
   ItemCategory,
@@ -9,6 +10,8 @@ import HashLink from "../HashLink";
 
 import s from "./styles.module.scss";
 import { isAllInventoryItems } from "../../lib/utils";
+import React from "react";
+import ObjectiveTable from "../ObjectiveTable";
 
 const CLASS_TYPE_NAME: { [k: string]: string } = {
   [1]: "Hunter",
@@ -26,7 +29,8 @@ interface InventoryItemDiffListProps {
   definitionName: string;
   itemCategory: string;
   hashes: number[];
-  definitions: AnyDefinitionTable;
+  definitions: AllDestinyManifestComponentsTagged["DestinyInventoryItemDefinition"];
+  otherDefinitions: Partial<AllDestinyManifestComponentsTagged>;
 }
 
 export default function InventoryItemDiffList({
@@ -34,24 +38,32 @@ export default function InventoryItemDiffList({
   itemCategory,
   hashes,
   definitions,
+  otherDefinitions,
 }: InventoryItemDiffListProps) {
   if (hashes.length == 0) {
     return null;
   }
 
-  if (!isAllInventoryItems(definitions)) {
-    throw new Error(
-      "Fail to assert that all definitions are DestinyInventoryItemDefinition"
-    );
-  }
+  const {
+    DestinyCollectibleDefinition: collectibleDefs,
+    DestinyObjectiveDefinition: objectiveDefs,
+  } = otherDefinitions;
 
   const isWeapon = itemCategory == ItemCategory.Weapon;
   const isArmor = itemCategory == ItemCategory.Armor;
 
-  const hasScreenshot = hashes.some((itemHash) => {
-    const def = definitions[itemHash];
-    return def && def.screenshot;
-  });
+  const hasScreenshot = hashes.some(
+    (itemHash) => definitions[itemHash]?.screenshot
+  );
+
+  const hasSource = hashes.some(
+    (itemHash) => definitions[itemHash]?.collectibleHash
+  );
+
+  const hasObjectives = hashes.some(
+    (itemHash) =>
+      (definitions[itemHash]?.objectives?.objectiveHashes?.length ?? 0) > 0
+  );
 
   return (
     <table className={s.table}>
@@ -60,7 +72,7 @@ export default function InventoryItemDiffList({
           <td>Hash</td>
           <td>Item</td>
 
-          {hasScreenshot && <td>Screenshot</td>}
+          {hasObjectives && <td>Objectives</td>}
 
           <td>Type</td>
 
@@ -71,6 +83,10 @@ export default function InventoryItemDiffList({
           )}
 
           {isArmor && <td>Class</td>}
+
+          {hasSource && <td>Source</td>}
+
+          {hasScreenshot && <td>Screenshot</td>}
         </tr>
       </thead>
 
@@ -81,22 +97,27 @@ export default function InventoryItemDiffList({
             return null;
           }
 
+          const sourceString =
+            collectibleDefs?.[def.collectibleHash ?? ""]?.sourceString;
+
+          const objectives = def?.objectives?.objectiveHashes || [];
+
           return (
             <tr key={hash}>
-              <td>
+              <td className={s.shrink}>
                 <HashLink hash={hash} definitionName={definitionName} />
               </td>
 
-              <td className={s.mainColumn}>
+              <td>
                 <ItemSummary def={def} definitions={definitions} />
               </td>
 
-              {hasScreenshot && (
-                <td>
-                  {def.screenshot && (
-                    <BungieImage
-                      className={s.screenshotPreview}
-                      src={def.screenshot}
+              {hasObjectives && (
+                <td className={s.shrink}>
+                  {objectiveDefs && (
+                    <ObjectiveTable
+                      hashes={objectives}
+                      definitions={objectiveDefs}
                     />
                   )}
                 </td>
@@ -111,6 +132,24 @@ export default function InventoryItemDiffList({
               )}
 
               {isArmor && <td>{CLASS_TYPE_NAME[def.classType]}</td>}
+
+              {hasSource && <td>{sourceString}</td>}
+
+              {hasScreenshot && (
+                <td>
+                  {def.screenshot && (
+                    <a
+                      href={`https://www.bungie.net${def.screenshot}`}
+                      target="_blank"
+                    >
+                      <BungieImage
+                        className={s.screenshotPreview}
+                        src={def.screenshot}
+                      />
+                    </a>
+                  )}
+                </td>
+              )}
             </tr>
           );
         })}

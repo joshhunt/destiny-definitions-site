@@ -54,6 +54,8 @@ import {
   DestinyEnergyTypeDefinition,
 } from "bungie-api-ts/destiny2";
 
+export type DefinitionTableName = keyof AllDestinyManifestComponentsTagged;
+
 export interface Breadcrumb {
   label: string;
   to: string;

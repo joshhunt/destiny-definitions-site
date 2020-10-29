@@ -7,35 +7,32 @@ import HashLink from "../HashLink";
 
 import s from "./styles.module.scss";
 
-interface FallbackDiffListProps {
+interface BaseDiffListProps {
   hashes: number[];
   definitions: AnyDefinitionTable;
   definitionName: string;
+  row: (def: any, hash: number) => [string, React.ReactNode][];
 }
 
-export default function FallbackDiffList({
+export default function BaseDiffList<T>({
   hashes,
   definitions,
   definitionName,
-}: FallbackDiffListProps) {
-  if (hashes.length == 0) {
-    return null;
-  }
-
+  row,
+}: BaseDiffListProps) {
   const hasIcon = hashes.some((hash) => {
     const def = definitions[hash] as BareDestinyDefinition;
     return def?.displayProperties?.icon;
   });
 
-  const hasName = hashes.some((hash) => {
-    const def = definitions[hash];
-    return getDisplayName(def);
-  });
+  const hasName = hashes.some((hash) => getDisplayName(definitions[hash]));
 
   const hasDescription = hashes.some((hash) => {
     const def = definitions[hash] as BareDestinyDefinition;
     return def?.displayProperties?.description;
   });
+
+  const otherHeaders = row(definitions[hashes[0]], hashes[0]).map((v) => v[0]);
 
   return (
     <table className={s.table}>
@@ -45,20 +42,19 @@ export default function FallbackDiffList({
           {hasIcon && <td>Icon</td>}
           {hasName && <td>Name</td>}
           {hasDescription && <td>Description</td>}
+          {otherHeaders.map((header) => (
+            <td>{header}</td>
+          ))}
         </tr>
       </thead>
 
       <tbody>
         {hashes.map((hash) => {
           const def = definitions[hash];
-          if (!def) {
-            return (
-              <tr key={hash}>
-                <td className={s.shrink}>{hash}</td>
-                <td colSpan={3}>Missing data</td>
-              </tr>
-            );
-          }
+
+          const otherCells = row(def, hash).map(([, cell], index) => (
+            <td key={index}>{cell}</td>
+          ));
 
           return (
             <tr key={hash}>
@@ -72,10 +68,10 @@ export default function FallbackDiffList({
               )}
               {hasName && <td className={s.nowrap}>{getDisplayName(def)}</td>}
               {hasDescription && (
-                <td className={cx(s.mainColumn, s.prewrap)}>
-                  {getDescription(def)}
-                </td>
+                <td className={cx(s.prewrap)}>{getDescription(def)}</td>
               )}
+
+              {otherCells}
             </tr>
           );
         })}

@@ -1,30 +1,14 @@
-import cx from "classnames";
+import React from "react";
 import {
-  AnyDefinitionTable,
-  AnyDefinition,
-  BareDestinyDefinition,
+  AllDestinyManifestComponentsTagged,
+  DestinyObjectiveDefinitionTagged,
 } from "../../types";
-
-import s from "./styles.module.scss";
-import { DestinyObjectiveDefinition } from "bungie-api-ts/destiny2";
-import HashLink from "../HashLink";
+import BaseDiffList from "./BaseDiffList";
 
 interface ObjectiveDiffListProps {
   definitionName: string;
   hashes: number[];
-  definitions: AnyDefinitionTable;
-}
-
-function getDisplayName(def: AnyDefinition & BareDestinyDefinition) {
-  return def?.displayProperties?.name;
-}
-
-function getIconSrc(def: AnyDefinition & BareDestinyDefinition) {
-  return def?.displayProperties?.icon;
-}
-
-function getDescription(def: AnyDefinition & BareDestinyDefinition) {
-  return def?.displayProperties?.description;
+  definitions: AllDestinyManifestComponentsTagged["DestinyObjectiveDefinition"];
 }
 
 export default function ObjectiveDiffList({
@@ -37,41 +21,14 @@ export default function ObjectiveDiffList({
   }
 
   return (
-    <table className={s.table}>
-      <thead>
-        <tr>
-          <td>Hash</td>
-          <td>Progress description</td>
-          <td>Target</td>
-        </tr>
-      </thead>
-
-      <tbody>
-        {hashes.map((hash) => {
-          const def = definitions[hash] as DestinyObjectiveDefinition | null;
-
-          if (!def) {
-            return (
-              <tr>
-                <td>{hash}</td>
-                <td colSpan={3}>Missing data</td>
-              </tr>
-            );
-          }
-
-          return (
-            <tr>
-              <td>
-                <HashLink hash={hash} definitionName={definitionName} />
-              </td>
-              <td className={s.nowrap}>{def.progressDescription}</td>
-              <td className={cx(s.mainColumn, s.prewrap)}>
-                {def.completionValue}
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+    <BaseDiffList
+      definitionName={definitionName}
+      hashes={hashes}
+      definitions={definitions}
+      row={(def?: DestinyObjectiveDefinitionTagged) => [
+        ["Progress description", def?.progressDescription],
+        ["Completion value", def?.completionValue],
+      ]}
+    />
   );
 }
