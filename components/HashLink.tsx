@@ -37,12 +37,24 @@ export const DiffHashLink: React.FC<HashLinkProps> = ({
   definitionName,
   children,
 }) => {
-  const { versionId, versionDiff } = useDiffData();
+  const {
+    versionId,
+    versionDiff,
+    definitionName: currentDefName,
+  } = useDiffData();
   const isInDiff =
     versionDiff && diffContainsHash(versionDiff[definitionName], hash);
 
   if (!isInDiff) {
     return <>{children}</>;
+  }
+
+  if (currentDefName === definitionName) {
+    return (
+      <a href={`#hash_${hash}`} className={commonStyles.link}>
+        {children}
+      </a>
+    );
   }
 
   return (

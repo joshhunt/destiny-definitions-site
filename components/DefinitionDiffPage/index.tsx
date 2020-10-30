@@ -106,6 +106,15 @@ export default function DefinitionDiffPage({
           otherDefinitions={otherDefinitions}
           useFallback
         />
+
+        <DiffList
+          name="Modified"
+          hashes={groupedDiff.modified}
+          definitions={previousDefinitions || definitions}
+          definitionName={definitionName}
+          otherDefinitions={otherDefinitions}
+          useModified
+        />
       </div>
 
       <div className={s.side}>

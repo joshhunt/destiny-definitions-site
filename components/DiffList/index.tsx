@@ -2,8 +2,6 @@ import React, { Fragment } from "react";
 
 import {
   AnyDefinitionTable,
-  AnyDefinition,
-  BareDestinyDefinition,
   DiffGroup,
   ItemCategory,
   ItemCategoryValues,
@@ -22,6 +20,7 @@ import { castDefinitions } from "../../lib/utils";
 import ActivityDiffList from "./Activity";
 import DestinationDiffList from "./Destination";
 import VendorDiffList from "./Vendor";
+import ModifiedDiffList from "./Modified";
 
 interface DiffListProps {
   name: string;
@@ -30,6 +29,7 @@ interface DiffListProps {
   definitionName: string;
   otherDefinitions: Partial<AllDestinyManifestComponentsTagged>;
   useFallback?: boolean;
+  useModified?: boolean;
 }
 
 interface ForDefinitionTypeProps {
@@ -39,6 +39,7 @@ interface ForDefinitionTypeProps {
   definitionName: string;
   otherDefinitions: Partial<AllDestinyManifestComponentsTagged>;
   useFallback?: boolean;
+  useModified?: boolean;
 }
 
 function ForDefinitionType({
@@ -48,11 +49,12 @@ function ForDefinitionType({
   definitionName,
   otherDefinitions,
   useFallback,
+  useModified,
 }: ForDefinitionTypeProps) {
   const zeroth = hashes[0];
   const def = definitions[zeroth];
 
-  switch (useFallback ? "fallback" : def?.__type) {
+  switch (useFallback ? "fallback" : useModified ? "modified" : def?.__type) {
     case "DestinyVendorDefinition":
       return (
         <VendorDiffList
@@ -150,6 +152,15 @@ function ForDefinitionType({
         />
       );
 
+    case "modified":
+      return (
+        <ModifiedDiffList
+          definitionName={definitionName}
+          hashes={hashes}
+          definitions={definitions}
+        />
+      );
+
     default:
       return (
         <FallbackDiffList
@@ -170,12 +181,13 @@ export default function DiffList({
   definitionName,
   otherDefinitions,
   useFallback,
+  useModified,
 }: DiffListProps) {
   const groupedHashes = Array.isArray(hashes)
     ? { [NO_CATEGORY]: hashes }
     : hashes;
 
-  const hasItems = Object.values(groupedHashes).some((v) => v.length);
+  const hasItems = Object.values(groupedHashes || {}).some((v) => v.length);
 
   if (!hasItems) {
     return null;
@@ -206,6 +218,7 @@ export default function DiffList({
             itemCategory={category}
             otherDefinitions={otherDefinitions}
             useFallback={useFallback}
+            useModified={useModified}
           />
         </Fragment>
       ))}

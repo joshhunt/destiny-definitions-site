@@ -24,6 +24,7 @@ export default function VersionDiffSummary({
           <td>Added</td>
           <td>Unclassified</td>
           <td>Removed</td>
+          <td>Modified</td>
         </tr>
       </thead>
 
@@ -53,6 +54,7 @@ export default function VersionDiffSummary({
                 <td>{diffs.added.length}</td>
                 <td>{diffs.unclassified.length}</td>
                 <td>{diffs.removed.length}</td>
+                <td>{diffs.modified.length}</td>
               </tr>
             );
           })}

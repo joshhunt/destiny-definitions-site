@@ -8,6 +8,7 @@ import {
   AllDefinitionDiffs,
   AllDestinyManifestComponentsTagged,
   DefinitionTableName,
+  ModifiedDeepDiffs,
 } from "../../../types";
 import { GetStaticProps, GetStaticPaths } from "next";
 import { mapValues, shuffle } from "lodash";
@@ -16,6 +17,7 @@ import {
   getVersionsIndex,
   getDiffForVersion,
   getDefinitionForVersion,
+  getModifiedDeepDiff,
 } from "../../../remote";
 
 import React from "react";
@@ -35,6 +37,7 @@ interface DefinitionDiffStaticProps {
   versionDiffCounts: VersionDiffCounts;
   otherDefinitions: Partial<AllDestinyManifestComponentsTagged>;
   allDefinitionDiffs: AllDefinitionDiffs;
+  modifiedDeepDiffs: ModifiedDeepDiffs;
 }
 
 export default function DefinitionDiffPageWrapper({
@@ -47,13 +50,16 @@ export default function DefinitionDiffPageWrapper({
   versionDiffCounts,
   otherDefinitions,
   allDefinitionDiffs,
+  modifiedDeepDiffs,
 }: DefinitionDiffStaticProps) {
   const contextValue = React.useMemo(
     () => ({
       versionDiff: allDefinitionDiffs,
       versionId,
+      definitionName,
+      modifiedDeepDiffs,
     }),
-    [allDefinitionDiffs, versionId]
+    [allDefinitionDiffs, versionId, definitionName, modifiedDeepDiffs]
   );
 
   return (
@@ -79,18 +85,10 @@ interface Params {
 }
 
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
-  const data = await getVersionsIndex();
+  const data = await getVersionsIndex(true);
   if (!data) throw new Error("Unable to get version index");
 
   const diffsForVersion: DiffsByVersion = {};
-
-  data.push({
-    id: "test",
-    version: "777.77.77.77.777-7",
-    s3Key: "versions/test/manifest.json",
-    createdAt: new Date("2020-07-14T18:38:58.037Z"),
-    updatedAt: new Date("2020-10-03T14:44:27.390Z"),
-  });
 
   for (const versionIndex in data) {
     const version = data[versionIndex];
@@ -182,16 +180,7 @@ export const getStaticProps: GetStaticProps<
   const versionId = context.params?.id ?? "";
   const definitionName = context.params?.table ?? "";
 
-  const allVersions = await getVersionsIndex();
-
-  allVersions &&
-    allVersions.push({
-      id: "test",
-      version: "777.77.77.77.777-7",
-      s3Key: "versions/test/manifest.json",
-      createdAt: ("2020-07-14T18:38:58.037Z" as unknown) as Date,
-      updatedAt: ("2020-10-03T14:44:27.390Z" as unknown) as Date,
-    });
+  const allVersions = await getVersionsIndex(true);
 
   const currentVersionIndex = allVersions?.findIndex((v) => v.id === versionId);
   const previousId =
@@ -210,6 +199,11 @@ export const getStaticProps: GetStaticProps<
   const allDefinitionDiffs = await getDiffForVersion(versionId);
   if (!allDefinitionDiffs) throw new Error("missing diff data for table page");
   const diff = allDefinitionDiffs[definitionName];
+
+  const modifiedDeepDiffs =
+    (diff.modified.length > 0
+      ? await getModifiedDeepDiff(versionId, definitionName)
+      : null) ?? {};
 
   const definitions = await getDefinitionForVersion(versionId, definitionName);
   if (!definitions) throw new Error("Definitions is missing");
@@ -255,6 +249,7 @@ export const getStaticProps: GetStaticProps<
       versionDiffCounts,
       otherDefinitions,
       allDefinitionDiffs,
+      modifiedDeepDiffs,
     },
   };
 };

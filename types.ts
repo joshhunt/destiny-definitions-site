@@ -54,7 +54,16 @@ import {
   DestinyEnergyTypeDefinition,
 } from "bungie-api-ts/destiny2";
 
+import deepDiffLib from "deep-diff";
+
 export type DefinitionTableName = keyof AllDestinyManifestComponentsTagged;
+
+export type ModifiedDeepDiffEntry = {
+  hash: number;
+  diff: deepDiffLib.Diff<AnyDefinition, AnyDefinition>[];
+};
+
+export type ModifiedDeepDiffs = Record<number, ModifiedDeepDiffEntry>;
 
 export interface Breadcrumb {
   label: string;
@@ -78,6 +87,7 @@ export interface DefinitionDiff {
   added: number[];
   unclassified: number[];
   reclassified: number[];
+  modified: number[];
 }
 
 export type DiffGroup = Record<ItemCategory, number[]>;
@@ -87,6 +97,7 @@ export type PossiblyGroupedDiff = {
   added: DiffGroup | number[];
   unclassified: DiffGroup | number[];
   reclassified: DiffGroup | number[];
+  modified: DiffGroup | number[];
 };
 
 export type AllDefinitionDiffs = {

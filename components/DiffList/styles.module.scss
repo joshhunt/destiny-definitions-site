@@ -7,6 +7,11 @@
   height: auto;
 }
 
+.smallIcon {
+  max-width: 35px;
+  height: auto;
+}
+
 .shrink {
   width: 1%;
 }
@@ -118,4 +123,8 @@ table + .groupTitle {
   & + & {
     margin-top: 16px;
   }
+}
+
+.codeSnippet {
+  margin-bottom: 0;
 }

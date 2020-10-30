@@ -4,8 +4,10 @@ import {
   ManifestVersion,
   AllDefinitionDiffs,
   AnyDefinitionTable,
+  ModifiedDeepDiffEntry,
+  ModifiedDeepDiffs,
 } from "./types";
-import { mapValues } from "lodash";
+import { keyBy, mapValues } from "lodash";
 
 const CACHE_DIR = ".api-cache";
 
@@ -29,11 +31,9 @@ async function getCachedData<T>(
 
   try {
     const data = await fs.readJSON(localCachePath);
-    console.log("CACHED", remoteUrl);
     return data;
   } catch {}
 
-  console.log("FETCHED", localCachePath);
   const res = await fetch(remoteUrl);
   const data: T | undefined = res.ok ? await res.json() : undefined;
   await fs.writeJSON(localCachePath, data);
@@ -41,11 +41,23 @@ async function getCachedData<T>(
   return data;
 }
 
-export async function getVersionsIndex() {
-  return getCachedData<ManifestVersion[]>(
+export async function getVersionsIndex(includeTestVersion = false) {
+  const data = await getCachedData<ManifestVersion[]>(
     "versions.json",
     "https://destiny-definitions.s3-eu-west-1.amazonaws.com/index.json"
   );
+
+  // if (includeTestVersion && data) {
+  //   data.push({
+  //     id: "test",
+  //     version: "777.77.77.77.777-7",
+  //     s3Key: "versions/test/manifest.json",
+  //     createdAt: ("2020-07-14T18:38:58.037Z" as unknown) as Date,
+  //     updatedAt: ("2020-10-03T14:44:27.390Z" as unknown) as Date,
+  //   });
+  // }
+
+  return data;
 }
 
 export async function getDiffForVersion(id: string) {
@@ -53,6 +65,22 @@ export async function getDiffForVersion(id: string) {
     `${id}__diff.json`,
     `https://destiny-definitions.s3-eu-west-1.amazonaws.com/versions/${id}/diff.json`
   );
+}
+
+export async function getModifiedDeepDiff(
+  id: string,
+  tableName: string
+): Promise<ModifiedDeepDiffs | undefined> {
+  const data = await getCachedData<ModifiedDeepDiffEntry[]>(
+    `${id}__modified__${tableName}.json`,
+    `https://destiny-definitions.s3-eu-west-1.amazonaws.com/versions/${id}/modifiedDiffs/${tableName}.json`
+  );
+
+  if (data) {
+    return keyBy(data, (d) => d.hash);
+  }
+
+  return data;
 }
 
 export async function getDefinitionForVersion(

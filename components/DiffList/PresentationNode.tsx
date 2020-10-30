@@ -159,29 +159,8 @@ const ChildrenList: React.FC<ChildrenListProps> = ({
 
   return (
     <>
-      {presentationNodes.length > 0 && (
-        <>
-          <div className={s.bold}>Presentation nodes</div>
-          <ul className={s.childList}>
-            {presentationNodes.map((child) => (
-              <li key={child.presentationNodeHash} className={s.childItem}>
-                <DiffHashLink
-                  definitionName="DestinyPresentationNodeDefinition"
-                  hash={child.presentationNodeHash}
-                >
-                  <InlineChild
-                    definition={
-                      presentationNodeDefinitions?.[child.presentationNodeHash]
-                    }
-                  />
-                </DiffHashLink>
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
-
       <List
+        title="Presentation nodes"
         childrenList={presentationNodes}
         definitions={presentationNodeDefinitions}
         definitionName="DestinyPresentationNodeDefinition"
@@ -189,6 +168,7 @@ const ChildrenList: React.FC<ChildrenListProps> = ({
       />
 
       <List
+        title="Triumphs"
         childrenList={records}
         definitions={recordDefs}
         definitionName="DestinyRecordDefinition"
@@ -196,6 +176,7 @@ const ChildrenList: React.FC<ChildrenListProps> = ({
       />
 
       <List
+        title="Collectibles"
         childrenList={collectibles}
         definitions={collectibleDefs}
         definitionName="DestinyCollectibleDefinition"
@@ -203,6 +184,7 @@ const ChildrenList: React.FC<ChildrenListProps> = ({
       />
 
       <List
+        title="Metrics"
         childrenList={metrics}
         definitions={metricDefs}
         definitionName="DestinyMetricDefinition"
@@ -219,6 +201,7 @@ type PresentationNodeChildren =
   | DestinyPresentationNodeMetricChildEntry;
 
 interface ListProps<T> {
+  title: React.ReactNode;
   childrenList: T[];
   definitionName: string;
   definitions: AnyDefinitionTable | undefined;
@@ -226,6 +209,7 @@ interface ListProps<T> {
 }
 
 function List<T extends PresentationNodeChildren>({
+  title,
   childrenList,
   definitions,
   definitionName,
@@ -233,7 +217,7 @@ function List<T extends PresentationNodeChildren>({
 }: ListProps<T>) {
   return childrenList.length > 0 ? (
     <>
-      <div className={s.bold}>Triumphs</div>
+      <div className={s.bold}>{title}</div>
       <ul className={s.childList}>
         {childrenList.map((child) => {
           const hash = selectHash(child);
