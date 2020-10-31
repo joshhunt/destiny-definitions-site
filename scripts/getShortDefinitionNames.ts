@@ -32,9 +32,8 @@ async function main() {
     CUSTOM_MAPPINGS
   );
 
-  console.log(mapping);
-
   await fs.writeJson("./lib/tableNameMappings.json", mapping, { spaces: 2 });
+  console.log("Wrote definitions table name mappings");
 }
 
 main().catch(console.error);

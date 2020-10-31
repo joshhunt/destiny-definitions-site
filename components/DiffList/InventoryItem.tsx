@@ -9,7 +9,6 @@ import ItemSummary from "../ItemSummary";
 import HashLink from "../HashLink";
 
 import s from "./styles.module.scss";
-import { isAllInventoryItems } from "../../lib/utils";
 import React from "react";
 import ObjectiveTable from "../ObjectiveTable";
 

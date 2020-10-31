@@ -1,10 +1,13 @@
 import cx from "classnames";
+import Link from "next/link";
+import React from "react";
 
-import { getDescription, getDisplayName, getIconSrc } from "../../lib/utils";
+import { getDisplayName, getIconSrc } from "../../lib/utils";
 import { AnyDefinitionTable, BareDestinyDefinition } from "../../types";
 import BungieImage from "../BungieImage";
 import { useDiffData } from "../diffDataContext";
 import HashLink from "../HashLink";
+import commonStyles from "../../styles/common.module.scss";
 
 import s from "./styles.module.scss";
 
@@ -19,7 +22,7 @@ export default function ModifiedDiffList({
   definitions,
   definitionName,
 }: ModifiedDiffListProps) {
-  const { modifiedDeepDiffs } = useDiffData();
+  const { modifiedDeepDiffs, versionId } = useDiffData();
 
   if (hashes.length == 0) {
     return null;
@@ -43,6 +46,7 @@ export default function ModifiedDiffList({
           {hasIcon && <td>Icon</td>}
           {hasName && <td>Name</td>}
           <td>Properties changed</td>
+          <td>Link</td>
         </tr>
       </thead>
 
@@ -72,6 +76,13 @@ export default function ModifiedDiffList({
               )}
               {hasName && <td className={s.nowrap}>{getDisplayName(def)}</td>}
               <td>{modifiedDiffs.diff.length}</td>
+              <td>
+                <Link
+                  href={`/version/${versionId}/${definitionName}/modified/${hash}`}
+                >
+                  <a className={commonStyles.link}>View diff</a>
+                </Link>
+              </td>
             </tr>
           );
         })}

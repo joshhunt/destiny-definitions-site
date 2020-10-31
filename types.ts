@@ -63,6 +63,9 @@ export type ModifiedDeepDiffEntry = {
   diff: deepDiffLib.Diff<AnyDefinition, AnyDefinition>[];
 };
 
+// TODO: rename this or something
+export type DiffType = deepDiffLib.Diff<AnyDefinition, AnyDefinition>;
+
 export type ModifiedDeepDiffs = Record<number, ModifiedDeepDiffEntry>;
 
 export interface Breadcrumb {
