@@ -31,9 +31,11 @@ async function getCachedData<T>(
 
   try {
     const data = await fs.readJSON(localCachePath);
+    console.log("CACHED", remoteUrl);
     return data;
   } catch {}
 
+  console.log("FETCHING", remoteUrl);
   const res = await fetch(remoteUrl);
   const data: T | undefined = res.ok ? await res.json() : undefined;
   await fs.writeJSON(localCachePath, data);
