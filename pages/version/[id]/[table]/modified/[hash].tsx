@@ -87,8 +87,5 @@ export const getStaticProps: GetStaticProps<
 };
 
 export default function ModifiedDiffPageWrapper(props: ModifiedDiffPageProps) {
-  console.log(
-    `Rendering ModifiedDiffPageWrapper for ${props.versionId} / ${props.hash}`
-  );
   return <ModifiedDiffPage {...props} />;
 }

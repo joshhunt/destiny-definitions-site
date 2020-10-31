@@ -9,7 +9,11 @@ import {
 } from "./types";
 import { keyBy, mapValues } from "lodash";
 
-const CACHE_DIR = ".api-cache";
+const CACHE_DIR = process.env.NETLIFY_CACHE_DIR
+  ? path.join(process.env.NETLIFY_CACHE_DIR, "api-ache")
+  : ".api-cache";
+
+console.log("CACHE_DIR:", CACHE_DIR);
 
 const getPath = async (name: string, useSharedCache: boolean = false) => {
   let buildId = "dev";
