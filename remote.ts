@@ -11,36 +11,55 @@ import { keyBy, mapValues } from "lodash";
 
 const CACHE_DIR = ".api-cache";
 
-const getPath = async (name: string) => {
+const getPath = async (name: string, useSharedCache: boolean = false) => {
   let buildId = "dev";
 
-  try {
-    buildId = (await fs.readFile(path.join(".next/BUILD_ID"))).toString();
-  } catch {}
+  if (useSharedCache) {
+    buildId = "shared";
+  } else {
+    try {
+      buildId = (await fs.readFile(path.join(".next/BUILD_ID"))).toString();
+    } catch {}
+  }
 
   await fs.ensureDir(path.join(CACHE_DIR, buildId));
 
   return path.join(CACHE_DIR, buildId, name);
 };
 
+const requestCache: Record<string, Promise<unknown>> = {};
+
 async function getCachedData<T>(
   localCacheFile: string,
-  remoteUrl: string
+  remoteUrl: string,
+  useSharedCache: boolean = false
 ): Promise<T | undefined> {
-  const localCachePath = await getPath(localCacheFile);
+  async function inner() {
+    const localCachePath = await getPath(localCacheFile, useSharedCache);
 
-  try {
-    const data = await fs.readJSON(localCachePath);
-    console.log("CACHED", remoteUrl);
+    try {
+      const data = await fs.readJSON(localCachePath);
+      console.log("FS CACHED", remoteUrl);
+      return data;
+    } catch {}
+
+    console.log("FETCHING", remoteUrl);
+    const res = await fetch(remoteUrl);
+    const data: T | undefined = res.ok ? await res.json() : undefined;
+
+    await fs.writeJSON(localCachePath, data);
+
     return data;
-  } catch {}
+  }
 
-  console.log("FETCHING", remoteUrl);
-  const res = await fetch(remoteUrl);
-  const data: T | undefined = res.ok ? await res.json() : undefined;
-  await fs.writeJSON(localCachePath, data);
-
-  return data;
+  if (requestCache[localCacheFile]) {
+    console.log("PROMISE CACHED", remoteUrl);
+    return requestCache[localCacheFile] as Promise<T | undefined>;
+  } else {
+    const promise = inner();
+    requestCache[localCacheFile] = promise;
+    return promise as Promise<T | undefined>;
+  }
 }
 
 export async function getVersionsIndex(includeTestVersion = false) {
@@ -65,7 +84,8 @@ export async function getVersionsIndex(includeTestVersion = false) {
 export async function getDiffForVersion(id: string) {
   return getCachedData<AllDefinitionDiffs>(
     `${id}__diff.json`,
-    `https://destiny-definitions.s3-eu-west-1.amazonaws.com/versions/${id}/diff.json`
+    `https://destiny-definitions.s3-eu-west-1.amazonaws.com/versions/${id}/diff.json`,
+    true
   );
 }
 
@@ -75,7 +95,8 @@ export async function getModifiedDeepDiff(
 ): Promise<ModifiedDeepDiffs | undefined> {
   const data = await getCachedData<ModifiedDeepDiffEntry[]>(
     `${id}__modified__${tableName}.json`,
-    `https://destiny-definitions.s3-eu-west-1.amazonaws.com/versions/${id}/modifiedDiffs/${tableName}.json`
+    `https://destiny-definitions.s3-eu-west-1.amazonaws.com/versions/${id}/modifiedDiffs/${tableName}.json`,
+    true
   );
 
   if (data) {
@@ -92,7 +113,8 @@ export async function getDefinitionForVersion(
   // TODO: type this
   const data = await getCachedData<AnyDefinitionTable>(
     `${version}__${definitionName}.json`,
-    `https://destiny-definitions.s3-eu-west-1.amazonaws.com/versions/${version}/tables/${definitionName}.json`
+    `https://destiny-definitions.s3-eu-west-1.amazonaws.com/versions/${version}/tables/${definitionName}.json`,
+    true
   );
 
   return mapValues(data, (v) => ({

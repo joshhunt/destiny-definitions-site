@@ -56,6 +56,7 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
 };
 
 interface ModifiedDiffPageProps {
+  versionId: string;
   hash: string;
   diffForHash: ModifiedDeepDiffEntry | undefined;
   definition: AnyDefinition;
@@ -77,6 +78,7 @@ export const getStaticProps: GetStaticProps<
 
   return {
     props: {
+      versionId,
       hash,
       diffForHash,
       definition,
@@ -85,5 +87,8 @@ export const getStaticProps: GetStaticProps<
 };
 
 export default function ModifiedDiffPageWrapper(props: ModifiedDiffPageProps) {
+  console.log(
+    `Rendering ModifiedDiffPageWrapper for ${props.versionId} / ${props.hash}`
+  );
   return <ModifiedDiffPage {...props} />;
 }
