@@ -59,7 +59,7 @@ interface ModifiedDiffPageProps {
   versionId: string;
   hash: string;
   diffForHash: ModifiedDeepDiffEntry | undefined;
-  definition: AnyDefinition;
+  definition: AnyDefinition | null;
 }
 
 export const getStaticProps: GetStaticProps<
@@ -73,15 +73,15 @@ export const getStaticProps: GetStaticProps<
   const diffData = await getModifiedDeepDiff(versionId, definitionName);
   const diffForHash = diffData?.[hash as any];
 
-  const definitions = await getDefinitionForVersion(versionId, definitionName);
-  const definition = definitions[hash];
+  // const definitions = await getDefinitionForVersion(versionId, definitionName);
+  // const definition = definitions[hash];
 
   return {
     props: {
       versionId,
       hash,
       diffForHash,
-      definition,
+      definition: null,
     },
   };
 };

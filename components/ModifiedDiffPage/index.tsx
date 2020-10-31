@@ -11,7 +11,7 @@ import { cloneDeepWith, mergeWith } from "lodash";
 interface ModifiedDiffProps {
   hash: string;
   diffForHash: ModifiedDeepDiffEntry | undefined;
-  definition: AnyDefinition;
+  definition: AnyDefinition | null;
 }
 
 const COLORS = {
