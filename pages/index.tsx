@@ -13,9 +13,14 @@ import Version from "../components/Version";
 interface HomeStaticProps {
   versions: ManifestVersion[];
   diffsForVersion: DiffsByVersion;
+  dataServerResponse: any;
 }
 
-export default function Home({ versions, diffsForVersion }: HomeStaticProps) {
+export default function Home({
+  versions,
+  diffsForVersion,
+  dataServerResponse,
+}: HomeStaticProps) {
   return (
     <div className={s.root}>
       <div className={s.versionList}>
@@ -35,6 +40,8 @@ export default function Home({ versions, diffsForVersion }: HomeStaticProps) {
           );
         })}
       </div>
+
+      <pre>{JSON.stringify(dataServerResponse, null, 2)}</pre>
     </div>
   );
 }
@@ -53,7 +60,11 @@ export const getStaticProps: GetStaticProps<HomeStaticProps> = async (
     diffsForVersion[manifestVersion.id] = diffData;
   }
 
+  const dataServerResponse = await (
+    await fetch("http://localhost:7777")
+  ).json();
+
   return {
-    props: { versions: data, diffsForVersion },
+    props: { versions: data, diffsForVersion, dataServerResponse },
   };
 };

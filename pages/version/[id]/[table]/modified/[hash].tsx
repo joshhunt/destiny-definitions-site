@@ -22,37 +22,37 @@ interface Params {
 }
 
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
-  const data = await getVersionsIndex(true);
-  if (!data) throw new Error("Unable to get version index");
+  // const data = await getVersionsIndex(true);
+  // if (!data) throw new Error("Unable to get version index");
 
-  const diffsForVersion: DiffsByVersion = {};
+  // const diffsForVersion: DiffsByVersion = {};
 
-  for (const versionIndex in data) {
-    const version = data[versionIndex];
-    const diffData = await getDiffForVersion(version.id);
+  // for (const versionIndex in data) {
+  //   const version = data[versionIndex];
+  //   const diffData = await getDiffForVersion(version.id);
 
-    diffsForVersion[version.id] = diffData;
-  }
+  //   diffsForVersion[version.id] = diffData;
+  // }
 
-  const paths = data.flatMap((version) => {
-    const diffData = diffsForVersion[version.id] ?? {};
+  // const paths = data.flatMap((version) => {
+  //   const diffData = diffsForVersion[version.id] ?? {};
 
-    return Object.entries(diffData)
-      .filter(([, diffData]) => Object.values(diffData).some((v) => v.length))
-      .flatMap(([table, definitionDiff]) => {
-        return definitionDiff.modified.map((modifiedHash) => {
-          return {
-            params: {
-              id: version.id,
-              table,
-              hash: modifiedHash.toString(),
-            },
-          };
-        });
-      });
-  });
+  //   return Object.entries(diffData)
+  //     .filter(([, diffData]) => Object.values(diffData).some((v) => v.length))
+  //     .flatMap(([table, definitionDiff]) => {
+  //       return definitionDiff.modified.map((modifiedHash) => {
+  //         return {
+  //           params: {
+  //             id: version.id,
+  //             table,
+  //             hash: modifiedHash.toString(),
+  //           },
+  //         };
+  //       });
+  //     });
+  // });
 
-  return { paths, fallback: false };
+  return { paths: [], fallback: false };
 };
 
 interface ModifiedDiffPageProps {
