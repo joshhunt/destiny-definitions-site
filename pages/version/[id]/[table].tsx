@@ -195,7 +195,9 @@ export const getStaticProps: GetStaticProps<
   if (!manifestVersion) {
     console.error("allVersions:");
     console.error(allVersions);
-    throw new Error(`Unable to find manifestVersion for version ${versionId}`);
+    throw new Error(
+      `Unable to find manifestVersion for version ${versionId} at index ${currentVersionIndex}`
+    );
   }
 
   const allDefinitionDiffs = await getDiffForVersion(versionId);
