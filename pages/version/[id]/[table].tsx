@@ -193,6 +193,8 @@ export const getStaticProps: GetStaticProps<
     : undefined;
 
   if (!manifestVersion) {
+    console.error("allVersions:");
+    console.error(allVersions);
     throw new Error(`Unable to find manifestVersion for version ${versionId}`);
   }
 

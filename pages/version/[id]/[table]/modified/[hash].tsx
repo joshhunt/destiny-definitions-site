@@ -14,6 +14,8 @@ import {
   ModifiedDeepDiffEntry,
 } from "../../../../../types";
 
+import config from "../../../../../config";
+
 interface Params {
   [key: string]: any;
   id: string;
@@ -22,37 +24,41 @@ interface Params {
 }
 
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
-  // const data = await getVersionsIndex(true);
-  // if (!data) throw new Error("Unable to get version index");
+  if (!config.modifiedDiffPages) {
+    return { paths: [], fallback: false };
+  }
 
-  // const diffsForVersion: DiffsByVersion = {};
+  const data = await getVersionsIndex(true);
+  if (!data) throw new Error("Unable to get version index");
 
-  // for (const versionIndex in data) {
-  //   const version = data[versionIndex];
-  //   const diffData = await getDiffForVersion(version.id);
+  const diffsForVersion: DiffsByVersion = {};
 
-  //   diffsForVersion[version.id] = diffData;
-  // }
+  for (const versionIndex in data) {
+    const version = data[versionIndex];
+    const diffData = await getDiffForVersion(version.id);
 
-  // const paths = data.flatMap((version) => {
-  //   const diffData = diffsForVersion[version.id] ?? {};
+    diffsForVersion[version.id] = diffData;
+  }
 
-  //   return Object.entries(diffData)
-  //     .filter(([, diffData]) => Object.values(diffData).some((v) => v.length))
-  //     .flatMap(([table, definitionDiff]) => {
-  //       return definitionDiff.modified.map((modifiedHash) => {
-  //         return {
-  //           params: {
-  //             id: version.id,
-  //             table,
-  //             hash: modifiedHash.toString(),
-  //           },
-  //         };
-  //       });
-  //     });
-  // });
+  const paths = data.flatMap((version) => {
+    const diffData = diffsForVersion[version.id] ?? {};
 
-  return { paths: [], fallback: false };
+    return Object.entries(diffData)
+      .filter(([, diffData]) => Object.values(diffData).some((v) => v.length))
+      .flatMap(([table, definitionDiff]) => {
+        return definitionDiff.modified.map((modifiedHash) => {
+          return {
+            params: {
+              id: version.id,
+              table,
+              hash: modifiedHash.toString(),
+            },
+          };
+        });
+      });
+  });
+
+  return { paths: paths, fallback: false };
 };
 
 interface ModifiedDiffPageProps {

@@ -4,9 +4,8 @@
   "private": true,
   "scripts": {
     "table-names": "ts-node ./scripts/getShortDefinitionNames.ts",
-    "data-server": "ts-node ./scripts/dataServer.ts",
-    "dev": "concurrently --kill-others --success last \"npm:data-server\" \"yarn table-names && next dev\"",
-    "build": "concurrently --kill-others --success last \"npm:data-server\" \"yarn table-names && next build && next export\"",
+    "dev": "yarn table-names && next dev",
+    "build": "yarn table-names && next build && next export",
     "start": "yarn table-names && next start",
     "serve": "serve ./out"
   },
@@ -29,7 +28,6 @@
     "axios": "^0.21.0",
     "bungie-api-ts": "^4.2.1",
     "classnames": "^2.2.6",
-    "concurrently": "^5.3.0",
     "date-fns": "^2.16.1",
     "deep-diff": "^1.0.2",
     "express": "^4.17.1",
