@@ -188,16 +188,12 @@ export const getStaticProps: GetStaticProps<
     allVersions &&
     allVersions[currentVersionIndex - 1].id;
 
-  const manifestVersion = currentVersionIndex
-    ? allVersions?.[currentVersionIndex]
-    : undefined;
+  const manifestVersion = allVersions?.find((v) => v.id === versionId);
 
   if (!manifestVersion) {
     console.error("allVersions:");
     console.error(allVersions);
-    throw new Error(
-      `Unable to find manifestVersion for version ${versionId} at index ${currentVersionIndex}`
-    );
+    throw new Error(`Unable to find manifestVersion for version ${versionId}`);
   }
 
   const allDefinitionDiffs = await getDiffForVersion(versionId);
