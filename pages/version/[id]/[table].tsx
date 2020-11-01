@@ -182,13 +182,17 @@ export const getStaticProps: GetStaticProps<
 
   const allVersions = await getVersionsIndex(true);
 
-  const currentVersionIndex = allVersions?.findIndex((v) => v.id === versionId);
+  if (!allVersions) {
+    throw new Error("allVersions is undefined. This is bad");
+  }
+
+  const currentVersionIndex = allVersions.findIndex((v) => v.id === versionId);
   const previousId =
     currentVersionIndex &&
     allVersions &&
     allVersions[currentVersionIndex - 1].id;
 
-  const manifestVersion = allVersions?.find((v) => v.id === versionId);
+  const manifestVersion = allVersions.find((v) => v.id === versionId);
 
   if (!manifestVersion) {
     console.error("allVersions:");

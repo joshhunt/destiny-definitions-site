@@ -1,3 +1,3 @@
 export default {
-  modifiedDiffPages: false,
+  modifiedDiffPages: true,
 };
