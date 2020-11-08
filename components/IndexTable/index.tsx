@@ -1,6 +1,5 @@
 import s from "./styles.module.scss";
 import { Fragment } from "react";
-import Link from "next/link";
 import { VersionDiffCounts } from "../../types";
 import { friendlyDiffName } from "../../lib/utils";
 
@@ -56,11 +55,12 @@ export default function IndexTable({
             {versionDiffCounts.map((diff) => (
               <tr key={diff.tableName}>
                 <td>
-                  <Link href={`/version/${versionId}/${diff.tableName}`}>
-                    <a className={s.otherTableName}>
-                      {friendlyDiffName(diff.tableName)}
-                    </a>
-                  </Link>
+                  <a
+                    href={`/version/${versionId}/${diff.tableName}`}
+                    className={s.otherTableName}
+                  >
+                    {friendlyDiffName(diff.tableName)}
+                  </a>
                 </td>
                 {diff.added > 0 ? (
                   <td className={s.countCellAdded}>+{diff.added}</td>
