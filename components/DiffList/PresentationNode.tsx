@@ -60,17 +60,17 @@ export default function PresentationNodeDiffList({
 
             const hierarchy: DestinyPresentationNodeDefinitionTagged[] = [];
 
-            let nextNodeHash = def.parentNodeHashes[0];
-            while (nextNodeHash) {
-              const node = definitions[nextNodeHash];
+            // let nextNodeHash = def.parentNodeHashes?.[0];
+            // while (nextNodeHash) {
+            //   const node = definitions[nextNodeHash];
 
-              if (!node) {
-                break;
-              }
+            //   if (!node) {
+            //     break;
+            //   }
 
-              hierarchy.unshift(node);
-              nextNodeHash = node.parentNodeHashes[0];
-            }
+            //   hierarchy.unshift(node);
+            //   nextNodeHash = node.parentNodeHashes[0];
+            // }
 
             if (!def) {
               return (
@@ -144,12 +144,8 @@ const ChildrenList: React.FC<ChildrenListProps> = ({
   presentationNodeDefinitions,
   otherDefinitions,
 }) => {
-  const {
-    presentationNodes,
-    records,
-    collectibles,
-    metrics,
-  } = definition.children;
+  const { presentationNodes, records, collectibles, metrics } =
+    definition.children || {};
 
   const {
     DestinyRecordDefinition: recordDefs,
@@ -161,7 +157,7 @@ const ChildrenList: React.FC<ChildrenListProps> = ({
     <>
       <List
         title="Presentation nodes"
-        childrenList={presentationNodes}
+        childrenList={presentationNodes ?? []}
         definitions={presentationNodeDefinitions}
         definitionName="DestinyPresentationNodeDefinition"
         selectHash={(child) => child.presentationNodeHash}
@@ -169,7 +165,7 @@ const ChildrenList: React.FC<ChildrenListProps> = ({
 
       <List
         title="Triumphs"
-        childrenList={records}
+        childrenList={records ?? []}
         definitions={recordDefs}
         definitionName="DestinyRecordDefinition"
         selectHash={(child) => child.recordHash}
@@ -177,7 +173,7 @@ const ChildrenList: React.FC<ChildrenListProps> = ({
 
       <List
         title="Collectibles"
-        childrenList={collectibles}
+        childrenList={collectibles ?? []}
         definitions={collectibleDefs}
         definitionName="DestinyCollectibleDefinition"
         selectHash={(child) => child.collectibleHash}
@@ -185,7 +181,7 @@ const ChildrenList: React.FC<ChildrenListProps> = ({
 
       <List
         title="Metrics"
-        childrenList={metrics}
+        childrenList={metrics ?? []}
         definitions={metricDefs}
         definitionName="DestinyMetricDefinition"
         selectHash={(child) => child.metricHash}

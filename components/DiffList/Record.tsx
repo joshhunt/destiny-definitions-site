@@ -102,7 +102,7 @@ export default function RecordDiffList({
                     </tbody>
                   </table>
                 ) : (
-                  <span>{def.completionInfo.ScoreValue} pts</span>
+                  <span>{def.completionInfo?.ScoreValue ?? 0} pts</span>
                 )}
               </td>
             </tr>
