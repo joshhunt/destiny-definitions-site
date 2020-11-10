@@ -25,6 +25,7 @@ import DefinitionDiffPage from "../../../components/DefinitionDiffPage";
 import { format } from "date-fns";
 import definitionsMetadata from "../../../components/definitionsMetadata";
 import { DiffDataProvider } from "../../../components/diffDataContext";
+import appconfig from "../../../config";
 
 interface DefinitionDiffStaticProps {
   versionId: string;
@@ -203,6 +204,10 @@ export const getStaticProps: GetStaticProps<
   const allDefinitionDiffs = await getDiffForVersion(versionId);
   if (!allDefinitionDiffs) throw new Error("missing diff data for table page");
   const diff = allDefinitionDiffs[definitionName];
+
+  if (!appconfig.modifedDiffsAtAll) {
+    diff.modified = [];
+  }
 
   const modifiedDeepDiffs =
     (diff.modified.length > 0

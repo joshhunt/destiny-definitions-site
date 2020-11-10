@@ -48,8 +48,8 @@ export default function RecordDiffList({
           const def = definitions[hash];
 
           const objectives = [
-            ...def.objectiveHashes,
-            ...def.intervalInfo.intervalObjectives.map(
+            ...(def.objectiveHashes ?? []),
+            ...(def.intervalInfo?.intervalObjectives ?? []).map(
               (v) => v.intervalObjectiveHash
             ),
           ];
@@ -88,15 +88,17 @@ export default function RecordDiffList({
               </td>
 
               <td className={cx(s.nowrap, s.shrink)}>
-                {def.intervalInfo.intervalObjectives.length > 0 ? (
+                {(def.intervalInfo?.intervalObjectives ?? []).length > 0 ? (
                   <table cellSpacing={0} cellPadding={0}>
                     <tbody>
-                      {def.intervalInfo.intervalObjectives.map((v, index) => (
-                        <tr key={index}>
-                          {" "}
-                          <td>{v.intervalScoreValue} pts</td>{" "}
-                        </tr>
-                      ))}
+                      {(def.intervalInfo?.intervalObjectives ?? []).map(
+                        (v, index) => (
+                          <tr key={index}>
+                            {" "}
+                            <td>{v.intervalScoreValue} pts</td>{" "}
+                          </tr>
+                        )
+                      )}
                     </tbody>
                   </table>
                 ) : (
