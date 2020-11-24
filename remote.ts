@@ -86,8 +86,7 @@ export async function getVersionsIndex(includeTestVersion = false) {
 export async function getDiffForVersion(id: string) {
   return getCachedData<AllDefinitionDiffs>(
     `${id}__diff.json`,
-    `https://destiny-definitions.s3-eu-west-1.amazonaws.com/versions/${id}/diff.json`,
-    true
+    `https://destiny-definitions.s3-eu-west-1.amazonaws.com/versions/${id}/diff.json`
   );
 }
 
@@ -97,8 +96,7 @@ export async function getModifiedDeepDiff(
 ): Promise<ModifiedDeepDiffs | undefined> {
   const data = await getCachedData<ModifiedDeepDiffEntry[]>(
     `${id}__modified__${tableName}.json`,
-    `https://destiny-definitions.s3-eu-west-1.amazonaws.com/versions/${id}/modifiedDiffs/${tableName}.json`,
-    true
+    `https://destiny-definitions.s3-eu-west-1.amazonaws.com/versions/${id}/modifiedDiffs/${tableName}.json`
   );
 
   if (data) {
