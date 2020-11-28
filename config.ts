@@ -1,4 +1,4 @@
 export default {
-  modifiedDiffPages: false,
-  modifedDiffsAtAll: false,
+  modifiedDiffPages: true,
+  modifedDiffsAtAll: true,
 };

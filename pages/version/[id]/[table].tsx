@@ -86,32 +86,7 @@ interface Params {
 }
 
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
-  const data = await getVersionsIndex(true);
-  if (!data) throw new Error("Unable to get version index");
-
-  const diffsForVersion: DiffsByVersion = {};
-
-  for (const versionIndex in data) {
-    const version = data[versionIndex];
-    const diffData = await getDiffForVersion(version.id);
-
-    diffsForVersion[version.id] = diffData;
-  }
-
-  const paths = data.flatMap((version) => {
-    const diffData = diffsForVersion[version.id] ?? {};
-
-    return Object.entries(diffData)
-      .filter(([, diffData]) => Object.values(diffData).some((v) => v.length))
-      .map(([table]) => ({
-        params: {
-          id: version.id,
-          table,
-        },
-      }));
-  });
-
-  return { paths, fallback: false };
+  return { paths: [], fallback: "blocking" };
 };
 
 function createDiffCounts(allDefDiffs: AllDefinitionDiffs): VersionDiffCounts {
@@ -178,10 +153,11 @@ export const getStaticProps: GetStaticProps<
   DefinitionDiffStaticProps,
   Params
 > = async (context) => {
+  console.log("/versions/:id/:tableName getStaticProps", context);
   const versionId = context.params?.id ?? "";
   const definitionName = context.params?.table ?? "";
 
-  const allVersions = await getVersionsIndex(true);
+  const allVersions = await getVersionsIndex();
 
   if (!allVersions) {
     throw new Error("allVersions is undefined. This is bad");
@@ -191,19 +167,25 @@ export const getStaticProps: GetStaticProps<
   const previousId =
     currentVersionIndex &&
     allVersions &&
-    allVersions[currentVersionIndex - 1].id;
+    allVersions[currentVersionIndex - 1]?.id;
 
   const manifestVersion = allVersions.find((v) => v.id === versionId);
 
   if (!manifestVersion) {
-    console.error("allVersions:");
-    console.error(allVersions);
-    throw new Error(`Unable to find manifestVersion for version ${versionId}`);
+    console.warn(`Unable to find manifestVersion for version ${versionId}`);
+    return { notFound: true, revalidate: 5 };
   }
 
   const allDefinitionDiffs = await getDiffForVersion(versionId);
   if (!allDefinitionDiffs) throw new Error("missing diff data for table page");
   const diff = allDefinitionDiffs[definitionName];
+
+  if (!diff) {
+    console.warn(
+      `Could not find diff for version: ${versionId}, definitionName: ${definitionName}`
+    );
+    return { notFound: true, revalidate: 5 };
+  }
 
   if (!appconfig.modifedDiffsAtAll) {
     diff.modified = [];
@@ -216,13 +198,6 @@ export const getStaticProps: GetStaticProps<
 
   const definitions = await getDefinitionForVersion(versionId, definitionName);
   if (!definitions) throw new Error("Definitions is missing");
-
-  // TEST STUFF - START
-  // const testHashes = shuffle(definitions)
-  //   .slice(0, 100)
-  //   .map((h) => h.hash);
-  // diff.added = diff.added.concat(testHashes);
-  // TEST STUFF - END
 
   const otherDefinitions = await getDefinitionDependencies(
     versionId,
@@ -260,6 +235,7 @@ export const getStaticProps: GetStaticProps<
       allDefinitionDiffs,
       modifiedDeepDiffs,
     },
+    revalidate: 5 * 60,
   };
 };
 

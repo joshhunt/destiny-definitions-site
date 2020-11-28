@@ -74,6 +74,10 @@ const ModifiedDiffPage: React.FC<ModifiedDiffProps> = ({
   diffForHash,
   definition,
 }) => {
+  if (!hash) {
+    return <h1>Page is loading...</h1>;
+  }
+
   let oldDef: Record<string, any> = {};
   let newDef: Record<string, any> = {};
 

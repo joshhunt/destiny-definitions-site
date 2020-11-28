@@ -30,6 +30,8 @@ export default function VersionIndex({
   );
 }
 
+const revalidate = 5;
+
 export const getStaticPaths: GetStaticPaths = async () => {
   const data = await getVersionsIndex();
 
@@ -38,7 +40,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
       params: { id: version.id },
     })) ?? [];
 
-  return { paths, fallback: false };
+  return { paths, fallback: "blocking" };
 };
 
 export const getStaticProps: GetStaticProps<VersionIndexStaticProps> = async (
@@ -46,7 +48,12 @@ export const getStaticProps: GetStaticProps<VersionIndexStaticProps> = async (
 ) => {
   const data = await getVersionsIndex();
   const version = data?.find((v) => v.id === context?.params?.id);
-  if (!version) throw new Error("Unable to find manifest version for page");
+  if (!version) {
+    console.warn(
+      `Unable to find manifest version for page ID ${context?.params?.id}`
+    );
+    return { notFound: true, revalidate };
+  }
 
   const allDefinitionDiffs = await getDiffForVersion(version.id);
 
@@ -55,5 +62,6 @@ export const getStaticProps: GetStaticProps<VersionIndexStaticProps> = async (
       version,
       allDefinitionDiffs,
     },
+    revalidate,
   };
 };

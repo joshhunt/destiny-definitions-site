@@ -39,10 +39,8 @@ export default function Home({ versions, diffsForVersion }: HomeStaticProps) {
   );
 }
 
-export const getStaticProps: GetStaticProps<HomeStaticProps> = async (
-  context
-) => {
-  const data = await getVersionsIndex();
+export const getStaticProps: GetStaticProps<HomeStaticProps> = async () => {
+  const data = [...((await getVersionsIndex()) ?? [])];
   if (!data) throw new Error("Versions index is undefined");
   data.reverse();
 
@@ -55,5 +53,6 @@ export const getStaticProps: GetStaticProps<HomeStaticProps> = async (
 
   return {
     props: { versions: data, diffsForVersion },
+    revalidate: 5,
   };
 };
