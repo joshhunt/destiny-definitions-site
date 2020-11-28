@@ -10,7 +10,7 @@
     "serve": "serve ./out"
   },
   "engines": {
-    "node": "14.x"
+    "node": "12.x"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
