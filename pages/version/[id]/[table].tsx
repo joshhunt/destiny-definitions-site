@@ -11,7 +11,7 @@ import {
   ModifiedDeepDiffs,
 } from "../../../types";
 import { GetStaticProps, GetStaticPaths } from "next";
-import { mapValues, shuffle } from "lodash";
+import { mapValues } from "lodash";
 
 import {
   getVersionsIndex,
@@ -26,6 +26,7 @@ import { format } from "date-fns";
 import definitionsMetadata from "../../../components/definitionsMetadata";
 import { DiffDataProvider } from "../../../components/diffDataContext";
 import appconfig from "../../../config";
+import { friendlyDiffName } from "../../../lib/utils";
 
 interface DefinitionDiffStaticProps {
   versionId: string;
@@ -218,6 +219,10 @@ export const getStaticProps: GetStaticProps<
     {
       label: format(new Date(manifestVersion.createdAt), "E do MMM, u"),
       to: `/version/${versionId}`,
+    },
+    {
+      label: friendlyDiffName(definitionName),
+      to: `/version/${versionId}/${definitionName}`,
     },
   ];
 

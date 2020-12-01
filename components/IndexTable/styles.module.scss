@@ -10,7 +10,7 @@
   display: flex;
 
   &:hover {
-    // background: var(--alt-color);
+    // background: var(--border-color);
     .name {
       text-decoration: underline;
     }
@@ -26,7 +26,7 @@
   composes: item;
   padding-left: 16px;
   margin-left: 16px;
-  border-left: 1px solid var(--alt-color);
+  border-left: 1px solid var(--border-color);
 }
 
 .name {
@@ -47,7 +47,7 @@
 .otherTables {
   margin-top: 24px;
   padding-top: 24px;
-  border-top: 1px solid var(--alt-color);
+  border-top: 1px solid var(--border-color);
 }
 
 .countCell {
@@ -79,7 +79,11 @@
 
 .otherTablesTable {
   width: 100%;
-  margin-bottom: 64px;
+  margin-bottom: 32px;
+  border-collapse: collapse;
+  margin-left: 16px;
+  margin-top: 4px;
+  border-left: 1px solid var(--border-color);
 
   td {
     padding: 0;
@@ -93,12 +97,14 @@
 
 .otherTableName {
   composes: topItem;
+
   max-width: 100%;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
   display: inline-block;
   padding: 0;
+  padding-left: 16px;
 
   &:hover {
     text-decoration: underline;

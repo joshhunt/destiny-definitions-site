@@ -50,7 +50,9 @@ export default function IndexTable({
       })}
 
       <div className={s.otherTables}>
-        <table className={s.otherTablesTable}>
+        <div className={s.topItem}>Other tables</div>
+
+        <table className={s.otherTablesTable} cellPadding={0} cellSpacing={0}>
           <tbody>
             {versionDiffCounts.map((diff) => (
               <tr key={diff.tableName}>

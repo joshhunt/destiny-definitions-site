@@ -3,27 +3,31 @@
 $dark: #121212;
 $light: #fafafa;
 
-/* Dark mode */
 .dark {
-  --bg-color: $dark;
-  --bg-color-alpha-50: rgba($dark, 0.5);
+  --bg-color: #{$dark};
+  --bg-color-alpha-75: #{rgba($dark, 0.75)};
 
-  --text-color: $light;
-  --alt-color: rgba($light, 0.188);
-  --hover-color: rgba($light, 0.047)
+  --text-color: #{$light};
+  --hover-color: #{rgba($light, 0.047)};
 
-  --inverted-bg-color-transparent: rgba($light, 0.251)
+  --border-color: #{rgba($light, 0.188)};
+  --alt-color: var(--border-color);
+
+  --inverted-bg-color-transparent: #{rgba($light, 0.251)};
 }
 
-// /* Light mode */
-// :root {
-//   --bg-color: #fafafa;
-//   --text-color: #121212;
-//   --alt-color: #12121230;
-//   --hover-color: #1212120c;
+.light {
+  --bg-color: #{$light};
+  --bg-color-alpha-75: #{rgba($light, 0.75)};
 
-//   --inverted-bg-color-transparent: #12121230;
-// }
+  --text-color: #{$dark};
+  --hover-color: #{rgba($dark, 0.047)};
+
+  --border-color: #{rgba($dark, 0.188)};
+  --alt-color: var(--border-color); // don't use this any more?
+
+  --inverted-bg-color-transparent: #{rgba($dark, 0.251)};
+}
 
 body {
   background: var(--bg-color);

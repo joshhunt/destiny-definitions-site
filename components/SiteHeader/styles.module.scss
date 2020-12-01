@@ -1,7 +1,12 @@
 .root {
-  margin: 32px;
-  padding-bottom: 32px;
-  border-bottom: 1px solid var(--alt-color);
+  padding: 32px;
+  padding-bottom: 0;
+  margin-bottom: 32px;
+  background: var(--bg-color-alpha-75);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .title {
@@ -15,6 +20,9 @@
 .breadcrumbs {
   display: flex;
   align-items: center;
+
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 32px;
 }
 
 .childCrumb {
