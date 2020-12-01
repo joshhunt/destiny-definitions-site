@@ -1,13 +1,18 @@
 @import "../styles/type.scss";
 
-/* Dark mode */
-:root {
-  --bg-color: #121212;
-  --text-color: #fafafa;
-  --alt-color: #fafafa30;
-  --hover-color: #fafafa0c;
+$dark: #121212;
+$light: #fafafa;
 
-  --inverted-bg-color-transparent: #fafafa40;
+/* Dark mode */
+.dark {
+  --bg-color: $dark;
+  --bg-color-alpha-50: rgba($dark, 0.5);
+
+  --text-color: $light;
+  --alt-color: rgba($light, 0.188);
+  --hover-color: rgba($light, 0.047)
+
+  --inverted-bg-color-transparent: rgba($light, 0.251)
 }
 
 // /* Light mode */
