@@ -173,7 +173,7 @@ export const getStaticProps: GetStaticProps<
 
   if (!manifestVersion) {
     console.warn(`Unable to find manifestVersion for version ${versionId}`);
-    return { notFound: true, revalidate: 5 };
+    return { notFound: true, revalidate: 60 };
   }
 
   const allDefinitionDiffs = await getDiffForVersion(versionId);
@@ -239,7 +239,7 @@ export const getStaticProps: GetStaticProps<
       allDefinitionDiffs,
       modifiedDeepDiffs,
     },
-    revalidate: 5 * 60,
+    revalidate: 60 * 60,
   };
 };
 

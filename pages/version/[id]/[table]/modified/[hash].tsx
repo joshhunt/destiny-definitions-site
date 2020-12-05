@@ -60,6 +60,7 @@ export const getStaticProps: GetStaticProps<
       diffForHash,
       definition,
     },
+    revalidate: 60 * 60,
   };
 };
 

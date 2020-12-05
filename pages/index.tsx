@@ -53,6 +53,6 @@ export const getStaticProps: GetStaticProps<HomeStaticProps> = async () => {
 
   return {
     props: { versions: data, diffsForVersion },
-    revalidate: 5,
+    revalidate: 5 * 60,
   };
 };

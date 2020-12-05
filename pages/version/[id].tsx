@@ -30,8 +30,6 @@ export default function VersionIndex({
   );
 }
 
-const revalidate = 5;
-
 export const getStaticPaths: GetStaticPaths = async () => {
   const data = await getVersionsIndex();
 
@@ -52,7 +50,7 @@ export const getStaticProps: GetStaticProps<VersionIndexStaticProps> = async (
     console.warn(
       `Unable to find manifest version for page ID ${context?.params?.id}`
     );
-    return { notFound: true, revalidate };
+    return { notFound: true, revalidate: 30 };
   }
 
   const allDefinitionDiffs = await getDiffForVersion(version.id);
@@ -62,6 +60,6 @@ export const getStaticProps: GetStaticProps<VersionIndexStaticProps> = async (
       version,
       allDefinitionDiffs,
     },
-    revalidate,
+    revalidate: 60 * 60,
   };
 };
