@@ -35,6 +35,10 @@ export default function App({ Component, pageProps }: AppProps) {
           rel="stylesheet"
         ></link>
         <script src="/smoothScroll.js" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1"
+        ></meta>
       </Head>
 
       <SiteHeader breadcrumbs={pageProps.breadcrumbs} />
