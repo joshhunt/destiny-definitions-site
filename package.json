@@ -6,7 +6,7 @@
     "table-names": "ts-node ./scripts/getShortDefinitionNames.ts",
     "warm-pages": "ts-node ./scripts/warmPages.ts",
     "dev": "yarn table-names && next dev",
-    "build": "yarn table-names && next build && next export",
+    "build": "yarn table-names && next build",
     "start": "yarn table-names && next start",
     "serve": "serve ./out"
   },
