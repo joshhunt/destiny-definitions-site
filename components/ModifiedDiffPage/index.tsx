@@ -290,12 +290,9 @@ function set(obj: Record<string, any>, pathList: string[], value: any) {
   for (const pathKey of pathList.slice(0, pathList.length - 1)) {
     if (!currentObj[pathKey]) currentObj[pathKey] = {};
     currentObj = currentObj[pathKey];
-    // console.log({ pathKey, currentObj });
   }
 
   currentObj[pathList[len - 1]] = value;
-
-  // console.log("last", { pathKey: pathList[len - 1], currentObj });
 
   console.groupEnd();
 }

@@ -154,7 +154,6 @@ export const getStaticProps: GetStaticProps<
   DefinitionDiffStaticProps,
   Params
 > = async (context) => {
-  console.log("/versions/:id/:tableName getStaticProps", context);
   const versionId = context.params?.id ?? "";
   const definitionName = context.params?.table ?? "";
 
