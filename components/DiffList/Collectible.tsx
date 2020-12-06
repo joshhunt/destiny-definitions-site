@@ -56,12 +56,19 @@ export default function CollectibleDiffList({
                 <BungieImage
                   className={s.icon}
                   src={def.displayProperties?.icon}
+                  alt={
+                    def.displayProperties?.name
+                      ? `Icon of "${def.displayProperties?.name}"`
+                      : "Icon of this collectible"
+                  }
                 />
               </td>
 
               <td className={s.nowrap}>{def.displayProperties?.name}</td>
 
-              <td className={cx(s.prewrap)}>{def.displayProperties?.name}</td>
+              <td className={cx(s.prewrap)}>
+                {def.displayProperties?.description}
+              </td>
 
               <td className={cx(s.prewrap)}>{def.sourceString}</td>
             </tr>

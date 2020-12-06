@@ -54,6 +54,7 @@ export default function VendorDiffList({
                         <BungieImage
                           className={s.screenshotPreview}
                           src={location.backgroundImagePath}
+                          alt="Icon"
                         />
                       </a>
                     )}

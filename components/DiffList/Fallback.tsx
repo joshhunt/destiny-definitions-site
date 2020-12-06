@@ -67,7 +67,15 @@ export default function FallbackDiffList({
               </td>
               {hasIcon && (
                 <td className={s.shrink}>
-                  <BungieImage className={s.icon} src={getIconSrc(def)} />
+                  <BungieImage
+                    className={s.icon}
+                    src={getIconSrc(def)}
+                    alt={
+                      hasName
+                        ? `Icon of "${getDisplayName(def)}"`
+                        : "Icon of this entity"
+                    }
+                  />
                 </td>
               )}
               {hasName && <td className={s.nowrap}>{getDisplayName(def)}</td>}

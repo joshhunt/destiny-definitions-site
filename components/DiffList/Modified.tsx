@@ -70,13 +70,25 @@ export default function ModifiedDiffList({
               <td className={s.shrink}>
                 <HashLink hash={hash} definitionName={definitionName} />
               </td>
+
               {hasIcon && (
                 <td className={s.shrink}>
-                  <BungieImage className={s.smallIcon} src={getIconSrc(def)} />
+                  <BungieImage
+                    className={s.smallIcon}
+                    src={getIconSrc(def)}
+                    alt={
+                      hasName
+                        ? `Icon of "${getDisplayName(def)}"`
+                        : "Icon of this entity"
+                    }
+                  />
                 </td>
               )}
+
               {hasName && <td className={s.nowrap}>{getDisplayName(def)}</td>}
+
               <td>{modifiedDiffs.diff.length}</td>
+
               {config.modifiedDiffPages && (
                 <td>
                   <Link

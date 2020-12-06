@@ -17,7 +17,17 @@ const InlineChild: React.FC<InlineChildProps> = ({ definition }) => {
 
   return (
     <span>
-      {icon && <BungieImage className={s.icon} src={icon} />}
+      {icon && (
+        <BungieImage
+          className={s.icon}
+          src={icon}
+          alt={
+            definition.displayProperties?.name
+              ? `Icon of "${definition.displayProperties.name}"`
+              : "Icon of this entity"
+          }
+        />
+      )}
       {definition.displayProperties?.name || <em>No name</em>}
     </span>
   );

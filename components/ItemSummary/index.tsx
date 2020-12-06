@@ -36,7 +36,15 @@ export default function ItemSummary({ def, definitions }: ItemSummaryProps) {
   return (
     <div className={s.itemSummary}>
       <div className={s.itemSummaryWell}>
-        <BungieImage className={s.icon} src={def.displayProperties.icon} />
+        <BungieImage
+          className={s.icon}
+          src={def.displayProperties.icon}
+          alt={
+            def.displayProperties.name
+              ? `Icon of "${def.displayProperties.name}"`
+              : "Icon of this entity"
+          }
+        />
       </div>
 
       <div className={s.itemSummaryMain}>

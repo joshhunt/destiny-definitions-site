@@ -144,6 +144,11 @@ export default function InventoryItemDiffList({
                       <BungieImage
                         className={s.screenshotPreview}
                         src={def.screenshot}
+                        alt={
+                          def.displayProperties.name
+                            ? `Screenshot of "${def.displayProperties.name}"`
+                            : "Screenshot of this item"
+                        }
                       />
                     </a>
                   )}

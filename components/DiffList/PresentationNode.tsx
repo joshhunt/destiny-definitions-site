@@ -91,6 +91,7 @@ export default function PresentationNodeDiffList({
                   <BungieImage
                     className={s.icon}
                     src={def.displayProperties?.icon}
+                    alt="Icon"
                   />
                 </td>
 
