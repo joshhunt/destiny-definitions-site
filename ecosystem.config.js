@@ -18,10 +18,14 @@ module.exports = {
       user: "josh",
       host: ["165.232.110.210"],
       ref: "origin/master",
+      key: "deploy.key",
       repo: "git@github.com:joshhunt/destiny-definitions-site.git",
       path: "/home/josh/destiny-definitions-site",
       "post-deploy":
         "yarn install; yarn build; yarn run pm2 startOrRestart ecosystem.config.js app",
+      env: {
+        NODE_ENV: "production",
+      },
     },
   },
 };
