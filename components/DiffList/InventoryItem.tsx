@@ -140,6 +140,7 @@ export default function InventoryItemDiffList({
                     <a
                       href={`https://www.bungie.net${def.screenshot}`}
                       target="_blank"
+                      rel="noopener noreferrer"
                     >
                       <BungieImage
                         className={s.screenshotPreview}

@@ -50,6 +50,7 @@ export default function VendorDiffList({
                       <a
                         href={`https://www.bungie.net${location.backgroundImagePath}`}
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         <BungieImage
                           className={s.screenshotPreview}

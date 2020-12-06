@@ -88,6 +88,7 @@ export default function ActivityDiffList({
               <a
                 href={`https://www.bungie.net${def.pgcrImage}`}
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 <BungieImage
                   className={s.screenshotPreview}
