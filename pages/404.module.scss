@@ -1,0 +1,29 @@
+.root {
+  min-height: calc(100% - 125px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.title,
+.desc {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0;
+}
+
+.title {
+  border-right: 1px solid var(--border-color);
+  margin-right: 24px;
+  padding: 8px 24px 8px 0;
+  font-size: 48px;
+}
+
+.block {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 100%;
+  text-align: center;
+}
