@@ -16,7 +16,7 @@ module.exports = {
     // "production" is the environment name
     production: {
       user: "josh",
-      host: ["DestinyBox"],
+      host: ["165.232.110.210"],
       ref: "origin/master",
       repo: "git@github.com:joshhunt/destiny-definitions-site.git",
       path: "/home/josh/destiny-definitions-site",

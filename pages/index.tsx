@@ -32,7 +32,7 @@ export default function Home({ versions, diffsForVersion }: HomeStaticProps) {
         })}
       </div>
 
-      <pre>do server</pre>
+      <pre>github action</pre>
     </div>
   );
 }
