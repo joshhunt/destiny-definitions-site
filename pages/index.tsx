@@ -31,8 +31,6 @@ export default function Home({ versions, diffsForVersion }: HomeStaticProps) {
           );
         })}
       </div>
-
-      <pre>github action</pre>
     </div>
   );
 }
