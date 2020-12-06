@@ -1,12 +1,8 @@
-import Link from "next/link";
 import { GetStaticProps } from "next";
-import { format } from "date-fns";
 
 import { ManifestVersion, DiffsByVersion } from "../types";
 import { getVersionsIndex, getDiffForVersion } from "../remote";
-import VersionDiffSummary from "../components/VersionDiffSummary";
 
-import commonStyles from "../styles/common.module.scss";
 import s from "./indexStyles.module.scss";
 import Version from "../components/Version";
 
@@ -35,6 +31,7 @@ export default function Home({ versions, diffsForVersion }: HomeStaticProps) {
           );
         })}
       </div>
+      <pre>server</pre>
     </div>
   );
 }
