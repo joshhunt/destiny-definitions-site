@@ -1,18 +1,11 @@
 import { GetStaticPaths, GetStaticProps } from "next";
 import React from "react";
 import ModifiedDiffPage from "../../../../../components/ModifiedDiffPage";
-import { getDisplayName } from "../../../../../lib/utils";
 import {
   getDefinitionForVersion,
-  getDiffForVersion,
   getModifiedDeepDiff,
-  getVersionsIndex,
 } from "../../../../../remote";
-import {
-  AnyDefinition,
-  DiffsByVersion,
-  ModifiedDeepDiffEntry,
-} from "../../../../../types";
+import { AnyDefinition, ModifiedDeepDiffEntry } from "../../../../../types";
 
 import config from "../../../../../config";
 
