@@ -31,6 +31,8 @@ export default function Home({ versions, diffsForVersion }: HomeStaticProps) {
           );
         })}
       </div>
+
+      <pre>cloudflare</pre>
     </div>
   );
 }
