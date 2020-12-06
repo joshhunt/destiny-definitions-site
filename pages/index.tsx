@@ -31,7 +31,8 @@ export default function Home({ versions, diffsForVersion }: HomeStaticProps) {
           );
         })}
       </div>
-      <pre>server</pre>
+
+      <pre>do server</pre>
     </div>
   );
 }

@@ -16,11 +16,12 @@ module.exports = {
     // "production" is the environment name
     production: {
       user: "josh",
-      host: ["165.232.110.210"],
+      host: ["DestinyBox"],
       ref: "origin/master",
       repo: "git@github.com:joshhunt/destiny-definitions-site.git",
       path: "/home/josh/destiny-definitions-site",
-      "post-deploy": "yarn install; yarn build",
+      "post-deploy":
+        "yarn install; yarn build; yarn run pm2 startOrRestart ecosystem.config.js app",
     },
   },
 };
