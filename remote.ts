@@ -8,6 +8,7 @@ import {
   ModifiedDeepDiffs,
 } from "./types";
 import { keyBy, mapValues } from "lodash";
+import { AllDestinyManifestComponents } from "bungie-api-ts/destiny2";
 
 const CACHE_DIR = path.join(process.cwd(), "custom-api-cache");
 console.log("CACHE_DIR:", CACHE_DIR);
@@ -74,6 +75,29 @@ export async function getModifiedDeepDiff(
   return data;
 }
 
+export async function getVersion(versionId: string) {
+  const index = await getVersionsIndex();
+  const found = index?.find((v) => (v.id = versionId));
+  return found;
+}
+
+export async function getPreviousVersion(versionId: string) {
+  const index = await getVersionsIndex();
+  const indexOf = index?.findIndex((v) => (v.id = versionId)) ?? -1;
+  const previousVersion = index?.[indexOf - 1];
+
+  return previousVersion;
+}
+
+export async function getDiffForTable(
+  versionId: string,
+  tableName: keyof AllDestinyManifestComponents | string
+) {
+  const allDefinitionDiffs = await getDiffForVersion(versionId);
+  if (!allDefinitionDiffs) throw new Error("missing diff data for table page");
+  return allDefinitionDiffs[tableName];
+}
+
 export async function getDefinitionForVersion(
   version: string,
   definitionName: string
@@ -83,6 +107,10 @@ export async function getDefinitionForVersion(
     `${version}__${definitionName}.json`,
     `https://destiny-definitions.s3-eu-west-1.amazonaws.com/versions/${version}/tables/${definitionName}.json`
   );
+
+  if (!data) {
+    throw new Error(`Definitions missing for ${version}/${definitionName}`);
+  }
 
   return mapValues(data, (v) => ({
     ...v,

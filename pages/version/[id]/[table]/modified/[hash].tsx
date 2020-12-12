@@ -4,10 +4,13 @@ import ModifiedDiffPage from "../../../../../components/ModifiedDiffPage";
 import {
   getDefinitionForVersion,
   getModifiedDeepDiff,
+  getVersion,
 } from "../../../../../remote";
 import { AnyDefinition, ModifiedDeepDiffEntry } from "../../../../../types";
 
 import config from "../../../../../config";
+import { format } from "date-fns";
+import { friendlyDiffName, getDisplayName } from "../../../../../lib/utils";
 
 interface Params {
   [key: string]: any;
@@ -40,11 +43,29 @@ export const getStaticProps: GetStaticProps<
   const definitionName = context.params?.table ?? "";
   const hash = context.params?.hash ?? "";
 
-  const diffData = await getModifiedDeepDiff(versionId, definitionName);
-  const diffForHash = diffData?.[hash as any];
+  const [diffData, definitions, manifestVersion] = await Promise.all([
+    getModifiedDeepDiff(versionId, definitionName),
+    getDefinitionForVersion(versionId, definitionName),
+    getVersion(versionId),
+  ]);
 
-  const definitions = await getDefinitionForVersion(versionId, definitionName);
+  const diffForHash = diffData?.[hash as any];
   const definition = definitions[hash];
+
+  const breadcrumbs = [
+    manifestVersion && {
+      label: format(new Date(manifestVersion.createdAt), "E do MMM, u"),
+      to: `/version/${versionId}`,
+    },
+    {
+      label: friendlyDiffName(definitionName),
+      to: `/version/${versionId}/${definitionName}`,
+    },
+    definition && {
+      label: getDisplayName(definition),
+      to: `/version/${versionId}/${definitionName}/modified/${hash}`,
+    },
+  ];
 
   return {
     props: {
@@ -52,6 +73,7 @@ export const getStaticProps: GetStaticProps<
       hash,
       diffForHash,
       definition,
+      breadcrumbs,
     },
     revalidate: 60 * 60,
   };

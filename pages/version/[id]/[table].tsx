@@ -18,6 +18,9 @@ import {
   getDiffForVersion,
   getDefinitionForVersion,
   getModifiedDeepDiff,
+  getVersion,
+  getPreviousVersion,
+  getDiffForTable,
 } from "../../../remote";
 
 import React from "react";
@@ -156,20 +159,10 @@ export const getStaticProps: GetStaticProps<
 > = async (context) => {
   const versionId = context.params?.id ?? "";
   const definitionName = context.params?.table ?? "";
-
-  const allVersions = await getVersionsIndex();
-
-  if (!allVersions) {
-    throw new Error("allVersions is undefined. This is bad");
-  }
-
-  const currentVersionIndex = allVersions.findIndex((v) => v.id === versionId);
-  const previousId =
-    currentVersionIndex &&
-    allVersions &&
-    allVersions[currentVersionIndex - 1]?.id;
-
-  const manifestVersion = allVersions.find((v) => v.id === versionId);
+  const [manifestVersion, previousManifestVersion] = await Promise.all([
+    getVersion(versionId),
+    getPreviousVersion(versionId),
+  ]);
 
   if (!manifestVersion) {
     console.warn(`Unable to find manifestVersion for version ${versionId}`);
@@ -181,14 +174,8 @@ export const getStaticProps: GetStaticProps<
   const diff = allDefinitionDiffs[definitionName];
 
   if (!diff) {
-    console.warn(
-      `Could not find diff for version: ${versionId}, definitionName: ${definitionName}`
-    );
+    console.warn(`No diff for version: ${versionId}/${definitionName}`);
     return { notFound: true, revalidate: 5 };
-  }
-
-  if (!appconfig.modifedDiffsAtAll) {
-    diff.modified = [];
   }
 
   const modifiedDeepDiffs =
@@ -197,7 +184,6 @@ export const getStaticProps: GetStaticProps<
       : null) ?? {};
 
   const definitions = await getDefinitionForVersion(versionId, definitionName);
-  if (!definitions) throw new Error("Definitions is missing");
 
   const otherDefinitions = await getDefinitionDependencies(
     versionId,
@@ -210,8 +196,11 @@ export const getStaticProps: GetStaticProps<
 
   const removedHashes = [...diff.removed, ...diff.reclassified];
   const previousDefinitions =
-    removedHashes.length > 0 && previousId
-      ? await getDefinitionForVersion(previousId, definitionName)
+    removedHashes.length > 0 && previousManifestVersion?.id
+      ? await getDefinitionForVersion(
+          previousManifestVersion.id,
+          definitionName
+        )
       : null;
 
   const breadcrumbs = [
