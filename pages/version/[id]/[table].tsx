@@ -1,5 +1,4 @@
 import {
-  DiffsByVersion,
   AnyDefinitionTable,
   DefinitionDiff,
   ManifestVersion,
@@ -14,13 +13,11 @@ import { GetStaticProps, GetStaticPaths } from "next";
 import { mapValues } from "lodash";
 
 import {
-  getVersionsIndex,
   getDiffForVersion,
   getDefinitionForVersion,
   getModifiedDeepDiff,
   getVersion,
   getPreviousVersion,
-  getDiffForTable,
 } from "../../../remote";
 
 import React from "react";
@@ -28,7 +25,6 @@ import DefinitionDiffPage from "../../../components/DefinitionDiffPage";
 import { format } from "date-fns";
 import definitionsMetadata from "../../../components/definitionsMetadata";
 import { DiffDataProvider } from "../../../components/diffDataContext";
-import appconfig from "../../../config";
 import { friendlyDiffName } from "../../../lib/utils";
 
 interface DefinitionDiffStaticProps {
