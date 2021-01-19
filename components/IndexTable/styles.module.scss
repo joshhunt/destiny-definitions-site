@@ -59,22 +59,22 @@
 
 .countCellAdded {
   composes: countCell;
-  color: #66bb6a;
+  color: #66bb6a; // todo: variable, also in VersionDiffSummary
 }
 
 .countCellRemoved {
   composes: countCell;
-  color: #ef5350;
+  color: #ef5350; // todo: variable, also in VersionDiffSummary
 }
 
 .countCellUnclassified {
   composes: countCell;
-  color: #2196f3;
+  color: #2196f3; // todo: variable, also in VersionDiffSummary
 }
 
 .countCellReclassified {
   composes: countCell;
-  color: #ef5350;
+  color: #ef5350; // todo: variable, also in VersionDiffSummary
 }
 
 .otherTablesTable {

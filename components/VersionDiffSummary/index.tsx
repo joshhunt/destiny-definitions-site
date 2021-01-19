@@ -51,16 +51,30 @@ export default function VersionDiffSummary({
                   </a>
                 </td>
                 <td>
-                  <DiffNumber value={diffs.added.length} />
+                  <DiffNumber
+                    value={diffs.added.length}
+                    suffix="+"
+                    className={s.numberAdded}
+                  />
                 </td>
                 <td>
-                  <DiffNumber value={diffs.unclassified.length} />
+                  <DiffNumber
+                    value={diffs.unclassified.length}
+                    className={s.numberUnclassified}
+                  />
                 </td>
                 <td>
-                  <DiffNumber value={diffs.removed.length} />
+                  <DiffNumber
+                    value={diffs.removed.length}
+                    suffix="-"
+                    className={s.numberRemoved}
+                  />
                 </td>
                 <td>
-                  <DiffNumber value={diffs.modified.length} />
+                  <DiffNumber
+                    value={diffs.modified.length}
+                    className={s.numberModified}
+                  />
                 </td>
               </tr>
             );
@@ -72,10 +86,20 @@ export default function VersionDiffSummary({
 
 interface DiffNumberProps {
   value: number;
+  className?: string;
+  suffix?: React.ReactNode;
 }
 
-const DiffNumber: React.FC<DiffNumberProps> = ({ value }) => {
+const DiffNumber: React.FC<DiffNumberProps> = ({
+  value,
+  className,
+  suffix,
+}) => {
+  const isZero = value === 0;
   return (
-    <span className={value === 0 ? s.zeroNumber : undefined}>{value}</span>
+    <span className={isZero ? s.zeroNumber : className}>
+      {value}
+      {!isZero && suffix}
+    </span>
   );
 };
