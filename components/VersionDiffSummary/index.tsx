@@ -50,10 +50,18 @@ export default function VersionDiffSummary({
                     {friendlyDiffName(tableName)}
                   </a>
                 </td>
-                <td>{diffs.added.length}</td>
-                <td>{diffs.unclassified.length}</td>
-                <td>{diffs.removed.length}</td>
-                <td>{diffs.modified.length}</td>
+                <td>
+                  <DiffNumber value={diffs.added.length} />
+                </td>
+                <td>
+                  <DiffNumber value={diffs.unclassified.length} />
+                </td>
+                <td>
+                  <DiffNumber value={diffs.removed.length} />
+                </td>
+                <td>
+                  <DiffNumber value={diffs.modified.length} />
+                </td>
               </tr>
             );
           })}
@@ -61,3 +69,13 @@ export default function VersionDiffSummary({
     </table>
   );
 }
+
+interface DiffNumberProps {
+  value: number;
+}
+
+const DiffNumber: React.FC<DiffNumberProps> = ({ value }) => {
+  return (
+    <span className={value === 0 ? s.zeroNumber : undefined}>{value}</span>
+  );
+};
