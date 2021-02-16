@@ -14,9 +14,11 @@ const listener = (ev) => {
   if (href?.[0] === "#") {
     ev.preventDefault();
     const id = href.slice(1);
-    document.querySelector(`[id="${id}"]`).scrollIntoView({
-      behavior: "smooth",
-    });
+    const target = document.querySelector(`[id="${id}"]`);
+    target &&
+      target.scrollIntoView({
+        behavior: "smooth",
+      });
   }
 };
 

@@ -84,7 +84,8 @@ export async function getVersion(versionId: string) {
 
 export async function getPreviousVersion(versionId: string) {
   const index = await getVersionsIndex();
-  const indexOf = index?.findIndex((v) => (v.id = versionId)) ?? -1;
+
+  const indexOf = index?.findIndex((v) => v.id === versionId) ?? -1;
   const previousVersion = index?.[indexOf - 1];
 
   return previousVersion;

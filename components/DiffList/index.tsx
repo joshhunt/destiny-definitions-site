@@ -14,6 +14,7 @@ import RecordDiffList from "./Record";
 import CollectibleDiffList from "./Collectible";
 import PresentationNodeDiffList from "./PresentationNode";
 import InventoryItemDiffList from "./InventoryItem";
+import commonStyles from "../../styles/common.module.scss";
 
 import s from "./styles.module.scss";
 import { castDefinitions } from "../../lib/utils";
@@ -24,12 +25,15 @@ import ModifiedDiffList from "./Modified";
 
 interface DiffListProps {
   name: string;
+  diffType: string;
   hashes: DiffGroup | number[];
   definitions: AnyDefinitionTable;
   definitionName: string;
   otherDefinitions: Partial<AllDestinyManifestComponentsTagged>;
   useFallback?: boolean;
   useModified?: boolean;
+  isTruncated?: boolean;
+  versionId: string;
 }
 
 interface ForDefinitionTypeProps {
@@ -182,6 +186,9 @@ export default function DiffList({
   otherDefinitions,
   useFallback,
   useModified,
+  isTruncated,
+  versionId,
+  diffType,
 }: DiffListProps) {
   const groupedHashes = Array.isArray(hashes)
     ? { [NO_CATEGORY]: hashes }
@@ -222,6 +229,20 @@ export default function DiffList({
           />
         </Fragment>
       ))}
+
+      {isTruncated && (
+        <p>
+          <em>
+            Showing only first 100 entries.{" "}
+            <a
+              href={`/version/${versionId}/${definitionName}/${diffType}`}
+              className={commonStyles.link}
+            >
+              Show all.
+            </a>
+          </em>
+        </p>
+      )}
     </div>
   );
 }

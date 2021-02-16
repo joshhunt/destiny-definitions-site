@@ -6,7 +6,6 @@ import {
   VersionDiffCounts,
   AllDestinyManifestComponentsTagged,
 } from "../../types";
-import { format } from "date-fns";
 import { friendlyDiffName } from "../../lib/utils";
 import DiffList from "../DiffList";
 import { doGrouping } from "./categorise";
@@ -18,6 +17,7 @@ interface DefinitionDiffStaticProps {
   versionId: string;
   manifestVersion: ManifestVersion;
   definitionName: string;
+  specificDiffType: string | undefined;
   diff: DefinitionDiff;
   definitions: AnyDefinitionTable;
   previousDefinitions: AnyDefinitionTable | null;
@@ -28,6 +28,7 @@ interface DefinitionDiffStaticProps {
 export default function DefinitionDiffPage({
   versionId,
   manifestVersion,
+  specificDiffType,
   definitionName,
   diff,
   definitions,
@@ -35,6 +36,8 @@ export default function DefinitionDiffPage({
   versionDiffCounts,
   otherDefinitions,
 }: DefinitionDiffStaticProps) {
+  const TRUNCATION_LIMIT = 100;
+
   const groupedDiff = doGrouping(
     diff,
     definitions,
@@ -68,53 +71,80 @@ export default function DefinitionDiffPage({
     })
     .filter((v) => v.count > 0);
 
+  const modified = Array.isArray(groupedDiff.modified)
+    ? groupedDiff.modified.slice(0, TRUNCATION_LIMIT)
+    : truncateObject(groupedDiff.modified, TRUNCATION_LIMIT);
+
   return (
     <div className={s.root}>
       <div className={s.main}>
         <h2 className={s.pageTitle}>{friendlyDiffName(definitionName)}</h2>
 
-        <DiffList
-          name="Added"
-          hashes={groupedDiff.added}
-          definitions={definitions}
-          definitionName={definitionName}
-          otherDefinitions={otherDefinitions}
-        />
+        {(!specificDiffType || specificDiffType == "added") && (
+          <DiffList
+            name="Added"
+            diffType="added"
+            hashes={groupedDiff.added}
+            definitions={definitions}
+            definitionName={definitionName}
+            otherDefinitions={otherDefinitions}
+            versionId={versionId}
+          />
+        )}
 
-        <DiffList
-          name="Unclassified"
-          hashes={groupedDiff.unclassified}
-          definitions={definitions}
-          definitionName={definitionName}
-          otherDefinitions={otherDefinitions}
-        />
+        {(!specificDiffType || specificDiffType == "unclassified") && (
+          <DiffList
+            name="Unclassified"
+            diffType="unclassified"
+            hashes={groupedDiff.unclassified}
+            definitions={definitions}
+            definitionName={definitionName}
+            otherDefinitions={otherDefinitions}
+            versionId={versionId}
+          />
+        )}
 
-        <DiffList
-          name="Removed"
-          hashes={groupedDiff.removed}
-          definitions={previousDefinitions || definitions}
-          definitionName={definitionName}
-          otherDefinitions={otherDefinitions}
-          useFallback
-        />
+        {(!specificDiffType || specificDiffType == "removed") && (
+          <DiffList
+            name="Removed"
+            diffType="removed"
+            hashes={groupedDiff.removed}
+            definitions={previousDefinitions || definitions}
+            definitionName={definitionName}
+            otherDefinitions={otherDefinitions}
+            versionId={versionId}
+            useFallback
+          />
+        )}
 
-        <DiffList
-          name="Reclassified"
-          hashes={groupedDiff.reclassified}
-          definitions={previousDefinitions || definitions}
-          definitionName={definitionName}
-          otherDefinitions={otherDefinitions}
-          useFallback
-        />
+        {(!specificDiffType || specificDiffType == "reclassified") && (
+          <DiffList
+            name="Reclassified"
+            diffType="reclassified"
+            hashes={groupedDiff.reclassified}
+            definitions={previousDefinitions || definitions}
+            definitionName={definitionName}
+            otherDefinitions={otherDefinitions}
+            versionId={versionId}
+            useFallback
+          />
+        )}
 
-        <DiffList
-          name="Modified"
-          hashes={groupedDiff.modified}
-          definitions={previousDefinitions || definitions}
-          definitionName={definitionName}
-          otherDefinitions={otherDefinitions}
-          useModified
-        />
+        {(!specificDiffType || specificDiffType == "modified") && (
+          <DiffList
+            name="Modified"
+            diffType="modified"
+            hashes={specificDiffType ? groupedDiff.modified : modified}
+            definitions={previousDefinitions || definitions}
+            definitionName={definitionName}
+            otherDefinitions={otherDefinitions}
+            versionId={versionId}
+            isTruncated={
+              !specificDiffType && diff.modified.length > TRUNCATION_LIMIT
+            }
+            useModified
+          />
+        )}
       </div>
 
       <div className={s.side}>
@@ -128,4 +158,24 @@ export default function DefinitionDiffPage({
       </div>
     </div>
   );
+}
+
+function truncateObject(
+  obj: Record<string, number[]>,
+  limit: number
+): Record<string, number[]> {
+  const newObj: Record<string, number[]> = {};
+
+  let total = 0;
+  for (const [key, hashes] of Object.entries(obj)) {
+    const remaining = limit - total;
+    if (remaining <= 0) {
+      break;
+    }
+
+    newObj[key] = hashes.slice(0, remaining);
+    total += newObj[key].length;
+  }
+
+  return newObj;
 }

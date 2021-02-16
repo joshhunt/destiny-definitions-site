@@ -78,19 +78,19 @@ export interface PageProps extends Record<string, any> {
 }
 
 export interface ManifestVersion {
-  id: string;
-  version: string;
-  s3Key: string;
-  createdAt: Date;
-  updatedAt: Date;
+  readonly id: string;
+  readonly version: string;
+  readonly s3Key: string;
+  readonly createdAt: Date;
+  readonly updatedAt: Date;
 }
 
 export interface DefinitionDiff {
-  removed: number[];
-  added: number[];
-  unclassified: number[];
-  reclassified: number[];
-  modified: number[];
+  readonly removed: number[];
+  readonly added: number[];
+  readonly unclassified: number[];
+  readonly reclassified: number[];
+  readonly modified: number[];
 }
 
 export type DiffGroup = Record<ItemCategory, number[]>;

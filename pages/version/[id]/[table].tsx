@@ -30,6 +30,7 @@ import { friendlyDiffName } from "../../../lib/utils";
 interface DefinitionDiffStaticProps {
   versionId: string;
   manifestVersion: ManifestVersion;
+  specificDiffType: string | null;
   definitionName: string;
   diff: DefinitionDiff;
   definitions: AnyDefinitionTable;
@@ -48,6 +49,7 @@ export default function DefinitionDiffPageWrapper({
   diff,
   definitions,
   previousDefinitions,
+  specificDiffType,
   versionDiffCounts,
   otherDefinitions,
   allDefinitionDiffs,
@@ -69,6 +71,7 @@ export default function DefinitionDiffPageWrapper({
         versionId={versionId}
         manifestVersion={manifestVersion}
         definitionName={definitionName}
+        specificDiffType={specificDiffType}
         diff={diff}
         definitions={definitions}
         previousDefinitions={previousDefinitions}
@@ -82,6 +85,7 @@ export default function DefinitionDiffPageWrapper({
 interface Params {
   id: string;
   table: string;
+  diffType?: string;
   [key: string]: any;
 }
 
@@ -155,6 +159,8 @@ export const getStaticProps: GetStaticProps<
 > = async (context) => {
   const versionId = context.params?.id ?? "";
   const definitionName = context.params?.table ?? "";
+  const specificDiffType = context.params?.diffType || null;
+
   const [manifestVersion, previousManifestVersion] = await Promise.all([
     getVersion(versionId),
     getPreviousVersion(versionId),
@@ -191,6 +197,7 @@ export const getStaticProps: GetStaticProps<
   );
 
   const removedHashes = [...diff.removed, ...diff.reclassified];
+
   const previousDefinitions =
     removedHashes.length > 0 && previousManifestVersion?.id
       ? await getDefinitionForVersion(
@@ -198,6 +205,12 @@ export const getStaticProps: GetStaticProps<
           definitionName
         )
       : null;
+
+  if (removedHashes.length > 0 && !previousDefinitions) {
+    console.warn(
+      "There are removed hashes, but could not find previous definitions"
+    );
+  }
 
   const breadcrumbs = [
     {
@@ -215,6 +228,7 @@ export const getStaticProps: GetStaticProps<
       versionId,
       manifestVersion,
       definitionName,
+      specificDiffType,
       diff,
       definitions,
       previousDefinitions,
