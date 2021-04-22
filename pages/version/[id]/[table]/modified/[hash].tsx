@@ -4,6 +4,7 @@ import ModifiedDiffPage from "../../../../../components/ModifiedDiffPage";
 import {
   getDefinitionForVersion,
   getModifiedDeepDiff,
+  getPreviousVersion,
   getVersion,
 } from "../../../../../remote";
 import { AnyDefinition, ModifiedDeepDiffEntry } from "../../../../../types";
@@ -32,6 +33,7 @@ interface ModifiedDiffPageProps {
   hash: string;
   diffForHash: ModifiedDeepDiffEntry | undefined;
   definition: AnyDefinition | null;
+  previousDefinition: AnyDefinition | null;
 }
 
 export const getStaticProps: GetStaticProps<
@@ -43,14 +45,27 @@ export const getStaticProps: GetStaticProps<
   const definitionName = context.params?.table ?? "";
   const hash = context.params?.hash ?? "";
 
-  const [diffData, definitions, manifestVersion] = await Promise.all([
+  const previousVersion = await getPreviousVersion(versionId);
+
+  if (!previousVersion) {
+    throw new Error("Could not find previous version");
+  }
+
+  const [
+    diffData,
+    definitions,
+    previousDefinitions,
+    manifestVersion,
+  ] = await Promise.all([
     getModifiedDeepDiff(versionId, definitionName),
     getDefinitionForVersion(versionId, definitionName),
+    getDefinitionForVersion(previousVersion.id, definitionName),
     getVersion(versionId),
   ]);
 
   const diffForHash = diffData?.[hash as any];
   const definition = definitions[hash];
+  const previousDefinition = previousDefinitions[hash];
 
   const breadcrumbs = [
     manifestVersion && {
@@ -73,6 +88,7 @@ export const getStaticProps: GetStaticProps<
       hash,
       diffForHash,
       definition,
+      previousDefinition,
       breadcrumbs,
     },
     revalidate: 60 * 60,

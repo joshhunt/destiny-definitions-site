@@ -1,17 +1,16 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { getDisplayName, getIconSrc } from "../../lib/utils";
 import { ModifiedDeepDiffEntry, AnyDefinition, DiffType } from "../../types";
-import JSONTree from "react-json-tree";
-import { Theme } from "react-base16-styling";
+import ReactDiffViewer, { DiffMethod } from "react-diff-viewer";
 
 import s from "./styles.module.scss";
 import BungieImage from "../BungieImage";
-import { cloneDeepWith, mergeWith } from "lodash";
 
 interface ModifiedDiffProps {
   hash: string;
   diffForHash: ModifiedDeepDiffEntry | undefined;
   definition: AnyDefinition | null;
+  previousDefinition: AnyDefinition | null;
 }
 
 const COLORS = {
@@ -71,164 +70,24 @@ const oldSideStyles = (diff: DiffType, type: string, _keyPath: string[]) => {
 
 const ModifiedDiffPage: React.FC<ModifiedDiffProps> = ({
   hash,
-  diffForHash,
   definition,
+  previousDefinition,
 }) => {
   if (!hash) {
     return <h1>Page is loading...</h1>;
   }
 
-  let oldDef: Record<string, any> = {};
-  let newDef: Record<string, any> = {};
+  const oldDef = useMemo(() => {
+    const d = { ...previousDefinition } as any;
+    d.__type = undefined;
+    return JSON.stringify(d, null, 2);
+  }, [previousDefinition]);
 
-  const newDefProps = [];
-  const oldDefProps = [];
-
-  if (diffForHash) {
-    for (const diffItem of diffForHash.diff) {
-      if (!diffItem.path) {
-        continue;
-      }
-
-      if (diffItem.kind === "A") {
-        newDefProps.push({
-          path: diffItem.path,
-          value: [],
-        });
-
-        oldDefProps.push({
-          path: diffItem.path,
-          value: [],
-        });
-
-        if (diffItem.item.kind === "N") {
-          newDefProps.push({
-            path: [...diffItem.path, diffItem.index],
-            value: diffItem.item.rhs,
-          });
-        }
-
-        if (diffItem.item.kind === "D") {
-          oldDefProps.push({
-            path: [...diffItem.path, diffItem.index],
-            value: diffItem.item.lhs,
-          });
-        }
-      }
-
-      if (diffItem.kind === "E" || diffItem.kind === "N") {
-        newDefProps.push({
-          path: diffItem.path,
-          value: diffItem.rhs,
-        });
-      }
-
-      if (diffItem.kind === "E" || diffItem.kind === "D") {
-        oldDefProps.push({
-          path: diffItem.path,
-          value: diffItem.lhs,
-        });
-      }
-    }
-  }
-
-  for (const iterator of newDefProps) {
-    set(newDef, iterator.path, iterator.value);
-  }
-
-  for (const iterator of oldDefProps) {
-    set(oldDef, iterator.path, iterator.value);
-  }
-
-  function diffForJsonPath(_keyPath: string[]) {
-    const keyPath = _keyPath.slice(0, _keyPath.length - 1).reverse();
-
-    while (keyPath.length) {
-      const diff = diffForHash?.diff.find((diff) =>
-        arrayShallowEquals(keyPath, diff.path || [])
-      );
-
-      if (diff) {
-        return diff;
-      }
-
-      keyPath.pop();
-    }
-  }
-
-  function applyStyle(
-    styleFn: (
-      diff: DiffType,
-      type: string,
-      _keyPath: string[]
-    ) => Record<string, React.CSSProperties | undefined> | undefined,
-    styleKey: string,
-    additionalStyles?: React.CSSProperties
-  ) {
-    return (
-      { style }: any,
-      _type: string | string[],
-      _keyPath: string[] | string
-    ) => {
-      // The arguments are sometimes in a different order. wtf
-      const type = (Array.isArray(_type) ? _keyPath : _type) as string;
-      const keyPath = (Array.isArray(_keyPath) ? _keyPath : _type) as string[];
-
-      const diff = diffForJsonPath(keyPath);
-      const customStyles = (diff && styleFn(diff, type, keyPath)) ?? {};
-      const thisCustomStyles = customStyles?.[styleKey] ?? {};
-
-      return {
-        style: {
-          ...style,
-          ...(additionalStyles ?? {}),
-          ...thisCustomStyles,
-        },
-      };
-    };
-  }
-
-  function treeStyles(
-    styleFn: (
-      diff: DiffType,
-      type: string,
-      _keyPath: string[]
-    ) => Record<string, React.CSSProperties | undefined> | undefined
-  ): Theme {
-    return {
-      tree: {
-        backgroundColor: "transparent",
-        fontFamily: "monospace",
-        color: "white",
-      },
-
-      arrowSign: {
-        color: "inherit",
-      },
-
-      nestedNodeLabel: applyStyle(styleFn, "nestedNodeLabel", {
-        color: "inherit",
-      }),
-
-      valueLabel: applyStyle(styleFn, "valueLabel", {
-        color: "inherit",
-        display: "inline-block",
-        marginRight: 0,
-        paddingRight: "0.5em",
-      }),
-
-      valueText: applyStyle(styleFn, "valueText", {
-        color: "inherit",
-        display: "inline-block",
-        textIndent: 0,
-      }),
-
-      value: applyStyle(styleFn, "value", {
-        textIndent: 0,
-        paddingLeft: "1.125em",
-      }),
-    };
-  }
+  const newDef = useMemo(() => {
+    const d = { ...definition } as any;
+    d.__type = undefined;
+    return JSON.stringify(d, null, 2);
+  }, [definition]);
 
   return (
     <div className={s.root}>
@@ -248,38 +107,32 @@ const ModifiedDiffPage: React.FC<ModifiedDiffProps> = ({
         diff
       </h1>
 
-      <p>Showing only changed properties</p>
-
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <div style={{ flex: "1 1 100%" }}>
-          <h2>Old</h2>
-          <JSONTree
-            data={oldDef}
-            shouldExpandNode={() => true}
-            theme={treeStyles(oldSideStyles)}
-            collectionLimit={9999999}
-          />
-        </div>
-
-        <div style={{ flex: "1 1 100%" }}>
-          <h2>New</h2>
-          <JSONTree
-            data={newDef}
-            shouldExpandNode={() => true}
-            theme={treeStyles(newSideStyles)}
-            collectionLimit={9999999}
-          />
-        </div>
-      </div>
-
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <h2>Diff</h2>
-      <pre>{JSON.stringify(diffForHash, null, 2)}</pre>
+      <ReactDiffViewer
+        leftTitle="Before"
+        rightTitle="Now"
+        oldValue={oldDef}
+        newValue={newDef}
+        splitView={true}
+        compareMethod={DiffMethod.WORDS}
+        useDarkTheme={true}
+        styles={
+          ({
+            variables: {
+              dark: {
+                diffViewerTitleColor: "white",
+              },
+            },
+            codeFold: {
+              a: {
+                textDecoration: "none !important",
+                "&:hover": {
+                  textDecoration: "underline !important",
+                },
+              },
+            },
+          } as unknown) as any
+        }
+      />
     </div>
   );
 };
