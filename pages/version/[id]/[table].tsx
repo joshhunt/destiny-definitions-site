@@ -71,7 +71,7 @@ export default function DefinitionDiffPageWrapper({
         versionId={versionId}
         manifestVersion={manifestVersion}
         definitionName={definitionName}
-        specificDiffType={specificDiffType}
+        specificDiffType={specificDiffType ?? undefined}
         diff={diff}
         definitions={definitions}
         previousDefinitions={previousDefinitions}
