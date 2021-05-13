@@ -108,7 +108,7 @@ export default function InventoryItemDiffList({
               </td>
 
               <td>
-                <ItemSummary def={def} definitions={definitions} />
+                <ItemSummary definition={def} definitions={definitions} />
               </td>
 
               {hasObjectives && (

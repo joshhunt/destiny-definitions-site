@@ -1,16 +1,15 @@
 import s from "./styles.module.scss";
 import { DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 import BungieImage from "../BungieImage";
-import getItemTags from "./itemTags";
 import { DestinyInventoryItemDefinitionTagged } from "../../types";
 import IntrinsicPerk from "../IntrinsicPerk";
+import React from "react";
+import ItemTags from "./ItemTags";
 
 interface ItemSummaryProps {
-  def: DestinyInventoryItemDefinition;
+  definition: DestinyInventoryItemDefinition;
   definitions: Record<string, DestinyInventoryItemDefinitionTagged>;
 }
-
-const RPM_STAT_HASH = 4284893193;
 
 function findIntrinsicPerk(
   itemDef: DestinyInventoryItemDefinition,
@@ -27,11 +26,11 @@ function findIntrinsicPerk(
   return socket && definitions[socket.singleInitialItemHash];
 }
 
-export default function ItemSummary({ def, definitions }: ItemSummaryProps) {
-  const tags = getItemTags(def);
+export default function ItemSummary({
+  definition: def,
+  definitions,
+}: ItemSummaryProps) {
   const intrinsicPerk = findIntrinsicPerk(def, definitions);
-
-  const rpmStat = def.stats?.stats?.[RPM_STAT_HASH]?.value;
 
   return (
     <div className={s.itemSummary}>
@@ -53,13 +52,7 @@ export default function ItemSummary({ def, definitions }: ItemSummaryProps) {
             {def.displayProperties.name || <em>No name</em>}
           </span>
 
-          {tags.map((t, index) => (
-            <span key={index} className={s.tag} data-tag={t}>
-              {t}
-            </span>
-          ))}
-
-          {rpmStat && <span className={s.emptyTag}>{rpmStat} RPM</span>}
+          <ItemTags definition={def} />
         </div>
 
         {def.displayProperties.description && (

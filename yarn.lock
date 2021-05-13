@@ -1318,10 +1318,10 @@ builtin-status-codes@^3.0.0:
   resolved "https://registry.yarnpkg.com/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
   integrity sha1-hZgoeOIbmOHGZCXgPQF0eI9Wnug=
 
-bungie-api-ts@^4.2.1:
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/bungie-api-ts/-/bungie-api-ts-4.6.0.tgz#ccb2d8b5ac5e632b009b53ff1d265bedfd5cf41e"
-  integrity sha512-Wqv9YEoejzuQedzC8qCz/gtiQu6rzo/4YksQ782I6GWvp9MHfpH72Ap80sosc814XgZiITqR39r1NMv4RdnS4Q==
+bungie-api-ts@^4.9.0:
+  version "4.9.0"
+  resolved "https://registry.yarnpkg.com/bungie-api-ts/-/bungie-api-ts-4.9.0.tgz#b7fad937f57a378fed20097a92fbe3acda0ce4f5"
+  integrity sha512-mAcKj1ouw7ItCiTRVHeMIVAkBurmKoU+Scq1jIUGxY8ZUdhynb5IKvqqQdlkcrwa31jWmH9Pk5LezuPoUthzdw==
 
 bytes@3.0.0:
   version "3.0.0"
