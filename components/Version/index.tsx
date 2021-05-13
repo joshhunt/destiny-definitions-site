@@ -63,7 +63,7 @@ export default function Version({
         <Link href={`/version/${manifestVersion.id}`}>
           <a className={commonStyles.invisibleLink}>
             {headingPrefix}
-            {format(new Date(manifestVersion.createdAt), "E do MMM, u")}{" "}
+            {format(new Date(manifestVersion.createdAt), "PPPP")}{" "}
             <sup>
               <FontAwesomeIcon icon={faLink} />
             </sup>
