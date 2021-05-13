@@ -2,12 +2,31 @@
   font-size: 16px;
 
   & + & {
-    margin-top: 64px;
+    margin-top: 96px;
+  }
+
+  &:before {
+    content: " ";
+    display: block;
+    width: 5rem;
+    height: 5px;
+    // margin-bottom: 0.9rem;
+    background: currentColor;
+    // margin-bottom: -20px;
+    margin-bottom: 8px;
   }
 }
 
-.versionTitle {
+.versionTitle,
+.subtitle {
   margin-top: 0;
+  // line-height: 1;
+  // margin-bottom: 22px;
+}
+
+.subtitle {
+  margin-bottom: 8px;
+  margin-top: 20px;
 }
 
 .table {

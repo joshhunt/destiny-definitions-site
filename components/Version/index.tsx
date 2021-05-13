@@ -1,5 +1,6 @@
 import React from "react";
 import { format, parse } from "date-fns";
+import cx from "classnames";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLink } from "@fortawesome/free-solid-svg-icons";
@@ -8,14 +9,21 @@ import VersionDiffSummary from "../VersionDiffSummary";
 import commonStyles from "../../styles/common.module.scss";
 import { ManifestVersion, AllDefinitionDiffs } from "../../types";
 import Link from "next/link";
+import _additionalData from "./additionalData.json";
 
 import s from "./styles.module.scss";
+
+interface AdditionalData {
+  subtitle: string;
+}
 
 interface VersionProps {
   manifestVersion: ManifestVersion;
   diff: AllDefinitionDiffs;
   headingPrefix?: string;
 }
+
+const additionalData = _additionalData as Record<string, AdditionalData>;
 
 const RE = /(\d+)/g;
 function dateFromVersion(version: string) {
@@ -36,6 +44,8 @@ export default function Version({
   diff,
   headingPrefix,
 }: VersionProps) {
+  const { subtitle } = additionalData[manifestVersion.id] || {};
+
   const hasChanges = Object.values(diff).some((item) => {
     const thisCount = Object.values(item).reduce(
       (acc2, item2) => item2.length + acc2,
@@ -47,6 +57,8 @@ export default function Version({
 
   return (
     <div className={s.version}>
+      {subtitle && <h3 className={cx("h5", s.subtitle)}>{subtitle}</h3>}
+
       <h2 className={s.versionTitle}>
         <Link href={`/version/${manifestVersion.id}`}>
           <a className={commonStyles.invisibleLink}>
@@ -61,6 +73,10 @@ export default function Version({
 
       <table className={s.table}>
         <tbody>
+          <tr>
+            <td>Time</td>
+            <td>{format(new Date(manifestVersion.createdAt), "pppp")}</td>
+          </tr>
           <tr>
             <td>ID</td>
             <td>
