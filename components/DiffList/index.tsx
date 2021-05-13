@@ -104,6 +104,7 @@ function ForDefinitionType({
             definitions,
             "DestinyObjectiveDefinition"
           )}
+          otherDefinitions={otherDefinitions}
         />
       );
 

@@ -132,6 +132,14 @@ const DEFINITION_DEPENDENCIES: Record<string, DefinitionTableName[]> = {
   DestinyDestinationDefinition: ["DestinyPlaceDefinition"],
 
   DestinyVendorDefinition: ["DestinyDestinationDefinition"],
+
+  DestinyObjectiveDefinition: [
+    "DestinyInventoryItemDefinition",
+    "DestinyRecordDefinition",
+    "DestinyMetricDefinition",
+    "DestinyActivityDefinition",
+    "DestinyPresentationNodeDefinition",
+  ],
 };
 
 async function getDefinitionDependencies(

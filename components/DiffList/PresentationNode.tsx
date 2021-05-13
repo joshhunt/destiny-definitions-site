@@ -1,22 +1,15 @@
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import cx from "classnames";
 import React from "react";
 import {
-  AllDefinitionDiffs,
   AllDestinyManifestComponentsTagged,
   AnyDefinitionTable,
-  DefinitionDiff,
   DestinyPresentationNodeDefinitionTagged,
 } from "../../types";
 import BungieImage from "../BungieImage";
 import HashLink, { DiffHashLink } from "../HashLink";
 import InlineChild from "../InlineEntry";
-import Interpose from "../Interpose";
-import commonStyles from "../../styles/common.module.scss";
 
 import s from "./styles.module.scss";
-import { useDiffData } from "../diffDataContext";
 import {
   DestinyPresentationNodeChildEntry,
   DestinyPresentationNodeCollectibleChildEntry,
@@ -60,17 +53,17 @@ export default function PresentationNodeDiffList({
 
             const hierarchy: DestinyPresentationNodeDefinitionTagged[] = [];
 
-            // let nextNodeHash = def.parentNodeHashes?.[0];
-            // while (nextNodeHash) {
-            //   const node = definitions[nextNodeHash];
+            let nextNodeHash = def.parentNodeHashes?.[0];
+            while (nextNodeHash) {
+              const node = definitions[nextNodeHash];
 
-            //   if (!node) {
-            //     break;
-            //   }
+              if (!node) {
+                break;
+              }
 
-            //   hierarchy.unshift(node);
-            //   nextNodeHash = node.parentNodeHashes[0];
-            // }
+              hierarchy.unshift(node);
+              nextNodeHash = node.parentNodeHashes[0];
+            }
 
             if (!def) {
               return (
@@ -100,22 +93,20 @@ export default function PresentationNodeDiffList({
                 </td>
 
                 <td>
-                  <Interpose
-                    node={
-                      <FontAwesomeIcon
-                        className={s.chevronSeperator}
-                        icon={faChevronRight}
-                      />
-                    }
-                  >
-                    {hierarchy.map((node) => (
-                      <span key={node.hash}>{node.displayProperties.name}</span>
-                    ))}
+                  {hierarchy.map((node, index) => (
+                    <div
+                      className={s.hierarchyItem}
+                      key={node.hash}
+                      style={{ marginLeft: 16 * index }}
+                    >
+                      {index !== 0 && <span>↳</span>}{" "}
+                      {node.displayProperties.name}
+                    </div>
+                  ))}
 
-                    <span className={s.faded}>
-                      <em>this</em>
-                    </span>
-                  </Interpose>
+                  <div style={{ marginLeft: 16 * hierarchy.length }}>
+                    ↳ <em className={s.faded}>this</em>
+                  </div>
                 </td>
 
                 <td className={cx(s.prewrap)}>

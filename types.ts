@@ -119,6 +119,7 @@ export type AnyDefinition = AnyDefinitionTable[keyof AnyDefinitionTable];
 export interface BareDestinyDefinition {
   hash: DestinyUnlockDefinition["hash"];
   displayProperties?: DestinyDisplayPropertiesDefinition;
+  __type?: string;
 }
 
 export enum ItemCategory {

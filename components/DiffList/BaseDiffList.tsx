@@ -9,6 +9,7 @@ import s from "./styles.module.scss";
 
 interface BaseDiffListProps {
   hashes: number[];
+  suppressNameAndDescription?: boolean;
   definitions: AnyDefinitionTable;
   definitionName: string;
   row: (def: any, hash: number) => [string, React.ReactNode][];
@@ -16,6 +17,7 @@ interface BaseDiffListProps {
 
 export default function BaseDiffList<T>({
   hashes,
+  suppressNameAndDescription,
   definitions,
   definitionName,
   row,
@@ -25,12 +27,16 @@ export default function BaseDiffList<T>({
     return def?.displayProperties?.icon;
   });
 
-  const hasName = hashes.some((hash) => getDisplayName(definitions[hash]));
+  const hasName =
+    !suppressNameAndDescription &&
+    hashes.some((hash) => getDisplayName(definitions[hash]));
 
-  const hasDescription = hashes.some((hash) => {
-    const def = definitions[hash] as BareDestinyDefinition;
-    return def?.displayProperties?.description;
-  });
+  const hasDescription =
+    !suppressNameAndDescription &&
+    hashes.some((hash) => {
+      const def = definitions[hash] as BareDestinyDefinition;
+      return def?.displayProperties?.description;
+    });
 
   const otherHeaders = row(definitions[hashes[0]], hashes[0]).map((v) => v[0]);
 

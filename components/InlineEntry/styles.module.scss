@@ -4,3 +4,44 @@
   display: inline-block;
   margin-right: 0.75ch;
 }
+
+.content {
+  position: relative;
+  display: inline-block;
+}
+
+$tooltipBgColor: var(--text-color);
+$tooltipTextColor: var(--bg-color);
+
+.tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+  padding: 3px 9px;
+  background: $tooltipBgColor;
+  color: $tooltipTextColor;
+  border-radius: 3px;
+  font-size: 0.9em;
+  text-align: center;
+
+  .content:hover & {
+    opacity: 1;
+  }
+
+  &:after {
+    position: absolute;
+    content: " ";
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 6px 8px 0 8px;
+    border-color: $tooltipBgColor transparent transparent transparent;
+  }
+}
