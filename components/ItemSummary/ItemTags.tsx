@@ -1,6 +1,6 @@
 import { DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 import React from "react";
-import getItemTags from "./itemTags";
+import getItemTags from "./tagUtils";
 import s from "./styles.module.scss";
 
 interface ItemTagsProps {

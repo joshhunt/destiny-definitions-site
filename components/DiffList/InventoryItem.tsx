@@ -66,7 +66,7 @@ export default function InventoryItemDiffList({
 
   return (
     <table className={s.table}>
-      <thead>
+      <thead className={s.tableHeader}>
         <tr>
           <td>Hash</td>
           <td>Item</td>

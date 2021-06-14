@@ -37,7 +37,7 @@ export default function PresentationNodeDiffList({
   return (
     <>
       <table className={s.table}>
-        <thead>
+        <thead className={s.tableHeader}>
           <tr>
             <td>Hash</td>
             <td>Icon</td>

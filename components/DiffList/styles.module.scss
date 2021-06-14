@@ -43,6 +43,13 @@
   }
 }
 
+.tableHeader {
+  position: sticky;
+  top: 93px;
+  background: var(--bg-color-alpha-75);
+  backdrop-filter: blur(10px);
+}
+
 .nowrap {
   white-space: nowrap;
 }
