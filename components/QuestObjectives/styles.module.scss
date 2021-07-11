@@ -1,0 +1,27 @@
+.objective {
+  font-size: 14px;
+  line-height: 1;
+  display: grid;
+  grid-template-columns: 1.2em 1fr;
+  gap: 8px;
+  max-width: 600px;
+
+  & + & {
+    margin-top: 4px;
+  }
+}
+
+.box {
+  align-self: center;
+  width: 1.2em;
+  height: 1.2em;
+  border: 1px solid var(--border-color);
+}
+
+.track {
+  display: flex;
+  background: var(--contrast-bg);
+  justify-content: space-between;
+  padding: 0.2em 4px;
+  align-items: center;
+}

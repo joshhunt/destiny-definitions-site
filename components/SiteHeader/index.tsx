@@ -34,9 +34,13 @@ export default function SiteHeader({ breadcrumbs }: SiteHeaderProps) {
           {breadcrumbs &&
             breadcrumbs.map((crumb) => (
               <div key={crumb.to} className={s.childCrumb}>
-                <Link href={crumb.to}>
-                  <a className={commonStyles.invisibleLink}>{crumb.label}</a>
-                </Link>
+                {crumb.to ? (
+                  <Link href={crumb.to}>
+                    <a className={commonStyles.invisibleLink}>{crumb.label}</a>
+                  </Link>
+                ) : (
+                  crumb.label
+                )}
               </div>
             ))}
         </Interpose>

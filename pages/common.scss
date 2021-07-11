@@ -9,12 +9,14 @@ $light: #fafafa;
   --bg-color-alpha-25: #{rgba($dark, 0.6)};
 
   --text-color: #{$light};
+  --text-fade-color: #{rgba($light, 0.8)};
   --hover-color: #{rgba($light, 0.047)};
 
   --border-color: #{rgba($light, 0.188)};
   --alt-color: var(--border-color);
 
   --inverted-bg-color-transparent: #{rgba($light, 0.251)};
+  --contrast-bg: #{rgba($light, 0.075)};
 }
 
 .light {
@@ -22,12 +24,14 @@ $light: #fafafa;
   --bg-color-alpha-75: #{rgba($light, 0.75)};
 
   --text-color: #{$dark};
+  --text-fade-color: #{rgba($dark, 0.8)};
   --hover-color: #{rgba($dark, 0.047)};
 
   --border-color: #{rgba($dark, 0.188)};
   --alt-color: var(--border-color); // don't use this any more?
 
   --inverted-bg-color-transparent: #{rgba($dark, 0.251)};
+  --contrast-bg: #{rgba($dark, 0.1)};
 }
 
 @font-face {

@@ -54,6 +54,14 @@ export async function getVersionsIndex() {
   return data;
 }
 
+export async function getLatestVersion() {
+  const data = await getVersionsIndex();
+  const latest = data?.reduce((a, b) =>
+    new Date(a.createdAt) > new Date(b.createdAt) ? a : b
+  );
+  return latest;
+}
+
 export async function getDiffForVersion(id: string) {
   return getData<AllDefinitionDiffs>(
     `https://destiny-definitions.s3-eu-west-1.amazonaws.com/versions/${id}/diff.json`
@@ -118,4 +126,20 @@ export async function getDefinitionForVersion(
     ...v,
     __type: definitionName,
   })) as AnyDefinitionTable;
+}
+
+export async function getTypedDefinition<
+  TableName extends keyof AllDestinyManifestComponents
+>(version: string, definitionName: TableName) {
+  // TODO: type this
+  const data = await getCachedData<AllDestinyManifestComponents[TableName]>(
+    `${version}__${definitionName}.json`,
+    `https://destiny-definitions.s3-eu-west-1.amazonaws.com/versions/${version}/tables/${definitionName}.json`
+  );
+
+  if (!data) {
+    throw new Error(`Definitions missing for ${version}/${definitionName}`);
+  }
+
+  return data;
 }

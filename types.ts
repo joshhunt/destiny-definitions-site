@@ -306,6 +306,8 @@ export type DestinyEnergyTypeDefinitionTagged = DestinyEnergyTypeDefinition & {
   __type: "DestinyEnergyTypeDefinition";
 };
 
+export type DefsObject<T> = Record<number | string, T>;
+
 export interface AllDestinyManifestComponentsTagged {
   DestinyPlaceDefinition: {
     [hash: string]: DestinyPlaceDefinitionTagged;

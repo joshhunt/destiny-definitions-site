@@ -133,6 +133,13 @@
     "@babel/helper-validator-identifier" "^7.12.11"
     to-fast-properties "^2.0.0"
 
+"@d2api/manifest@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@d2api/manifest/-/manifest-1.0.3.tgz#fa9ce92b36212621f73eec87a24a84e49d239467"
+  integrity sha512-Ceb/I1XYelmhYcvZ53G7ZsmfHt6xqxADDtsvr//EudpG8Lmx7pVj0L1U6WHTgVDkjjOtdTs39fnO9+uFW+tTog==
+  dependencies:
+    bungie-api-ts "^4.3.0"
+
 "@emotion/cache@^10.0.27":
   version "10.0.29"
   resolved "https://registry.yarnpkg.com/@emotion/cache/-/cache-10.0.29.tgz#87e7e64f412c060102d589fe7c6dc042e6f9d1e0"
@@ -400,6 +407,11 @@
   integrity sha512-SBuYsh+o35knItbRW97vl5/5nEc5c5DYP7PxjyPLOfmm9bMaDsVeATXjXMBy6+KLlyrYWHZxGbfXe003NnHClg==
   dependencies:
     debug "^4.1.1"
+
+"@standards/duration@^1.1.3":
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/@standards/duration/-/duration-1.1.3.tgz#198dcb475b9a717637383a760d632bb2aa42ee9e"
+  integrity sha512-T4ZpFqH7Lf0gIMBsh+D8FkEnlMC8sJ/H/8YkA97KByKJIgucTpUebCgjjenuMKgNxPuVgmkEVfpOd/rIjSdYfg==
 
 "@types/base16@^1.0.2":
   version "1.0.2"
@@ -1318,7 +1330,7 @@ builtin-status-codes@^3.0.0:
   resolved "https://registry.yarnpkg.com/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
   integrity sha1-hZgoeOIbmOHGZCXgPQF0eI9Wnug=
 
-bungie-api-ts@^4.9.0:
+bungie-api-ts@^4.3.0, bungie-api-ts@^4.9.0:
   version "4.9.0"
   resolved "https://registry.yarnpkg.com/bungie-api-ts/-/bungie-api-ts-4.9.0.tgz#b7fad937f57a378fed20097a92fbe3acda0ce4f5"
   integrity sha512-mAcKj1ouw7ItCiTRVHeMIVAkBurmKoU+Scq1jIUGxY8ZUdhynb5IKvqqQdlkcrwa31jWmH9Pk5LezuPoUthzdw==

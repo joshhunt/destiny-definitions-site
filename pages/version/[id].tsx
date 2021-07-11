@@ -5,6 +5,7 @@ import s from "./styles.module.scss";
 import { getVersionsIndex, getDiffForVersion } from "../../remote";
 import VersionDiffSummary from "../../components/VersionDiffSummary";
 import Version from "../../components/Version";
+import { format } from "date-fns";
 
 interface VersionIndexStaticProps {
   version: ManifestVersion;
@@ -55,8 +56,16 @@ export const getStaticProps: GetStaticProps<VersionIndexStaticProps> = async (
 
   const allDefinitionDiffs = await getDiffForVersion(version.id);
 
+  const breadcrumbs = [
+    {
+      label: format(new Date(version.createdAt), "E do MMM, u"),
+      to: `/version/${version.id}`,
+    },
+  ];
+
   return {
     props: {
+      breadcrumbs,
       version,
       allDefinitionDiffs,
     },
