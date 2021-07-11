@@ -39,7 +39,7 @@ export default function FallbackDiffList({
 
   return (
     <table className={s.table}>
-      <thead>
+      <thead className={s.tableHeader}>
         <tr>
           <td className={s.shrink}>Hash</td>
           {hasIcon && <td>Icon</td>}
