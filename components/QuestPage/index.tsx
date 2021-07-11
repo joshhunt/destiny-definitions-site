@@ -1,10 +1,16 @@
 import React from "react";
 import { DefsObject } from "../../types";
-import { QuestItem, QuestObjective, QuestVendor } from "./types";
+import {
+  InteractionRewardSet,
+  QuestItem,
+  QuestObjective,
+  QuestVendor,
+} from "./types";
 
 import s from "./styles.module.scss";
 import QuestObjectives from "../QuestObjectives";
 import BungieImage from "../BungieImage";
+import RewardItem from "../RewardItem";
 
 export interface QuestPageProps {
   questHash: number;
@@ -12,11 +18,13 @@ export interface QuestPageProps {
   itemDefinitions: DefsObject<QuestItem>;
   objectiveDefinitions: DefsObject<QuestObjective>;
   relatedVendors: QuestVendor[];
+  interactionRewards: InteractionRewardSet;
 }
 
 const QuestPage: React.FC<QuestPageProps> = ({
   questHash,
   rewardItemHashes,
+  interactionRewards,
   itemDefinitions,
   relatedVendors,
   objectiveDefinitions,
@@ -77,11 +85,28 @@ const QuestPage: React.FC<QuestPageProps> = ({
               <div className={s.stepHeader}>
                 {vendor.displayProperties.name}
               </div>
-              {interactions.map((interaction) => (
-                <blockquote className={s.interactionQuote}>
-                  {interaction.flavorLineOne}
-                </blockquote>
-              ))}
+              {interactions.map((interaction) => {
+                const itemHashes =
+                  interactionRewards[vendor.hash]?.[
+                    interaction.interactionIndex
+                  ] ?? [];
+
+                const items = itemHashes
+                  .map((v) => itemDefinitions[v])
+                  .filter(Boolean);
+
+                return (
+                  <blockquote className={s.interactionQuote}>
+                    <p>{interaction.flavorLineOne}</p>
+
+                    <div className={s.itemGrid}>
+                      {items.map((item) => (
+                        <RewardItem item={item} />
+                      ))}
+                    </div>
+                  </blockquote>
+                );
+              })}
             </div>
           ))}
 
@@ -95,25 +120,9 @@ const QuestPage: React.FC<QuestPageProps> = ({
           <div>
             <h3>Related items &amp; rewards</h3>
             <div className={s.itemGrid}>
-              {rewardItemHashes.map((itemHash) => {
-                const reward = itemDefinitions[itemHash];
-
-                return (
-                  <div className={s.questItem}>
-                    {" "}
-                    <BungieImage
-                      className={s.questIcon}
-                      src={reward.displayProperties.icon}
-                    />{" "}
-                    <span className={s.questItemName}>
-                      {reward.displayProperties.name}
-                    </span>
-                    <span className={s.questItemType}>
-                      {reward.itemTypeAndTierDisplayName}
-                    </span>
-                  </div>
-                );
-              })}
+              {rewardItemHashes.map((itemHash) => (
+                <RewardItem item={itemDefinitions[itemHash]} />
+              ))}
             </div>
           </div>
         )}

@@ -7,6 +7,7 @@ import {
   createQuestItem,
   createQuestObjective,
   createQuestVendor,
+  InteractionRewardSet,
 } from "../../components/QuestPage/types";
 import duration from "../../lib/duration";
 import { getLatestVersion, getTypedDefinition } from "../../remote";
@@ -63,7 +64,6 @@ export const getStaticProps = async ({ params }: Context) => {
     ...allQuestDefs.map((v) => v.hash),
   ];
 
-  const limitedItemDefs = pick(itemDefinitions, limitedItemHashes);
   const objectiveHashes = allQuestDefs
     .flatMap((v) => v.objectives?.objectiveHashes)
     .filter(nonNullable);
@@ -76,6 +76,39 @@ export const getStaticProps = async ({ params }: Context) => {
         questName && interaction.headerDisplayProperties.name === questName
     )
   );
+
+  const interactionRewards: InteractionRewardSet = {};
+
+  for (const vendor of relatedVendors) {
+    interactionRewards[vendor.hash] = interactionRewards[vendor.hash] ?? {};
+
+    for (const interaction of vendor.interactions) {
+      interactionRewards[vendor.hash][interaction.interactionIndex] =
+        interactionRewards[vendor.hash][interaction.interactionIndex] ?? [];
+
+      if (questName && interaction.headerDisplayProperties.name === questName) {
+        const vendorCategory =
+          vendor.categories[interaction.vendorCategoryIndex];
+        const rewardsCategory =
+          vendor.categories[interaction.rewardVendorCategoryIndex];
+
+        const itemIndexes = [
+          ...(vendorCategory?.vendorItemIndexes ?? []),
+          ...(rewardsCategory?.vendorItemIndexes ?? []),
+        ];
+
+        const itemHashes = itemIndexes.map(
+          (index) => vendor.itemList[index].itemHash
+        );
+        limitedItemHashes.push(...itemHashes);
+        interactionRewards[vendor.hash][interaction.interactionIndex].push(
+          ...itemHashes
+        );
+      }
+    }
+  }
+
+  const limitedItemDefs = pick(itemDefinitions, limitedItemHashes);
 
   const breadcrumbs = [
     {
@@ -98,6 +131,7 @@ export const getStaticProps = async ({ params }: Context) => {
       rewardItemHashes: rewardItemHashes,
       itemDefinitions: mapValues(limitedItemDefs, createQuestItem),
       relatedVendors: relatedVendors.map(createQuestVendor),
+      interactionRewards,
       objectiveDefinitions: mapValues(
         limitedObjectiveDefs,
         createQuestObjective

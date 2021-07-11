@@ -66,36 +66,8 @@
   color: var(--text-fade-color);
 }
 
-.questItem {
-  display: grid;
-  grid-template-columns: 40px auto;
-  grid-template-areas:
-    "icon name"
-    "icon type";
-  // gap: 8px;
-  column-gap: 8px;
-
-  & + & {
-    margin-top: 8px;
-  }
-}
-
-.questIcon {
-  width: 40px;
-  grid-area: icon;
-}
-
-.questItemName {
-  grid-area: name;
-}
-
-.questItemType {
-  grid-area: type;
-  color: var(--text-fade-color);
-  font-size: 0.9em;
-}
-
 .itemGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(216px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 8px;
 }

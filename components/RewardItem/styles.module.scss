@@ -1,0 +1,29 @@
+.questItem {
+  display: grid;
+  grid-template-columns: 40px auto;
+  grid-template-rows: max-content;
+  grid-template-areas:
+    "icon name"
+    "icon type";
+
+  column-gap: 8px;
+
+  & + & {
+    margin-top: 8px;
+  }
+}
+
+.questIcon {
+  width: 40px;
+  grid-area: icon;
+}
+
+.questItemName {
+  grid-area: name;
+}
+
+.questItemType {
+  grid-area: type;
+  color: var(--text-fade-color);
+  font-size: 0.9em;
+}
