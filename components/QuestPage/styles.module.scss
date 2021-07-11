@@ -2,12 +2,21 @@
   max-width: 2000px;
   margin: 0 32px 64px 32px;
   // margin: auto;
+
+  h3 {
+    margin-bottom: 20px;
+  }
 }
 
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-auto-flow: row;
   gap: 64px;
+
+  @media screen and (max-width: 970px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .step {
@@ -55,4 +64,38 @@
   font-style: italic;
   font-size: 14px;
   color: var(--text-fade-color);
+}
+
+.questItem {
+  display: grid;
+  grid-template-columns: 40px auto;
+  grid-template-areas:
+    "icon name"
+    "icon type";
+  // gap: 8px;
+  column-gap: 8px;
+
+  & + & {
+    margin-top: 8px;
+  }
+}
+
+.questIcon {
+  width: 40px;
+  grid-area: icon;
+}
+
+.questItemName {
+  grid-area: name;
+}
+
+.questItemType {
+  grid-area: type;
+  color: var(--text-fade-color);
+  font-size: 0.9em;
+}
+
+.itemGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(216px, 1fr));
 }

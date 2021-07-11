@@ -51,7 +51,7 @@ const QuestPage: React.FC<QuestPageProps> = ({
       <div className={s.grid}>
         <div>
           <h3>Steps</h3>
-          <br />
+
           {allQuestDefs.map((item, index) => (
             <div className={s.step}>
               <div className={s.stepHeader}>
@@ -71,7 +71,6 @@ const QuestPage: React.FC<QuestPageProps> = ({
 
         <div>
           <h3>Interactions</h3>
-          <br />
 
           {relatedInteractions.map(({ interactions, vendor }) => (
             <div>
@@ -92,23 +91,32 @@ const QuestPage: React.FC<QuestPageProps> = ({
           </p>
         </div>
 
-        <div>
-          <h3>Related items &amp; rewards</h3>
-          {rewardItemHashes.map((itemHash) => {
-            const reward = itemDefinitions[itemHash];
+        {rewardItemHashes.length > 1 && (
+          <div>
+            <h3>Related items &amp; rewards</h3>
+            <div className={s.itemGrid}>
+              {rewardItemHashes.map((itemHash) => {
+                const reward = itemDefinitions[itemHash];
 
-            return (
-              <div>
-                {" "}
-                <BungieImage
-                  className={s.bigIcon}
-                  src={reward.displayProperties.icon}
-                />{" "}
-                <span>{reward.displayProperties.name}</span>
-              </div>
-            );
-          })}
-        </div>
+                return (
+                  <div className={s.questItem}>
+                    {" "}
+                    <BungieImage
+                      className={s.questIcon}
+                      src={reward.displayProperties.icon}
+                    />{" "}
+                    <span className={s.questItemName}>
+                      {reward.displayProperties.name}
+                    </span>
+                    <span className={s.questItemType}>
+                      {reward.itemTypeAndTierDisplayName}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

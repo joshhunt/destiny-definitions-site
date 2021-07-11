@@ -6,7 +6,14 @@ import {
 import { pick } from "lodash";
 
 export function createQuestItem(item: DestinyInventoryItemDefinition) {
-  return pick(item, "hash", "displayProperties", "setData", "objectives");
+  return pick(
+    item,
+    "hash",
+    "displayProperties",
+    "setData",
+    "objectives",
+    "itemTypeAndTierDisplayName"
+  );
 }
 
 export function createQuestVendor(vendor: DestinyVendorDefinition) {
