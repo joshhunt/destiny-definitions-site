@@ -1,0 +1,27 @@
+.itemSummary {
+  display: flex;
+  margin-bottom: 32px;
+}
+
+.title {
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 21px;
+  line-height: 22px;
+  margin: 0px;
+  margin-top: 8px;
+  font-weight: 500;
+}
+
+.icon {
+  display: block;
+  height: 92px;
+  width: auto;
+  display: inline-block;
+  margin-right: 0.25em;
+
+  flex: 0 0 auto;
+  margin-right: 18px;
+}

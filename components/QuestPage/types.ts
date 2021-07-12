@@ -12,7 +12,8 @@ export function createQuestItem(item: DestinyInventoryItemDefinition) {
     "displayProperties",
     "setData",
     "objectives",
-    "itemTypeAndTierDisplayName"
+    "itemTypeAndTierDisplayName",
+    "displaySource"
   );
 }
 

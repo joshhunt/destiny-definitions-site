@@ -2,8 +2,7 @@ import { ManifestVersion, AllDefinitionDiffs } from "../../types";
 import { GetStaticProps, GetStaticPaths } from "next";
 
 import s from "./styles.module.scss";
-import { getVersionsIndex, getDiffForVersion } from "../../remote";
-import VersionDiffSummary from "../../components/VersionDiffSummary";
+import { getVersionsIndex, getDiffForVersion, getVersion } from "../../remote";
 import Version from "../../components/Version";
 import { format } from "date-fns";
 
@@ -45,8 +44,12 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps<VersionIndexStaticProps> = async (
   context
 ) => {
-  const data = await getVersionsIndex();
-  const version = data?.find((v) => v.id === context?.params?.id);
+  const versionIdParam = Array.isArray(context?.params?.id)
+    ? context?.params?.id[0]
+    : context?.params?.id;
+
+  const version = await getVersion(versionIdParam ?? "");
+
   if (!version) {
     console.warn(
       `Unable to find manifest version for page ID ${context?.params?.id}`
@@ -63,11 +66,16 @@ export const getStaticProps: GetStaticProps<VersionIndexStaticProps> = async (
     },
   ];
 
+  const canonical = `/version/${version.id}`;
+
   return {
     props: {
       breadcrumbs,
       version,
       allDefinitionDiffs,
+      meta: {
+        canonical: canonical,
+      },
     },
     revalidate: 60 * 60,
   };

@@ -11,6 +11,7 @@
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-template-rows: masonry;
   grid-auto-flow: row;
   gap: 64px;
 
@@ -22,6 +23,21 @@
 .step {
   & + & {
     margin-top: 48px;
+  }
+}
+
+.selectedStep {
+  composes: step;
+  // padding-left: 8px;
+  // border-left: 1px solid #f1c40f;
+
+  .stepHeader {
+    border-color: #f1c40f;
+  }
+
+  .stepHeaderText {
+    background: #f1c40f;
+    color: black;
   }
 }
 
@@ -45,6 +61,12 @@
   height: 4ex;
 }
 
+.interaction {
+  & + & {
+    margin-top: 48px;
+  }
+}
+
 .interactionQuote {
   border-left: 1px solid var(--border-color);
   margin-left: 8px;
@@ -58,16 +80,28 @@
   //   border-top: 1px solid var(--border-color);
   //   // margin-bottom: 16px;
   // }
+  margin: 0 0 0 8px;
+
+  & + & {
+    margin-top: 24px;
+  }
 }
 
 .disclaimer {
   font-style: italic;
   font-size: 14px;
   color: var(--text-fade-color);
+  margin-top: 32px;
 }
 
 .itemGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 8px;
+}
+
+.displaySource {
+  font-style: italic;
+  font-size: 14px;
+  color: var(--text-fade-color);
 }

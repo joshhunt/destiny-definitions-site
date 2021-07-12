@@ -10,7 +10,9 @@ import {
   InteractionRewardSet,
 } from "../../components/QuestPage/types";
 import duration from "../../lib/duration";
-import { getLatestVersion, getTypedDefinition } from "../../remote";
+import notFound from "../../lib/next";
+import { getLatestVersion, getTypedDefinition, getVersion } from "../../remote";
+import { ManifestVersion } from "../../types";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return { paths: [], fallback: "blocking" };
@@ -18,16 +20,31 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 interface Context {
   params: {
-    hash: string;
+    hashAndVersion: string[];
   };
 }
 
 export const getStaticProps = async ({ params }: Context) => {
-  const questHash = parseInt(params.hash, 10);
-  const version = await getLatestVersion();
+  let questHash: number;
+  let version: ManifestVersion | undefined;
+
+  if (params.hashAndVersion.length === 1) {
+    questHash = parseInt(params.hashAndVersion[0], 10);
+    version = await getLatestVersion();
+  } else if (params.hashAndVersion.length === 2) {
+    questHash = parseInt(params.hashAndVersion[1], 10);
+    version = await getVersion(params.hashAndVersion[0]); // TODO: specific version
+  } else {
+    return { notFound: true, revalidate: duration("1 day") };
+  }
 
   if (!version) {
-    throw new Error("Unable to find latest version");
+    console.log(
+      `Unable to find version with params ${JSON.stringify(
+        params.hashAndVersion
+      )}`
+    );
+    return notFound(duration("1 hour"));
   }
 
   const [
@@ -47,7 +64,7 @@ export const getStaticProps = async ({ params }: Context) => {
     "";
 
   if (!thisQuest) {
-    return { notFound: true, revalidate: duration("1 hour") };
+    return notFound(duration("1 hour"));
   }
 
   const allQuestDefs =
@@ -59,10 +76,11 @@ export const getStaticProps = async ({ params }: Context) => {
       .filter((v) => v) ?? []
   );
 
-  const limitedItemHashes = [
+  const limitedItemHashes = uniq([
+    questHash,
     ...rewardItemHashes,
     ...allQuestDefs.map((v) => v.hash),
-  ];
+  ]);
 
   const objectiveHashes = allQuestDefs
     .flatMap((v) => v.objectives?.objectiveHashes)
@@ -124,6 +142,8 @@ export const getStaticProps = async ({ params }: Context) => {
     },
   ];
 
+  const canonical = `/version/${version.id}/${questHash}`;
+
   return {
     props: {
       breadcrumbs,
@@ -136,6 +156,7 @@ export const getStaticProps = async ({ params }: Context) => {
         limitedObjectiveDefs,
         createQuestObjective
       ),
+      meta: { canonical },
     },
   };
 };

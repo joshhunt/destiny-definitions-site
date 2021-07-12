@@ -4,6 +4,7 @@ import {
 } from "bungie-api-ts/destiny2";
 import React from "react";
 import BungieImage from "../BungieImage";
+import ItemHeader from "../ItemHeader";
 import ItemTags from "../ItemSummary/ItemTags";
 
 import s from "./styles.module.scss";
@@ -30,24 +31,7 @@ const ItemDefinitionPage: React.FC<ItemDefinitionPageProps> = ({
 
       <div className={s.page}>
         <div className={s.content}>
-          <div className={s.itemSummary}>
-            {/* <div className={s.itemAccessory}> */}
-            <BungieImage
-              className={s.icon}
-              src={definition.displayProperties.icon}
-            />
-            {/* </div> */}
-
-            <div className={s.itemSummaryContent}>
-              <h1 className={s.title}>
-                <span>{definition.displayProperties.name}</span>
-              </h1>
-
-              <p className={s.subtitle}>
-                {definition.itemTypeAndTierDisplayName}
-              </p>
-            </div>
-          </div>
+          <ItemHeader item={definition} />
 
           <div className={s.box}>
             <p className={s.desc}>

@@ -85,7 +85,8 @@ export async function getModifiedDeepDiff(
 
 export async function getVersion(versionId: string) {
   const index = await getVersionsIndex();
-  const found = index?.find((v) => v.id === versionId);
+  let found = index?.find((v) => v.id === versionId);
+  found = found ?? index?.find((v) => v.id.startsWith(versionId));
 
   return found;
 }

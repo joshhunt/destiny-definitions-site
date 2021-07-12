@@ -73,8 +73,13 @@ export interface Breadcrumb {
   to: string;
 }
 
+export interface Meta {
+  canonical?: string;
+}
+
 export interface PageProps extends Record<string, any> {
   breadcrumbs?: Breadcrumb[];
+  meta?: Meta;
 }
 
 export interface ManifestVersion {

@@ -25,6 +25,7 @@ interface AppProps extends NextAppProps {
 }
 
 export default function App({ Component, pageProps }: AppProps) {
+  const meta = pageProps.meta ?? {};
   return (
     <>
       <Head>
@@ -39,6 +40,8 @@ export default function App({ Component, pageProps }: AppProps) {
           name="viewport"
           content="width=device-width, initial-scale=1"
         ></meta>
+
+        {meta.canonical && <link rel="canonical" href={`${meta.canonical}`} />}
       </Head>
 
       <SiteHeader breadcrumbs={pageProps.breadcrumbs} />
