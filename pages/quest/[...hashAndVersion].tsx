@@ -142,7 +142,7 @@ export const getStaticProps = async ({ params }: Context) => {
     },
   ];
 
-  const canonical = `/version/${version.id}/${questHash}`;
+  const canonical = `/quest/${version.id}/${questHash}`;
 
   return {
     props: {
