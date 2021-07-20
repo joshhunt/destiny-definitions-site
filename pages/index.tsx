@@ -5,6 +5,7 @@ import { getVersionsIndex, getDiffForVersion } from "../remote";
 
 import s from "./indexStyles.module.scss";
 import Version from "../components/Version";
+import duration from "../lib/duration";
 
 interface HomeStaticProps {
   versions: ManifestVersion[];
@@ -31,8 +32,6 @@ export default function Home({ versions, diffsForVersion }: HomeStaticProps) {
           );
         })}
       </div>
-
-      <pre>hi :)</pre>
     </div>
   );
 }
@@ -51,6 +50,6 @@ export const getStaticProps: GetStaticProps<HomeStaticProps> = async () => {
 
   return {
     props: { versions: data, diffsForVersion },
-    revalidate: 5 * 60,
+    revalidate: duration("5 minutes"),
   };
 };

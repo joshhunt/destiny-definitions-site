@@ -5,6 +5,7 @@ import s from "./styles.module.scss";
 import { getVersionsIndex, getDiffForVersion, getVersion } from "../../remote";
 import Version from "../../components/Version";
 import { format } from "date-fns";
+import duration from "../../lib/duration";
 
 interface VersionIndexStaticProps {
   version: ManifestVersion;
@@ -54,7 +55,7 @@ export const getStaticProps: GetStaticProps<VersionIndexStaticProps> = async (
     console.warn(
       `Unable to find manifest version for page ID ${context?.params?.id}`
     );
-    return { notFound: true, revalidate: 30 };
+    return { notFound: true, revalidate: duration("5 minutes") };
   }
 
   const allDefinitionDiffs = await getDiffForVersion(version.id);
@@ -77,6 +78,6 @@ export const getStaticProps: GetStaticProps<VersionIndexStaticProps> = async (
         canonical: canonical,
       },
     },
-    revalidate: 60 * 60,
+    revalidate: duration("1 day"),
   };
 };

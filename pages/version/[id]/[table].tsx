@@ -26,6 +26,7 @@ import { format } from "date-fns";
 import definitionsMetadata from "../../../components/definitionsMetadata";
 import { DiffDataProvider } from "../../../components/diffDataContext";
 import { friendlyDiffName } from "../../../lib/utils";
+import duration from "../../../lib/duration";
 
 interface DefinitionDiffStaticProps {
   versionId: string;
@@ -176,7 +177,7 @@ export const getStaticProps: GetStaticProps<
 
   if (!manifestVersion) {
     console.warn(`Unable to find manifestVersion for version ${versionId}`);
-    return { notFound: true, revalidate: 60 };
+    return { notFound: true, revalidate: duration("5 minutes") };
   }
 
   const allDefinitionDiffs = await getDiffForVersion(versionId);
@@ -185,7 +186,7 @@ export const getStaticProps: GetStaticProps<
 
   if (!diff) {
     console.warn(`No diff for version: ${versionId}/${definitionName}`);
-    return { notFound: true, revalidate: 5 };
+    return { notFound: true, revalidate: duration("5 minutes") };
   }
 
   const modifiedDeepDiffs =
@@ -246,7 +247,7 @@ export const getStaticProps: GetStaticProps<
       allDefinitionDiffs,
       modifiedDeepDiffs,
     },
-    revalidate: 60 * 60,
+    revalidate: duration("30 days"),
   };
 };
 

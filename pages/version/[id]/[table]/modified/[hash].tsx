@@ -12,6 +12,7 @@ import { AnyDefinition, ModifiedDeepDiffEntry } from "../../../../../types";
 import config from "../../../../../config";
 import { format } from "date-fns";
 import { friendlyDiffName, getDisplayName } from "../../../../../lib/utils";
+import duration from "../../../../../lib/duration";
 
 interface Params {
   [key: string]: any;
@@ -91,7 +92,7 @@ export const getStaticProps: GetStaticProps<
       previousDefinition,
       breadcrumbs,
     },
-    revalidate: 60 * 60,
+    revalidate: duration("30 days"),
   };
 };
 
