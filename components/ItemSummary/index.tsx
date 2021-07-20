@@ -1,5 +1,8 @@
 import s from "./styles.module.scss";
-import { DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
+import {
+  DestinyInventoryItemDefinition,
+  TierType,
+} from "bungie-api-ts/destiny2";
 import BungieImage from "../BungieImage";
 import { DestinyInventoryItemDefinitionTagged } from "../../types";
 import IntrinsicPerk from "../IntrinsicPerk";
@@ -30,7 +33,8 @@ export default function ItemSummary({
   definition: def,
   definitions,
 }: ItemSummaryProps) {
-  const intrinsicPerk = findIntrinsicPerk(def, definitions);
+  const isExotic = def.inventory?.tierType === 6 ?? false;
+  const intrinsicPerk = isExotic && findIntrinsicPerk(def, definitions);
 
   return (
     <div className={s.itemSummary}>
