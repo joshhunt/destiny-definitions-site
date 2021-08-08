@@ -58,6 +58,15 @@
   white-space: pre-wrap;
 }
 
+.questMarker {
+  composes: shrink;
+  height: 1px;
+}
+
+.objectives {
+  min-width: 300px;
+}
+
 .topLevelDiff {
   margin-bottom: 64px;
 

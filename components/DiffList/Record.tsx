@@ -3,7 +3,7 @@ import React from "react";
 import { AllDestinyManifestComponentsTagged } from "../../types";
 import BungieImage from "../BungieImage";
 import HashLink from "../HashLink";
-import ObjectiveTable from "../ObjectiveTable";
+import QuestObjectives from "../QuestObjectives";
 
 import s from "./styles.module.scss";
 
@@ -81,11 +81,13 @@ export default function RecordDiffList({
 
               <td>{def.displayProperties?.name}</td>
 
-              <td className={s.shrink}>
-                <ObjectiveTable
-                  hashes={objectives}
-                  definitions={objectiveDefs}
-                />
+              <td>
+                <div className={s.objectives}>
+                  <QuestObjectives
+                    objectiveHashes={objectives}
+                    objectiveDefinitions={objectiveDefs}
+                  />
+                </div>
               </td>
 
               <td className={cx(s.nowrap, s.shrink)}>

@@ -89,7 +89,7 @@ export const getStaticProps = async ({ params }: Context) => {
   const limitedObjectiveDefs = pick(objectiveDefinitions, objectiveHashes);
 
   const relatedVendors = Object.values(vendorDefinitions).filter((v) =>
-    v.interactions.some(
+    v.interactions?.some(
       (interaction) =>
         questName && interaction.headerDisplayProperties.name === questName
     )

@@ -36,25 +36,25 @@ export default function ItemSummary({
   const isExotic = def.inventory?.tierType === 6 ?? false;
   const intrinsicPerk = isExotic && findIntrinsicPerk(def, definitions);
 
+  let displayName: React.ReactNode = def.displayProperties.name;
+
+  if (!displayName && def.setData?.questLineName) {
+    displayName = <em>Quest step from '{def.setData.questLineName}'</em>;
+  }
+
   return (
     <div className={s.itemSummary}>
       <div className={s.itemSummaryWell}>
         <BungieImage
           className={s.icon}
           src={def.displayProperties.icon}
-          alt={
-            def.displayProperties.name
-              ? `Icon of "${def.displayProperties.name}"`
-              : "Icon of this entity"
-          }
+          alt=""
         />
       </div>
 
       <div className={s.itemSummaryMain}>
         <div className={s.itemHeader}>
-          <span className={s.name}>
-            {def.displayProperties.name || <em>No name</em>}
-          </span>
+          <span className={s.name}>{displayName || <em>No name</em>}</span>
 
           <ItemTags definition={def} />
         </div>

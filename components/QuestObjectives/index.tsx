@@ -25,13 +25,26 @@ const QuestObjectives: React.FC<QuestObjectivesProps> = ({
           );
         }
 
+        const isBoolean =
+          (def.valueStyle === 0 || def.valueStyle === 2) &&
+          def.completionValue === 1;
+
+        const progressDescription =
+          isBoolean && !def.progressDescription ? (
+            <em>Completed</em>
+          ) : (
+            def.progressDescription
+          );
+
         return (
           <div className={s.objective}>
             <div className={s.box} />
 
             <div className={s.track}>
-              <div className={s.description}>{def.progressDescription}</div>
-              <div className={s.value}>{def.completionValue}</div>
+              <div className={s.description}>{progressDescription}</div>
+              {!isBoolean && (
+                <div className={s.value}>{def.completionValue}</div>
+              )}
             </div>
           </div>
         );

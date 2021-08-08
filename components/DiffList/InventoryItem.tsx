@@ -1,6 +1,5 @@
 import {
   AllDestinyManifestComponentsTagged,
-  AnyDefinitionTable,
   DestinyInventoryItemDefinitionTagged,
   ItemCategory,
 } from "../../types";
@@ -10,7 +9,8 @@ import HashLink from "../HashLink";
 
 import s from "./styles.module.scss";
 import React from "react";
-import ObjectiveTable from "../ObjectiveTable";
+import { QuestMarker } from "../QuestMarkers";
+import QuestObjectives from "../QuestObjectives";
 
 const CLASS_TYPE_NAME: { [k: string]: string } = {
   [1]: "Hunter",
@@ -50,6 +50,7 @@ export default function InventoryItemDiffList({
 
   const isWeapon = itemCategory == ItemCategory.Weapon;
   const isArmor = itemCategory == ItemCategory.Armor;
+  const isQuests = itemCategory === ItemCategory.Quest;
 
   const hasScreenshot = hashes.some(
     (itemHash) => definitions[itemHash]?.screenshot
@@ -68,6 +69,8 @@ export default function InventoryItemDiffList({
     <table className={s.table}>
       <thead className={s.tableHeader}>
         <tr>
+          {isQuests && <td>Quest</td>}
+
           <td>Hash</td>
           <td>Item</td>
 
@@ -103,6 +106,16 @@ export default function InventoryItemDiffList({
 
           return (
             <tr key={hash}>
+              {isQuests && (
+                <td className={s.questMarker}>
+                  <QuestMarker
+                    definitions={definitions}
+                    siblingDiffHashes={hashes}
+                    definition={def}
+                  />
+                </td>
+              )}
+
               <td className={s.shrink}>
                 <HashLink hash={hash} definitionName={definitionName} />
               </td>
@@ -112,11 +125,11 @@ export default function InventoryItemDiffList({
               </td>
 
               {hasObjectives && (
-                <td className={s.shrink}>
+                <td className={s.objectives}>
                   {objectiveDefs && (
-                    <ObjectiveTable
-                      hashes={objectives}
-                      definitions={objectiveDefs}
+                    <QuestObjectives
+                      objectiveHashes={objectives}
+                      objectiveDefinitions={objectiveDefs}
                     />
                   )}
                 </td>
