@@ -5,6 +5,7 @@
 /node_modules
 /.pnp
 .pnp.js
+api-spec-v3.json
 
 # testing
 /coverage
