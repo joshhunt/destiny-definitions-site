@@ -7,7 +7,6 @@
 .pnp.js
 
 api-spec-v3.json
-types.generated.ts
 graphql-schema.generated.json
 
 # testing
