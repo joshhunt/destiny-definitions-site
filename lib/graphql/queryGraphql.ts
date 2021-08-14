@@ -1,6 +1,6 @@
 import { DocumentNode, graphql } from "graphql";
 
-import { schema } from "../../pages/api/graphql";
+import { schema } from "./schema";
 
 function getGqlString(doc: DocumentNode) {
   if (!doc.loc) {
@@ -10,12 +10,22 @@ function getGqlString(doc: DocumentNode) {
   return doc.loc.source.body;
 }
 
-export default async function queryGraphql(
+export default async function queryGraphql<TData, TVariables = any>(
   query: string | DocumentNode,
-  variableValues = {}
-) {
+  variableValues: TVariables
+): Promise<TData> {
   const queryString = typeof query === "string" ? query : getGqlString(query);
-  const result = await graphql({ schema, source: queryString, variableValues });
+  const result = await graphql({
+    schema,
+    source: queryString,
+    variableValues: variableValues ?? {},
+  });
+
+  if (result.errors) {
+    result.errors.forEach((err) => console.error(err));
+    throw result.errors[0];
+  }
   const { data } = result;
-  return data;
+
+  return data as TData;
 }

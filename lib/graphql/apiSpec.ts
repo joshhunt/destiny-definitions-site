@@ -17,9 +17,7 @@ export function getApiSpec() {
     return apiSpec;
   }
 
-  const specJSON = fs
-    .readFileSync("pages/api/definitions-graphql/api-spec-v3.json")
-    .toString();
+  const specJSON = fs.readFileSync("lib/graphql/api-spec-v3.json").toString();
 
   apiSpec = JSON.parse(specJSON) as OpenAPIV3.Document;
   return apiSpec;

@@ -65,6 +65,10 @@ export function makeResolver(
 
     const hash = source[name];
 
+    if (!hash) {
+      return null;
+    }
+
     const def = await getDefinition(version, tableName, hash);
     return defWithVersion(def, version);
   };

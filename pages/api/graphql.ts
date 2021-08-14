@@ -1,7 +1,5 @@
 import { ApolloServer } from "apollo-server-micro";
-import createGraphQLSchema from "./definitions-graphql/createGraphQLSchema";
-
-export const schema = createGraphQLSchema();
+import { schema } from "../../lib/graphql/schema";
 
 const apolloServer = new ApolloServer({ schema });
 

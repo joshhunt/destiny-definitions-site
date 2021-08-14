@@ -63,7 +63,6 @@ export async function getDefinition(
   tableName: string,
   hash: string
 ) {
-  console.log("getDefinition", { version, tableName, hash });
   const [versionResult, definitionResult] = await redisGetDefinition(
     version,
     tableName,

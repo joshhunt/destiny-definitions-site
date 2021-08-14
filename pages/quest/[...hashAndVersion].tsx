@@ -11,6 +11,7 @@ import {
 } from "../../components/QuestPage/types";
 import duration from "../../lib/duration";
 import notFound from "../../lib/next";
+import { getHashAndVersion } from "../../lib/pageUtils";
 import { getLatestVersion, getTypedDefinition, getVersion } from "../../remote";
 import { ManifestVersion } from "../../types";
 
@@ -25,26 +26,14 @@ interface Context {
 }
 
 export const getStaticProps = async ({ params }: Context) => {
-  let questHash: number;
-  let version: ManifestVersion | undefined;
+  const { hash: rawQuestHash, version } = await getHashAndVersion(
+    params.hashAndVersion
+  );
 
-  if (params.hashAndVersion.length === 1) {
-    questHash = parseInt(params.hashAndVersion[0], 10);
-    version = await getLatestVersion();
-  } else if (params.hashAndVersion.length === 2) {
-    questHash = parseInt(params.hashAndVersion[1], 10);
-    version = await getVersion(params.hashAndVersion[0]); // TODO: specific version
-  } else {
+  const questHash = parseInt(rawQuestHash ?? "", 10);
+
+  if (!questHash || !version) {
     return { notFound: true, revalidate: duration("1 day") };
-  }
-
-  if (!version) {
-    console.log(
-      `Unable to find version with params ${JSON.stringify(
-        params.hashAndVersion
-      )}`
-    );
-    return notFound(duration("1 hour"));
   }
 
   const [
