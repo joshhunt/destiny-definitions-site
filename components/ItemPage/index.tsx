@@ -14,18 +14,23 @@ const ItemPage: React.FC<ItemPageProps> = ({ data: { item } }) => {
   }
 
   const sockets = item.sockets?.socketEntries ?? [];
-  const randomSockets = sockets.filter((v) => v?.randomizedPlugSet);
+  // const randomSockets = sockets.filter((v) => v?.randomizedPlugSet);
 
   return (
     <div className={s.root}>
       <ItemHeader item={item} />
 
-      {randomSockets.map((socket) => (
+      {sockets.map((socket, index) => (
         <>
           <ul>
-            {socket?.randomizedPlugSet?.reusablePlugItems?.map((v) => (
-              <li>{v?.plugItem?.displayProperties?.name}</li>
-            ))}
+            {socket?.randomizedPlugSet?.reusablePlugItems?.map(
+              (v) =>
+                v?.plugItem?.displayProperties?.name && (
+                  <li>
+                    {v.plugItem.hash} {v.plugItem.displayProperties.name}
+                  </li>
+                )
+            )}
           </ul>
 
           <hr />

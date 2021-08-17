@@ -13,6 +13,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+  JSONObject: any;
 };
 
 export type DateRange = {
@@ -3589,6 +3591,7 @@ export type Query = {
   ManyDestinyHistoricalStatsDefinition?: Maybe<
     Array<Maybe<DestinyHistoricalStatsDefinition>>
   >;
+  JSONDefinition?: Maybe<Scalars["JSONObject"]>;
 };
 
 export type QueryDestinyProgressionDefinitionArgs = {
@@ -4091,6 +4094,12 @@ export type QueryManyDestinyHistoricalStatsDefinitionArgs = {
   version?: Maybe<Scalars["String"]>;
 };
 
+export type QueryJsonDefinitionArgs = {
+  table?: Maybe<Scalars["String"]>;
+  hash?: Maybe<Scalars["String"]>;
+  version?: Maybe<Scalars["String"]>;
+};
+
 export type SchemaRecordStateBlock = {
   __typename?: "SchemaRecordStateBlock";
   featuredPriority?: Maybe<Scalars["Int"]>;
@@ -4161,4 +4170,17 @@ export type ItemPageQuery = {
       }>;
     } & DisplayableItemFragment
   >;
+};
+
+export type ModifiedDiffPageQueryVariables = Exact<{
+  version?: Maybe<Scalars["String"]>;
+  previousVersion?: Maybe<Scalars["String"]>;
+  hash?: Maybe<Scalars["String"]>;
+  table?: Maybe<Scalars["String"]>;
+}>;
+
+export type ModifiedDiffPageQuery = {
+  __typename?: "Query";
+  definition?: Maybe<any>;
+  previousDefinition?: Maybe<any>;
 };

@@ -1,5 +1,6 @@
 import * as graphql from "graphql";
 import { OpenAPIV3 } from "openapi-types";
+import { GraphQLJSONObject } from "graphql-type-json";
 import {
   getApiSpec,
   getRootSpecs,
@@ -17,6 +18,7 @@ type OpenAPISchemaProperties = Exclude<
   undefined
 >;
 type OpenAPISchemaProperty = OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject;
+type GraphQLFieldConfig = graphql.GraphQLFieldConfig<unknown, unknown>;
 
 function fieldTypeForProperty(
   apiSpec: OpenAPIV3.Document,
@@ -146,6 +148,48 @@ function createSchemaFromSpec(apiSpec: OpenAPIV3.Document, specPath: string) {
   return graphqlType;
 }
 
+function createDefinitionSchema(
+  schema: graphql.GraphQLObjectType<unknown, unknown>,
+  name: string
+): GraphQLFieldConfig {
+  return {
+    args: {
+      hash: { type: graphql.GraphQLString },
+      version: { type: graphql.GraphQLString },
+    },
+    type: schema,
+    resolve: makeRootDefinitionResolver(name),
+  };
+}
+
+function createMultipleDefinitionSchema(
+  schema: graphql.GraphQLObjectType<unknown, unknown>,
+  name: string
+): GraphQLFieldConfig {
+  return {
+    args: {
+      hashes: { type: new graphql.GraphQLList(graphql.GraphQLString) },
+      version: { type: graphql.GraphQLString },
+    },
+    type: new graphql.GraphQLList(schema),
+    resolve: makeRootMultipleDefinitionResolver(name) as any, // TODO: type
+  };
+}
+
+function createJSONDefinitionSchema(): GraphQLFieldConfig {
+  const type = GraphQLJSONObject;
+
+  return {
+    args: {
+      table: { type: graphql.GraphQLString },
+      hash: { type: graphql.GraphQLString },
+      version: { type: graphql.GraphQLString },
+    },
+    type: type,
+    resolve: makeRootDefinitionResolver(),
+  };
+}
+
 export default function makeGraphQLSchema() {
   const apiSpec = getApiSpec();
   const rootSpecs = getRootSpecs(apiSpec);
@@ -155,33 +199,20 @@ export default function makeGraphQLSchema() {
 
   const queryFields: graphql.GraphQLFieldConfigMap<any, any> = {};
 
-  for (const [path, definitionType] of Object.entries(rootSpecs)) {
+  for (const path of Object.keys(rootSpecs)) {
     const name = nameFromSpecPath(path);
     if (!name) continue;
 
     const schema = createSchemaFromSpec(apiSpec, path);
 
-    const definitionGraphQLSchema: graphql.GraphQLFieldConfig<any, any> = {
-      args: {
-        hash: { type: graphql.GraphQLString },
-        version: { type: graphql.GraphQLString },
-      },
-      type: schema,
-      resolve: makeRootDefinitionResolver(name),
-    };
+    const definitionSchema = createDefinitionSchema(schema, name);
+    const multipleDefsSchema = createMultipleDefinitionSchema(schema, name);
 
-    const multipleSchema: graphql.GraphQLFieldConfig<any, any> = {
-      args: {
-        hashes: { type: new graphql.GraphQLList(graphql.GraphQLString) },
-        version: { type: graphql.GraphQLString },
-      },
-      type: new graphql.GraphQLList(schema),
-      resolve: makeRootMultipleDefinitionResolver(name) as any, // TODO: type
-    };
-
-    queryFields[name] = definitionGraphQLSchema;
-    queryFields[`Many${name}`] = multipleSchema;
+    queryFields[name] = definitionSchema;
+    queryFields[`Many${name}`] = multipleDefsSchema;
   }
+
+  queryFields.JSONDefinition = createJSONDefinitionSchema();
 
   const queryType = new graphql.GraphQLObjectType({
     name: "Query",

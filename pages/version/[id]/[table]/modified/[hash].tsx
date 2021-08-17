@@ -1,18 +1,19 @@
 import { GetStaticPaths, GetStaticProps } from "next";
-import React from "react";
-import ModifiedDiffPage from "../../../../../components/ModifiedDiffPage";
-import {
-  getDefinitionForVersion,
-  getModifiedDeepDiff,
-  getPreviousVersion,
-  getVersion,
-} from "../../../../../remote";
-import { AnyDefinition, ModifiedDeepDiffEntry } from "../../../../../types";
+import ModifiedDiffPage, {
+  ModifiedDiffPageProps,
+} from "../../../../../components/ModifiedDiffPage";
+import { getPreviousVersion, getVersion } from "../../../../../remote";
 
 import config from "../../../../../config";
 import { format } from "date-fns";
 import { friendlyDiffName, getDisplayName } from "../../../../../lib/utils";
 import duration from "../../../../../lib/duration";
+import gql from "graphql-tag";
+import queryGraphql from "../../../../../lib/graphql/queryGraphql";
+import {
+  ModifiedDiffPageQuery,
+  ModifiedDiffPageQueryVariables,
+} from "../../../../../lib/graphql/types.generated";
 
 interface Params {
   [key: string]: any;
@@ -29,21 +30,13 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
   return { paths: [], fallback: "blocking" };
 };
 
-interface ModifiedDiffPageProps {
-  versionId: string;
-  hash: string;
-  diffForHash: ModifiedDeepDiffEntry | undefined;
-  definition: AnyDefinition | null;
-  previousDefinition: AnyDefinition | null;
-}
-
 export const getStaticProps: GetStaticProps<
   ModifiedDiffPageProps,
   Params
 > = async (context) => {
   console.log("Running getStaticProps with context", context);
   const versionId = context.params?.id ?? "";
-  const definitionName = context.params?.table ?? "";
+  const tableName = context.params?.table ?? "";
   const hash = context.params?.hash ?? "";
 
   const previousVersion = await getPreviousVersion(versionId);
@@ -52,21 +45,20 @@ export const getStaticProps: GetStaticProps<
     throw new Error("Could not find previous version");
   }
 
-  const [
-    diffData,
-    definitions,
-    previousDefinitions,
-    manifestVersion,
-  ] = await Promise.all([
-    getModifiedDeepDiff(versionId, definitionName),
-    getDefinitionForVersion(versionId, definitionName),
-    getDefinitionForVersion(previousVersion.id, definitionName),
-    getVersion(versionId),
-  ]);
+  const [manifestVersion] = await Promise.all([getVersion(versionId)]);
 
-  const diffForHash = diffData?.[hash as any];
-  const definition = definitions[hash];
-  const previousDefinition = previousDefinitions[hash];
+  const data = await queryGraphql<
+    ModifiedDiffPageQuery,
+    ModifiedDiffPageQueryVariables
+  >(QUERY, {
+    version: versionId,
+    previousVersion: previousVersion.id,
+    hash,
+    table: tableName,
+  });
+
+  const definition = data.definition;
+  const previousDefinition = data.previousDefinition;
 
   const breadcrumbs = [
     manifestVersion && {
@@ -74,12 +66,12 @@ export const getStaticProps: GetStaticProps<
       to: `/version/${versionId}`,
     },
     {
-      label: friendlyDiffName(definitionName),
-      to: `/version/${versionId}/${definitionName}`,
+      label: friendlyDiffName(tableName),
+      to: `/version/${versionId}/${tableName}`,
     },
     definition && {
       label: getDisplayName(definition),
-      to: `/version/${versionId}/${definitionName}/modified/${hash}`,
+      to: `/version/${versionId}/${tableName}/modified/${hash}`,
     },
   ];
 
@@ -87,7 +79,6 @@ export const getStaticProps: GetStaticProps<
     props: {
       versionId,
       hash,
-      diffForHash,
       definition,
       previousDefinition,
       breadcrumbs,
@@ -96,6 +87,21 @@ export const getStaticProps: GetStaticProps<
   };
 };
 
-export default function ModifiedDiffPageWrapper(props: ModifiedDiffPageProps) {
-  return <ModifiedDiffPage {...props} />;
-}
+export default ModifiedDiffPage;
+
+const QUERY = gql`
+  query ModifiedDiffPage(
+    $version: String
+    $previousVersion: String
+    $hash: String
+    $table: String
+  ) {
+    definition: JSONDefinition(version: $version, hash: $hash, table: $table)
+
+    previousDefinition: JSONDefinition(
+      version: $previousVersion
+      hash: $hash
+      table: $table
+    )
+  }
+`;

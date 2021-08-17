@@ -12,8 +12,19 @@ function defWithVersion(def: any, version: string) {
   };
 }
 
-export function makeRootDefinitionResolver(tableName: string) {
-  return async (_: unknown, { hash, version }: Arguments) => {
+export function makeRootDefinitionResolver(_tableName?: string) {
+  return async (
+    _: unknown,
+    { hash, version, table: tableNameArg }: Arguments
+  ) => {
+    const tableName = _tableName ?? tableNameArg;
+
+    if (!tableName) {
+      throw new Error(
+        "Table name was not specified to makeRootDefinitionResolver"
+      );
+    }
+
     const def = await getDefinition(version, tableName, hash);
     return defWithVersion(def, version);
   };

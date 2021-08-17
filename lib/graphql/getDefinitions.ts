@@ -6,10 +6,6 @@ const client = redis.createClient();
 redis.add_command("JSON.SET");
 redis.add_command("JSON.GET");
 
-let defStore: Record<string, Record<string, any>> = {};
-
-const BUNGIE_API_KEY = "21a93b95633f476f88f8ba183edb3c32";
-
 function redisGetDefinition(
   version: string,
   tableName: string,
@@ -57,7 +53,6 @@ function redisSetDefinitions(version: string, tableName: string, data: any) {
   });
 }
 
-// TODO: this needs to use redis cache and support versions
 export async function getDefinition(
   version: string,
   tableName: string,

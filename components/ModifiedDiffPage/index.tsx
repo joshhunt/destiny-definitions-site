@@ -6,69 +6,13 @@ import ReactDiffViewer, { DiffMethod } from "react-diff-viewer";
 import s from "./styles.module.scss";
 import BungieImage from "../BungieImage";
 
-interface ModifiedDiffProps {
+export interface ModifiedDiffPageProps {
   hash: string;
-  diffForHash: ModifiedDeepDiffEntry | undefined;
   definition: AnyDefinition | null;
   previousDefinition: AnyDefinition | null;
 }
 
-const COLORS = {
-  ADDED: "#66bb6a",
-  CHANGE_NEW: "#ffca28",
-  REMOVED: "#ef5350",
-  CHANGE_OLD: "#e65100",
-};
-
-const newSideStyles = (diff: DiffType, type: string, _keyPath: string[]) => {
-  if (diff.kind === "N") {
-    return {
-      valueLabel: {
-        borderBottom: "2px solid currentColor",
-        color: COLORS.ADDED,
-      },
-      valueText: {
-        borderBottom: "2px solid currentColor",
-        color: COLORS.ADDED,
-      },
-      nestedNodeLabel: {
-        borderBottom: "2px solid currentColor",
-        color: COLORS.ADDED,
-      },
-    };
-  }
-
-  if (diff.kind === "E") {
-    return {
-      valueText: {
-        borderBottom: "2px solid currentColor",
-        color: COLORS.CHANGE_NEW,
-      },
-    };
-  }
-};
-
-const oldSideStyles = (diff: DiffType, type: string, _keyPath: string[]) => {
-  if (diff.kind === "E") {
-    return {
-      valueText: {
-        borderBottom: "2px solid currentColor",
-        color: COLORS.CHANGE_OLD,
-      },
-    };
-  }
-
-  if (diff.kind === "D") {
-    return {
-      valueText: {
-        borderBottom: "2px solid currentColor",
-        color: COLORS.REMOVED,
-      },
-    };
-  }
-};
-
-const ModifiedDiffPage: React.FC<ModifiedDiffProps> = ({
+const ModifiedDiffPage: React.FC<ModifiedDiffPageProps> = ({
   hash,
   definition,
   previousDefinition,
