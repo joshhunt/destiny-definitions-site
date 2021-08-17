@@ -48,7 +48,7 @@
     "graphql": "^15.5.1",
     "graphql-tag": "^2.12.5",
     "graphql-type-json": "^0.3.2",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.21",
     "micro": "^9.3.4",
     "next": "^10.0.0",
     "node-sass": "^5.0.0",
