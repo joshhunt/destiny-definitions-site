@@ -17,32 +17,32 @@ export type Scalars = {
   JSONObject: any;
 };
 
-export type DateRange = {
+export type QLDateRange = {
   __typename?: "DateRange";
   start?: Maybe<Scalars["String"]>;
   end?: Maybe<Scalars["String"]>;
 };
 
-export type DestinyActivityChallengeDefinition = {
+export type QLDestinyActivityChallengeDefinition = {
   __typename?: "DestinyActivityChallengeDefinition";
   /** The hash for the Objective that matches this challenge. Use it to look up the DestinyObjectiveDefinition. */
   objectiveHash?: Maybe<Scalars["Float"]>;
-  objective?: Maybe<DestinyObjectiveDefinition>;
+  objective?: Maybe<QLDestinyObjectiveDefinition>;
   /**
    * The rewards as they're represented in the UI. Note that they generally link to "dummy" items that give a summary of rewards rather than direct, real items themselves.
    * If the quantity is 0, don't show the quantity.
    */
-  dummyRewards?: Maybe<Array<Maybe<DestinyItemQuantity>>>;
+  dummyRewards?: Maybe<Array<Maybe<QLDestinyItemQuantity>>>;
 };
 
-export type DestinyActivityDefinition = {
+export type QLDestinyActivityDefinition = {
   __typename?: "DestinyActivityDefinition";
   /** The title, subtitle, and icon for the activity. We do a little post-processing on this to try and account for Activities where the designers have left this data too minimal to determine what activity is actually being played. */
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** The unadulterated form of the display properties, as they ought to be shown in the Director (if the activity appears in the director). */
-  originalDisplayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  originalDisplayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** The title, subtitle, and icon for the activity as determined by Selection Screen data, if there is any for this activity. There won't be data in this field if the activity is never shown in a selection/options screen. */
-  selectionScreenDisplayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  selectionScreenDisplayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** If the activity has an icon associated with a specific release (such as a DLC), this is the path to that release's icon. */
   releaseIcon?: Maybe<Scalars["String"]>;
   /** If the activity will not be visible until a specific and known time, this will be the seconds since the Epoch when it will become visible. */
@@ -51,60 +51,60 @@ export type DestinyActivityDefinition = {
   activityLightLevel?: Maybe<Scalars["Int"]>;
   /** The hash identifier for the Destination on which this Activity is played. Use it to look up the DestinyDestinationDefinition for human readable info about the destination. A Destination can be thought of as a more specific location than a "Place". For instance, if the "Place" is Earth, the "Destination" would be a specific city or region on Earth. */
   destinationHash?: Maybe<Scalars["Float"]>;
-  destination?: Maybe<DestinyDestinationDefinition>;
+  destination?: Maybe<QLDestinyDestinationDefinition>;
   /** The hash identifier for the "Place" on which this Activity is played. Use it to look up the DestinyPlaceDefinition for human readable info about the Place. A Place is the largest-scoped concept for location information. For instance, if the "Place" is Earth, the "Destination" would be a specific city or region on Earth. */
   placeHash?: Maybe<Scalars["Float"]>;
-  place?: Maybe<DestinyPlaceDefinition>;
+  place?: Maybe<QLDestinyPlaceDefinition>;
   /** The hash identifier for the Activity Type of this Activity. You may use it to look up the DestinyActivityTypeDefinition for human readable info, but be forewarned: Playlists and many PVP Map Activities will map to generic Activity Types. You'll have to use your knowledge of the Activity Mode being played to get more specific information about what the user is playing. */
   activityTypeHash?: Maybe<Scalars["Float"]>;
-  activityType?: Maybe<DestinyActivityTypeDefinition>;
+  activityType?: Maybe<QLDestinyActivityTypeDefinition>;
   /** The difficulty tier of the activity. */
   tier?: Maybe<Scalars["Int"]>;
   /** When Activities are completed, we generate a "Post-Game Carnage Report", or PGCR, with details about what happened in that activity (how many kills someone got, which team won, etc...) We use this image as the background when displaying PGCR information, and often use it when we refer to the Activity in general. */
   pgcrImage?: Maybe<Scalars["String"]>;
   /** The expected possible rewards for the activity. These rewards may or may not be accessible for an individual player based on their character state, the account state, and even the game's state overall. But it is a useful reference for possible rewards you can earn in the activity. These match up to rewards displayed when you hover over the Activity in the in-game Director, and often refer to Placeholder or "Dummy" items: items that tell you what you can earn in vague terms rather than what you'll specifically be earning (partly because the game doesn't even know what you'll earn specifically until you roll for it at the end) */
-  rewards?: Maybe<Array<Maybe<DestinyActivityRewardDefinition>>>;
+  rewards?: Maybe<Array<Maybe<QLDestinyActivityRewardDefinition>>>;
   /** Activities can have Modifiers, as defined in DestinyActivityModifierDefinition. These are references to the modifiers that *can* be applied to that activity, along with data that we use to determine if that modifier is actually active at any given point in time. */
-  modifiers?: Maybe<Array<Maybe<DestinyActivityModifierReferenceDefinition>>>;
+  modifiers?: Maybe<Array<Maybe<QLDestinyActivityModifierReferenceDefinition>>>;
   /** If True, this Activity is actually a Playlist that refers to multiple possible specific Activities and Activity Modes. For instance, a Crucible Playlist may have references to multiple Activities (Maps) with multiple Activity Modes (specific PvP gameplay modes). If this is true, refer to the playlistItems property for the specific entries in the playlist. */
   isPlaylist?: Maybe<Scalars["Boolean"]>;
   /** An activity can have many Challenges, of which any subset of them may be active for play at any given period of time. This gives the information about the challenges and data that we use to understand when they're active and what rewards they provide. Sadly, at the moment there's no central definition for challenges: much like "Skulls" were in Destiny 1, these are defined on individual activities and there can be many duplicates/near duplicates across the Destiny 2 ecosystem. I have it in mind to centralize these in a future revision of the API, but we are out of time. */
-  challenges?: Maybe<Array<Maybe<DestinyActivityChallengeDefinition>>>;
+  challenges?: Maybe<Array<Maybe<QLDestinyActivityChallengeDefinition>>>;
   /** If there are status strings related to the activity and based on internal state of the game, account, or character, then this will be the definition of those strings and the states needed in order for the strings to be shown. */
   optionalUnlockStrings?: Maybe<
-    Array<Maybe<DestinyActivityUnlockStringDefinition>>
+    Array<Maybe<QLDestinyActivityUnlockStringDefinition>>
   >;
   /** Represents all of the possible activities that could be played in the Playlist, along with information that we can use to determine if they are active at the present time. */
-  playlistItems?: Maybe<Array<Maybe<DestinyActivityPlaylistItemDefinition>>>;
+  playlistItems?: Maybe<Array<Maybe<QLDestinyActivityPlaylistItemDefinition>>>;
   /** Unfortunately, in practice this is almost never populated. In theory, this is supposed to tell which Activity Graph to show if you bring up the director while in this activity. */
   activityGraphList?: Maybe<
-    Array<Maybe<DestinyActivityGraphListEntryDefinition>>
+    Array<Maybe<QLDestinyActivityGraphListEntryDefinition>>
   >;
   /** This block of data provides information about the Activity's matchmaking attributes: how many people can join and such. */
-  matchmaking?: Maybe<DestinyActivityMatchmakingBlockDefinition>;
+  matchmaking?: Maybe<QLDestinyActivityMatchmakingBlockDefinition>;
   /** This block of data, if it exists, provides information about the guided game experience and restrictions for this activity. If it doesn't exist, the game is not able to be played as a guided game. */
-  guidedGame?: Maybe<DestinyActivityGuidedBlockDefinition>;
+  guidedGame?: Maybe<QLDestinyActivityGuidedBlockDefinition>;
   /** If this activity had an activity mode directly defined on it, this will be the hash of that mode. */
   directActivityModeHash?: Maybe<Scalars["Float"]>;
-  directActivityMode?: Maybe<DestinyActivityModeDefinition>;
+  directActivityMode?: Maybe<QLDestinyActivityModeDefinition>;
   /** If the activity had an activity mode directly defined on it, this will be the enum value of that mode. */
   directActivityModeType?: Maybe<Scalars["Int"]>;
   /** The set of all possible loadout requirements that could be active for this activity. Only one will be active at any given time, and you can discover which one through activity-associated data such as Milestones that have activity info on them. */
-  loadouts?: Maybe<Array<Maybe<DestinyActivityLoadoutRequirementSet>>>;
+  loadouts?: Maybe<Array<Maybe<QLDestinyActivityLoadoutRequirementSet>>>;
   /** The hash identifiers for Activity Modes relevant to this activity.  Note that if this is a playlist, the specific playlist entry chosen will determine the actual activity modes that end up being relevant. */
   activityModeHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
-  activityMode?: Maybe<DestinyActivityModeDefinition>;
+  activityMode?: Maybe<QLDestinyActivityModeDefinition>;
   /** The activity modes - if any - in enum form. Because we can't seem to escape the enums. */
   activityModeTypes?: Maybe<Array<Maybe<Scalars["Int"]>>>;
   /** If true, this activity is a PVP activity or playlist. */
   isPvP?: Maybe<Scalars["Boolean"]>;
   /** The list of phases or points of entry into an activity, along with information we can use to determine their gating and availability. */
   insertionPoints?: Maybe<
-    Array<Maybe<DestinyActivityInsertionPointDefinition>>
+    Array<Maybe<QLDestinyActivityInsertionPointDefinition>>
   >;
   /** A list of location mappings that are affected by this activity. Pulled out of DestinyLocationDefinitions for our/your lookup convenience. */
   activityLocationMappings?: Maybe<
-    Array<Maybe<DestinyEnvironmentLocationMapping>>
+    Array<Maybe<QLDestinyEnvironmentLocationMapping>>
   >;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
@@ -117,36 +117,36 @@ export type DestinyActivityDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyActivityGraphArtElementDefinition = {
+export type QLDestinyActivityGraphArtElementDefinition = {
   __typename?: "DestinyActivityGraphArtElementDefinition";
   /** The position on the map of the art element. */
-  position?: Maybe<DestinyPositionDefinition>;
+  position?: Maybe<QLDestinyPositionDefinition>;
 };
 
-export type DestinyActivityGraphConnectionDefinition = {
+export type QLDestinyActivityGraphConnectionDefinition = {
   __typename?: "DestinyActivityGraphConnectionDefinition";
   sourceNodeHash?: Maybe<Scalars["Float"]>;
   destNodeHash?: Maybe<Scalars["Float"]>;
 };
 
-export type DestinyActivityGraphDefinition = {
+export type QLDestinyActivityGraphDefinition = {
   __typename?: "DestinyActivityGraphDefinition";
   /** These represent the visual "nodes" on the map's view. These are the activities you can click on in the map. */
-  nodes?: Maybe<Array<Maybe<DestinyActivityGraphNodeDefinition>>>;
+  nodes?: Maybe<Array<Maybe<QLDestinyActivityGraphNodeDefinition>>>;
   /** Represents one-off/special UI elements that appear on the map. */
-  artElements?: Maybe<Array<Maybe<DestinyActivityGraphArtElementDefinition>>>;
+  artElements?: Maybe<Array<Maybe<QLDestinyActivityGraphArtElementDefinition>>>;
   /** Represents connections between graph nodes. However, it lacks context that we'd need to make good use of it. */
-  connections?: Maybe<Array<Maybe<DestinyActivityGraphConnectionDefinition>>>;
+  connections?: Maybe<Array<Maybe<QLDestinyActivityGraphConnectionDefinition>>>;
   /** Objectives can display on maps, and this is supposedly metadata for that. I have not had the time to analyze the details of what is useful within however: we could be missing important data to make this work. Expect this property to be expanded on later if possible. */
   displayObjectives?: Maybe<
-    Array<Maybe<DestinyActivityGraphDisplayObjectiveDefinition>>
+    Array<Maybe<QLDestinyActivityGraphDisplayObjectiveDefinition>>
   >;
   /** Progressions can also display on maps, but similarly to displayObjectives we appear to lack some required information and context right now. We will have to look into it later and add more data if possible. */
   displayProgressions?: Maybe<
-    Array<Maybe<DestinyActivityGraphDisplayProgressionDefinition>>
+    Array<Maybe<QLDestinyActivityGraphDisplayProgressionDefinition>>
   >;
   /** Represents links between this Activity Graph and other ones. */
-  linkedGraphs?: Maybe<Array<Maybe<DestinyLinkedGraphDefinition>>>;
+  linkedGraphs?: Maybe<Array<Maybe<QLDestinyLinkedGraphDefinition>>>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -158,67 +158,69 @@ export type DestinyActivityGraphDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyActivityGraphDisplayObjectiveDefinition = {
+export type QLDestinyActivityGraphDisplayObjectiveDefinition = {
   __typename?: "DestinyActivityGraphDisplayObjectiveDefinition";
   /** $NOTE $amola 2017-01-19 This field is apparently something that CUI uses to manually wire up objectives to display info. I am unsure how it works. */
   id?: Maybe<Scalars["Float"]>;
   /** The objective being shown on the map. */
   objectiveHash?: Maybe<Scalars["Float"]>;
-  objective?: Maybe<DestinyObjectiveDefinition>;
+  objective?: Maybe<QLDestinyObjectiveDefinition>;
 };
 
-export type DestinyActivityGraphDisplayProgressionDefinition = {
+export type QLDestinyActivityGraphDisplayProgressionDefinition = {
   __typename?: "DestinyActivityGraphDisplayProgressionDefinition";
   id?: Maybe<Scalars["Float"]>;
   progressionHash?: Maybe<Scalars["Float"]>;
 };
 
-export type DestinyActivityGraphListEntryDefinition = {
+export type QLDestinyActivityGraphListEntryDefinition = {
   __typename?: "DestinyActivityGraphListEntryDefinition";
   /** The hash identifier of the DestinyActivityGraphDefinition that should be shown when opening the director. */
   activityGraphHash?: Maybe<Scalars["Float"]>;
-  activityGraph?: Maybe<DestinyActivityGraphDefinition>;
+  activityGraph?: Maybe<QLDestinyActivityGraphDefinition>;
 };
 
-export type DestinyActivityGraphNodeActivityDefinition = {
+export type QLDestinyActivityGraphNodeActivityDefinition = {
   __typename?: "DestinyActivityGraphNodeActivityDefinition";
   /** An identifier for this node activity. It is only guaranteed to be unique within the Activity Graph. */
   nodeActivityId?: Maybe<Scalars["Float"]>;
   /** The activity that will be activated if the user clicks on this node. Controls all activity-related information displayed on the node if it is active (the text shown in the tooltip etc) */
   activityHash?: Maybe<Scalars["Float"]>;
-  activity?: Maybe<DestinyActivityDefinition>;
+  activity?: Maybe<QLDestinyActivityDefinition>;
 };
 
-export type DestinyActivityGraphNodeDefinition = {
+export type QLDestinyActivityGraphNodeDefinition = {
   __typename?: "DestinyActivityGraphNodeDefinition";
   /** An identifier for the Activity Graph Node, only guaranteed to be unique within its parent Activity Graph. */
   nodeId?: Maybe<Scalars["Float"]>;
   /** The node *may* have display properties that override the active Activity's display properties. */
-  overrideDisplay?: Maybe<DestinyDisplayPropertiesDefinition>;
+  overrideDisplay?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** The position on the map for this node. */
-  position?: Maybe<DestinyPositionDefinition>;
+  position?: Maybe<QLDestinyPositionDefinition>;
   /** The node may have various visual accents placed on it, or styles applied. These are the list of possible styles that the Node can have. The game iterates through each, looking for the first one that passes a check of the required game/character/account state in order to show that style, and then renders the node in that style. */
   featuringStates?: Maybe<
-    Array<Maybe<DestinyActivityGraphNodeFeaturingStateDefinition>>
+    Array<Maybe<QLDestinyActivityGraphNodeFeaturingStateDefinition>>
   >;
   /** The node may have various possible activities that could be active for it, however only one may be active at a time. See the DestinyActivityGraphNodeActivityDefinition for details. */
-  activities?: Maybe<Array<Maybe<DestinyActivityGraphNodeActivityDefinition>>>;
+  activities?: Maybe<
+    Array<Maybe<QLDestinyActivityGraphNodeActivityDefinition>>
+  >;
   /** Represents possible states that the graph node can be in. These are combined with some checking that happens in the game client and server to determine which state is actually active at any given time. */
-  states?: Maybe<Array<Maybe<DestinyActivityGraphNodeStateEntry>>>;
+  states?: Maybe<Array<Maybe<QLDestinyActivityGraphNodeStateEntry>>>;
 };
 
-export type DestinyActivityGraphNodeFeaturingStateDefinition = {
+export type QLDestinyActivityGraphNodeFeaturingStateDefinition = {
   __typename?: "DestinyActivityGraphNodeFeaturingStateDefinition";
   /** The node can be highlighted in a variety of ways - the game iterates through these and finds the first FeaturingState that is valid at the present moment given the Game, Account, and Character state, and renders the node in that state. See the ActivityGraphNodeHighlightType enum for possible values. */
   highlightType?: Maybe<Scalars["Int"]>;
 };
 
-export type DestinyActivityGraphNodeStateEntry = {
+export type QLDestinyActivityGraphNodeStateEntry = {
   __typename?: "DestinyActivityGraphNodeStateEntry";
   state?: Maybe<Scalars["Int"]>;
 };
 
-export type DestinyActivityGuidedBlockDefinition = {
+export type QLDestinyActivityGuidedBlockDefinition = {
   __typename?: "DestinyActivityGuidedBlockDefinition";
   /** The maximum amount of people that can be in the waiting lobby. */
   guidedMaxLobbySize?: Maybe<Scalars["Int"]>;
@@ -228,28 +230,28 @@ export type DestinyActivityGuidedBlockDefinition = {
   guidedDisbandCount?: Maybe<Scalars["Int"]>;
 };
 
-export type DestinyActivityInsertionPointDefinition = {
+export type QLDestinyActivityInsertionPointDefinition = {
   __typename?: "DestinyActivityInsertionPointDefinition";
   /** A unique hash value representing the phase. This can be useful for, for example, comparing how different instances of Raids have phases in different orders! */
   phaseHash?: Maybe<Scalars["Float"]>;
 };
 
-export type DestinyActivityLoadoutRequirement = {
+export type QLDestinyActivityLoadoutRequirement = {
   __typename?: "DestinyActivityLoadoutRequirement";
   equipmentSlotHash?: Maybe<Scalars["Float"]>;
-  equipmentSlot?: Maybe<DestinyEquipmentSlotDefinition>;
+  equipmentSlot?: Maybe<QLDestinyEquipmentSlotDefinition>;
   allowedEquippedItemHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
-  allowedEquippedItem?: Maybe<DestinyInventoryItemDefinition>;
+  allowedEquippedItem?: Maybe<QLDestinyInventoryItemDefinition>;
   allowedWeaponSubTypes?: Maybe<Array<Maybe<Scalars["Int"]>>>;
 };
 
-export type DestinyActivityLoadoutRequirementSet = {
+export type QLDestinyActivityLoadoutRequirementSet = {
   __typename?: "DestinyActivityLoadoutRequirementSet";
   /** The set of requirements that will be applied on the activity if this requirement set is active. */
-  requirements?: Maybe<Array<Maybe<DestinyActivityLoadoutRequirement>>>;
+  requirements?: Maybe<Array<Maybe<QLDestinyActivityLoadoutRequirement>>>;
 };
 
-export type DestinyActivityMatchmakingBlockDefinition = {
+export type QLDestinyActivityMatchmakingBlockDefinition = {
   __typename?: "DestinyActivityMatchmakingBlockDefinition";
   /** If TRUE, the activity is matchmade. Otherwise, it requires explicit forming of a party. */
   isMatchmade?: Maybe<Scalars["Boolean"]>;
@@ -263,9 +265,9 @@ export type DestinyActivityMatchmakingBlockDefinition = {
   requiresGuardianOath?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyActivityModeDefinition = {
+export type QLDestinyActivityModeDefinition = {
   __typename?: "DestinyActivityModeDefinition";
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** If this activity mode has a related PGCR image, this will be the path to said image. */
   pgcrImage?: Maybe<Scalars["String"]>;
   /** The Enumeration value for this Activity Mode. Pass this identifier into Stats endpoints to get aggregate stats for this mode. */
@@ -298,9 +300,9 @@ export type DestinyActivityModeDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyActivityModifierDefinition = {
+export type QLDestinyActivityModifierDefinition = {
   __typename?: "DestinyActivityModifierDefinition";
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -312,31 +314,31 @@ export type DestinyActivityModifierDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyActivityModifierReferenceDefinition = {
+export type QLDestinyActivityModifierReferenceDefinition = {
   __typename?: "DestinyActivityModifierReferenceDefinition";
   /** The hash identifier for the DestinyActivityModifierDefinition referenced by this activity. */
   activityModifierHash?: Maybe<Scalars["Float"]>;
-  activityModifier?: Maybe<DestinyActivityModifierDefinition>;
+  activityModifier?: Maybe<QLDestinyActivityModifierDefinition>;
 };
 
-export type DestinyActivityPlaylistItemDefinition = {
+export type QLDestinyActivityPlaylistItemDefinition = {
   __typename?: "DestinyActivityPlaylistItemDefinition";
   /** The hash identifier of the Activity that can be played. Use it to look up the DestinyActivityDefinition. */
   activityHash?: Maybe<Scalars["Float"]>;
-  activity?: Maybe<DestinyActivityDefinition>;
+  activity?: Maybe<QLDestinyActivityDefinition>;
   /** If this playlist entry had an activity mode directly defined on it, this will be the hash of that mode. */
   directActivityModeHash?: Maybe<Scalars["Float"]>;
-  directActivityMode?: Maybe<DestinyActivityModeDefinition>;
+  directActivityMode?: Maybe<QLDestinyActivityModeDefinition>;
   /** If the playlist entry had an activity mode directly defined on it, this will be the enum value of that mode. */
   directActivityModeType?: Maybe<Scalars["Int"]>;
   /** The hash identifiers for Activity Modes relevant to this entry. */
   activityModeHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
-  activityMode?: Maybe<DestinyActivityModeDefinition>;
+  activityMode?: Maybe<QLDestinyActivityModeDefinition>;
   /** The activity modes - if any - in enum form. Because we can't seem to escape the enums. */
   activityModeTypes?: Maybe<Array<Maybe<Scalars["Int"]>>>;
 };
 
-export type DestinyActivityRewardDefinition = {
+export type QLDestinyActivityRewardDefinition = {
   __typename?: "DestinyActivityRewardDefinition";
   /** The header for the reward set, if any. */
   rewardText?: Maybe<Scalars["String"]>;
@@ -344,12 +346,12 @@ export type DestinyActivityRewardDefinition = {
    * The "Items provided" in the reward. This is almost always a pointer to a DestinyInventoryItemDefintion for an item that you can't actually earn in-game, but that has name/description/icon information for the vague concept of the rewards you will receive. This is because the actual reward generation is non-deterministic and extremely complicated, so the best the game can do is tell you what you'll get in vague terms. And so too shall we.
    * Interesting trivia: you actually *do* earn these items when you complete the activity. They go into a single-slot bucket on your profile, which is how you see the pop-ups of these rewards when you complete an activity that match these "dummy" items. You can even see them if you look at the last one you earned in your profile-level inventory through the BNet API! Who said reading documentation is a waste of time?
    */
-  rewardItems?: Maybe<Array<Maybe<DestinyItemQuantity>>>;
+  rewardItems?: Maybe<Array<Maybe<QLDestinyItemQuantity>>>;
 };
 
-export type DestinyActivityTypeDefinition = {
+export type QLDestinyActivityTypeDefinition = {
   __typename?: "DestinyActivityTypeDefinition";
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -361,32 +363,32 @@ export type DestinyActivityTypeDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyActivityUnlockStringDefinition = {
+export type QLDestinyActivityUnlockStringDefinition = {
   __typename?: "DestinyActivityUnlockStringDefinition";
   /** The string to be displayed if the conditions are met. */
   displayString?: Maybe<Scalars["String"]>;
 };
 
-export type DestinyAnimationReference = {
+export type QLDestinyAnimationReference = {
   __typename?: "DestinyAnimationReference";
   animName?: Maybe<Scalars["String"]>;
   animIdentifier?: Maybe<Scalars["String"]>;
   path?: Maybe<Scalars["String"]>;
 };
 
-export type DestinyArtDyeReference = {
+export type QLDestinyArtDyeReference = {
   __typename?: "DestinyArtDyeReference";
   artDyeChannelHash?: Maybe<Scalars["Float"]>;
 };
 
-export type DestinyArtifactDefinition = {
+export type QLDestinyArtifactDefinition = {
   __typename?: "DestinyArtifactDefinition";
   /** Any basic display info we know about the Artifact. Currently sourced from a related inventory item, but the source of this data is subject to change. */
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** Any Geometry/3D info we know about the Artifact. Currently sourced from a related inventory item's gearset information, but the source of this data is subject to change. */
-  translationBlock?: Maybe<DestinyItemTranslationBlockDefinition>;
+  translationBlock?: Maybe<QLDestinyItemTranslationBlockDefinition>;
   /** Any Tier/Rank data related to this artifact, listed in display order.  Currently sourced from a Vendor, but this source is subject to change. */
-  tiers?: Maybe<Array<Maybe<DestinyArtifactTierDefinition>>>;
+  tiers?: Maybe<Array<Maybe<QLDestinyArtifactTierDefinition>>>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -398,7 +400,7 @@ export type DestinyArtifactDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyArtifactTierDefinition = {
+export type QLDestinyArtifactTierDefinition = {
   __typename?: "DestinyArtifactTierDefinition";
   /** An identifier, unique within the Artifact, for this specific tier. */
   tierHash?: Maybe<Scalars["Float"]>;
@@ -407,20 +409,20 @@ export type DestinyArtifactTierDefinition = {
   /** A string representing the localized minimum requirement text for this Tier, if any. */
   progressRequirementMessage?: Maybe<Scalars["String"]>;
   /** The items that can be earned within this tier. */
-  items?: Maybe<Array<Maybe<DestinyArtifactTierItemDefinition>>>;
+  items?: Maybe<Array<Maybe<QLDestinyArtifactTierItemDefinition>>>;
   /** The minimum number of "unlock points" that you must have used before you can unlock items from this tier. */
   minimumUnlockPointsUsedRequirement?: Maybe<Scalars["Int"]>;
 };
 
-export type DestinyArtifactTierItemDefinition = {
+export type QLDestinyArtifactTierItemDefinition = {
   __typename?: "DestinyArtifactTierItemDefinition";
   /** The identifier of the Plug Item unlocked by activating this item in the Artifact. */
   itemHash?: Maybe<Scalars["Float"]>;
 };
 
-export type DestinyBreakerTypeDefinition = {
+export type QLDestinyBreakerTypeDefinition = {
   __typename?: "DestinyBreakerTypeDefinition";
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** We have an enumeration for Breaker types for quick reference. This is the current definition's breaker type enum value. */
   enumValue?: Maybe<Scalars["Int"]>;
   /**
@@ -434,23 +436,23 @@ export type DestinyBreakerTypeDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyBubbleDefinition = {
+export type QLDestinyBubbleDefinition = {
   __typename?: "DestinyBubbleDefinition";
   /** The identifier for the bubble: only guaranteed to be unique within the Destination. */
   hash?: Maybe<Scalars["Float"]>;
   /** The display properties of this bubble, so you don't have to look them up in a separate list anymore. */
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
 };
 
-export type DestinyChecklistDefinition = {
+export type QLDestinyChecklistDefinition = {
   __typename?: "DestinyChecklistDefinition";
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** A localized string prompting you to view the checklist. */
   viewActionString?: Maybe<Scalars["String"]>;
   /** Indicates whether you will find this checklist on the Profile or Character components. */
   scope?: Maybe<Scalars["Int"]>;
   /** The individual checklist items. Gotta catch 'em all. */
-  entries?: Maybe<Array<Maybe<DestinyChecklistEntryDefinition>>>;
+  entries?: Maybe<Array<Maybe<QLDestinyChecklistEntryDefinition>>>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -462,40 +464,40 @@ export type DestinyChecklistDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyChecklistEntryDefinition = {
+export type QLDestinyChecklistEntryDefinition = {
   __typename?: "DestinyChecklistEntryDefinition";
   /** The identifier for this Checklist entry. Guaranteed unique only within this Checklist Definition, and not globally/for all checklists. */
   hash?: Maybe<Scalars["Float"]>;
   /** Even if no other associations exist, we will give you *something* for display properties. In cases where we have no associated entities, it may be as simple as a numerical identifier. */
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   destinationHash?: Maybe<Scalars["Float"]>;
-  destination?: Maybe<DestinyDestinationDefinition>;
+  destination?: Maybe<QLDestinyDestinationDefinition>;
   locationHash?: Maybe<Scalars["Float"]>;
-  location?: Maybe<DestinyLocationDefinition>;
+  location?: Maybe<QLDestinyLocationDefinition>;
   /**
    * Note that a Bubble's hash doesn't uniquely identify a "top level" entity in Destiny. Only the combination of location and bubble can uniquely identify a place in the world of Destiny: so if bubbleHash is populated, locationHash must too be populated for it to have any meaning.
    * You can use this property if it is populated to look up the DestinyLocationDefinition's associated .locationReleases[].activityBubbleName property.
    */
   bubbleHash?: Maybe<Scalars["Float"]>;
   activityHash?: Maybe<Scalars["Float"]>;
-  activity?: Maybe<DestinyActivityDefinition>;
+  activity?: Maybe<QLDestinyActivityDefinition>;
   itemHash?: Maybe<Scalars["Float"]>;
-  item?: Maybe<DestinyInventoryItemDefinition>;
+  item?: Maybe<QLDestinyInventoryItemDefinition>;
   vendorHash?: Maybe<Scalars["Float"]>;
   vendorInteractionIndex?: Maybe<Scalars["Int"]>;
   /** The scope at which this specific entry can be computed. */
   scope?: Maybe<Scalars["Int"]>;
 };
 
-export type DestinyClassDefinition = {
+export type QLDestinyClassDefinition = {
   __typename?: "DestinyClassDefinition";
   /** In Destiny 1, we added a convenience Enumeration for referring to classes. We've kept it, though mostly for posterity. This is the enum value for this definition's class. */
   classType?: Maybe<Scalars["Int"]>;
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
-  genderedClassNamesByGender?: Maybe<DestinyGenderDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
+  genderedClassNamesByGender?: Maybe<QLDestinyGenderDefinition>;
   /** Mentors don't really mean anything anymore. Don't expect this to be populated. */
   mentorVendorHash?: Maybe<Scalars["Float"]>;
-  mentorVendor?: Maybe<DestinyVendorDefinition>;
+  mentorVendor?: Maybe<QLDestinyVendorDefinition>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -507,17 +509,17 @@ export type DestinyClassDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyCollectibleAcquisitionBlock = {
+export type QLDestinyCollectibleAcquisitionBlock = {
   __typename?: "DestinyCollectibleAcquisitionBlock";
   acquireMaterialRequirementHash?: Maybe<Scalars["Float"]>;
-  acquireMaterialRequirement?: Maybe<DestinyMaterialRequirementSetDefinition>;
+  acquireMaterialRequirement?: Maybe<QLDestinyMaterialRequirementSetDefinition>;
   acquireTimestampUnlockValueHash?: Maybe<Scalars["Float"]>;
-  acquireTimestampUnlockValue?: Maybe<DestinyUnlockValueDefinition>;
+  acquireTimestampUnlockValue?: Maybe<QLDestinyUnlockValueDefinition>;
 };
 
-export type DestinyCollectibleDefinition = {
+export type QLDestinyCollectibleDefinition = {
   __typename?: "DestinyCollectibleDefinition";
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** Indicates whether the state of this Collectible is determined on a per-character or on an account-wide basis. */
   scope?: Maybe<Scalars["Int"]>;
   /** A human readable string for a hint about how to acquire the item. */
@@ -529,17 +531,17 @@ export type DestinyCollectibleDefinition = {
    */
   sourceHash?: Maybe<Scalars["Float"]>;
   itemHash?: Maybe<Scalars["Float"]>;
-  item?: Maybe<DestinyInventoryItemDefinition>;
-  acquisitionInfo?: Maybe<DestinyCollectibleAcquisitionBlock>;
-  stateInfo?: Maybe<DestinyCollectibleStateBlock>;
-  presentationInfo?: Maybe<DestinyPresentationChildBlock>;
+  item?: Maybe<QLDestinyInventoryItemDefinition>;
+  acquisitionInfo?: Maybe<QLDestinyCollectibleAcquisitionBlock>;
+  stateInfo?: Maybe<QLDestinyCollectibleStateBlock>;
+  presentationInfo?: Maybe<QLDestinyPresentationChildBlock>;
   presentationNodeType?: Maybe<Scalars["Int"]>;
   traitIds?: Maybe<Array<Maybe<Scalars["String"]>>>;
   traitHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
-  trait?: Maybe<DestinyTraitDefinition>;
+  trait?: Maybe<QLDestinyTraitDefinition>;
   /** A quick reference to presentation nodes that have this node as a child. Presentation nodes can be parented under multiple parents. */
   parentNodeHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
-  parentNode?: Maybe<DestinyPresentationNodeDefinition>;
+  parentNode?: Maybe<QLDestinyPresentationNodeDefinition>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -551,14 +553,14 @@ export type DestinyCollectibleDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyCollectibleStateBlock = {
+export type QLDestinyCollectibleStateBlock = {
   __typename?: "DestinyCollectibleStateBlock";
   obscuredOverrideItemHash?: Maybe<Scalars["Float"]>;
-  obscuredOverrideItem?: Maybe<DestinyInventoryItemDefinition>;
-  requirements?: Maybe<DestinyPresentationNodeRequirementsBlock>;
+  obscuredOverrideItem?: Maybe<QLDestinyInventoryItemDefinition>;
+  requirements?: Maybe<QLDestinyPresentationNodeRequirementsBlock>;
 };
 
-export type DestinyColor = {
+export type QLDestinyColor = {
   __typename?: "DestinyColor";
   red?: Maybe<Scalars["String"]>;
   green?: Maybe<Scalars["String"]>;
@@ -566,10 +568,10 @@ export type DestinyColor = {
   alpha?: Maybe<Scalars["String"]>;
 };
 
-export type DestinyDamageTypeDefinition = {
+export type QLDestinyDamageTypeDefinition = {
   __typename?: "DestinyDamageTypeDefinition";
   /** The description of the damage type, icon etc... */
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** A variant of the icon that is transparent and colorless. */
   transparentIconPath?: Maybe<Scalars["String"]>;
   /** If TRUE, the game shows this damage type's icon. Otherwise, it doesn't. Whether you show it or not is up to you. */
@@ -587,15 +589,15 @@ export type DestinyDamageTypeDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyDerivedItemCategoryDefinition = {
+export type QLDestinyDerivedItemCategoryDefinition = {
   __typename?: "DestinyDerivedItemCategoryDefinition";
   /** The localized string for the category title. This will be something describing the items you can get as a group, or your likelihood/the quantity you'll get. */
   categoryDescription?: Maybe<Scalars["String"]>;
   /** This is the list of all of the items for this category and the basic properties we'll know about them. */
-  items?: Maybe<Array<Maybe<DestinyDerivedItemDefinition>>>;
+  items?: Maybe<Array<Maybe<QLDestinyDerivedItemDefinition>>>;
 };
 
-export type DestinyDerivedItemDefinition = {
+export type QLDestinyDerivedItemDefinition = {
   __typename?: "DestinyDerivedItemDefinition";
   /** The hash for the DestinyInventoryItemDefinition of this derived item, if there is one. Sometimes we are given this information as a manual override, in which case there won't be an actual DestinyInventoryItemDefinition for what we display, but you can still show the strings from this object itself. */
   itemHash?: Maybe<Scalars["Float"]>;
@@ -611,23 +613,23 @@ export type DestinyDerivedItemDefinition = {
   vendorItemIndex?: Maybe<Scalars["Int"]>;
 };
 
-export type DestinyDestinationBubbleSettingDefinition = {
+export type QLDestinyDestinationBubbleSettingDefinition = {
   __typename?: "DestinyDestinationBubbleSettingDefinition";
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
 };
 
-export type DestinyDestinationDefinition = {
+export type QLDestinyDestinationDefinition = {
   __typename?: "DestinyDestinationDefinition";
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** The place that "owns" this Destination. Use this hash to look up the DestinyPlaceDefinition. */
   placeHash?: Maybe<Scalars["Float"]>;
-  place?: Maybe<DestinyPlaceDefinition>;
+  place?: Maybe<QLDestinyPlaceDefinition>;
   /** If this Destination has a default Free-Roam activity, this is the hash for that Activity. Use it to look up the DestinyActivityDefintion. */
   defaultFreeroamActivityHash?: Maybe<Scalars["Float"]>;
-  defaultFreeroamActivity?: Maybe<DestinyActivityDefinition>;
+  defaultFreeroamActivity?: Maybe<QLDestinyActivityDefinition>;
   /** If the Destination has default Activity Graphs (i.e. "Map") that should be shown in the director, this is the list of those Graphs. At most, only one should be active at any given time for a Destination: these would represent, for example, different variants on a Map if the Destination is changing on a macro level based on game state. */
   activityGraphEntries?: Maybe<
-    Array<Maybe<DestinyActivityGraphListEntryDefinition>>
+    Array<Maybe<QLDestinyActivityGraphListEntryDefinition>>
   >;
   /**
    * A Destination may have many "Bubbles" zones with human readable properties.
@@ -635,13 +637,13 @@ export type DestinyDestinationDefinition = {
    * DEPRECATED - Just use bubbles, it now has this data.
    */
   bubbleSettings?: Maybe<
-    Array<Maybe<DestinyDestinationBubbleSettingDefinition>>
+    Array<Maybe<QLDestinyDestinationBubbleSettingDefinition>>
   >;
   /**
    * This provides the unique identifiers for every bubble in the destination (only guaranteed unique within the destination), and any intrinsic properties of the bubble.
    * bubbleSettings and bubbles both have the identical number of entries, and you should match up their indexes to provide matching bubble and bubbleSettings data.
    */
-  bubbles?: Maybe<Array<Maybe<DestinyBubbleDefinition>>>;
+  bubbles?: Maybe<Array<Maybe<QLDestinyBubbleDefinition>>>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -653,13 +655,13 @@ export type DestinyDestinationDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyDisplayCategoryDefinition = {
+export type QLDestinyDisplayCategoryDefinition = {
   __typename?: "DestinyDisplayCategoryDefinition";
   index?: Maybe<Scalars["Int"]>;
   /** A string identifier for the display category. */
   identifier?: Maybe<Scalars["String"]>;
   displayCategoryHash?: Maybe<Scalars["Float"]>;
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** If true, this category should be displayed in the "Banner" section of the vendor's UI. */
   displayInBanner?: Maybe<Scalars["Boolean"]>;
   /**
@@ -667,7 +669,7 @@ export type DestinyDisplayCategoryDefinition = {
    * Specific categories can now have thier own distinct progression, apparently. So that's cool.
    */
   progressionHash?: Maybe<Scalars["Float"]>;
-  progression?: Maybe<DestinyProgressionDefinition>;
+  progression?: Maybe<QLDestinyProgressionDefinition>;
   /** If this category sorts items in a nonstandard way, this will be the way we sort. */
   sortOrder?: Maybe<Scalars["Int"]>;
   /** An indicator of how the category will be displayed in the UI. It's up to you to do something cool or interesting in response to this, or just to treat it as a normal category. */
@@ -676,7 +678,7 @@ export type DestinyDisplayCategoryDefinition = {
   displayStyleIdentifier?: Maybe<Scalars["String"]>;
 };
 
-export type DestinyDisplayPropertiesDefinition = {
+export type QLDestinyDisplayPropertiesDefinition = {
   __typename?: "DestinyDisplayPropertiesDefinition";
   description?: Maybe<Scalars["String"]>;
   name?: Maybe<Scalars["String"]>;
@@ -686,13 +688,13 @@ export type DestinyDisplayPropertiesDefinition = {
    * They are currently represented as 96px x 96px images.
    */
   icon?: Maybe<Scalars["String"]>;
-  iconSequences?: Maybe<Array<Maybe<DestinyIconSequenceDefinition>>>;
+  iconSequences?: Maybe<Array<Maybe<QLDestinyIconSequenceDefinition>>>;
   /** If this item has a high-res icon (at least for now, many things won't), then the path to that icon will be here. */
   highResIcon?: Maybe<Scalars["String"]>;
   hasIcon?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyEnergyCapacityEntry = {
+export type QLDestinyEnergyCapacityEntry = {
   __typename?: "DestinyEnergyCapacityEntry";
   /** How much energy capacity this plug provides. */
   capacityValue?: Maybe<Scalars["Int"]>;
@@ -702,7 +704,7 @@ export type DestinyEnergyCapacityEntry = {
   energyType?: Maybe<Scalars["Int"]>;
 };
 
-export type DestinyEnergyCostEntry = {
+export type QLDestinyEnergyCostEntry = {
   __typename?: "DestinyEnergyCostEntry";
   /** The Energy cost for inserting this plug. */
   energyCost?: Maybe<Scalars["Int"]>;
@@ -712,10 +714,10 @@ export type DestinyEnergyCostEntry = {
   energyType?: Maybe<Scalars["Int"]>;
 };
 
-export type DestinyEnergyTypeDefinition = {
+export type QLDestinyEnergyTypeDefinition = {
   __typename?: "DestinyEnergyTypeDefinition";
   /** The description of the energy type, icon etc... */
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** A variant of the icon that is transparent and colorless. */
   transparentIconPath?: Maybe<Scalars["String"]>;
   /** If TRUE, the game shows this Energy type's icon. Otherwise, it doesn't. Whether you show it or not is up to you. */
@@ -737,36 +739,36 @@ export type DestinyEnergyTypeDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyEnvironmentLocationMapping = {
+export type QLDestinyEnvironmentLocationMapping = {
   __typename?: "DestinyEnvironmentLocationMapping";
   /** The location that is revealed on the director by this mapping. */
   locationHash?: Maybe<Scalars["Float"]>;
-  location?: Maybe<DestinyLocationDefinition>;
+  location?: Maybe<QLDestinyLocationDefinition>;
   /** A hint that the UI uses to figure out how this location is activated by the player. */
   activationSource?: Maybe<Scalars["String"]>;
   /** If this is populated, it is the item that you must possess for this location to be active because of this mapping. (theoretically, a location can have multiple mappings, and some might require an item while others don't) */
   itemHash?: Maybe<Scalars["Float"]>;
-  item?: Maybe<DestinyInventoryItemDefinition>;
+  item?: Maybe<QLDestinyInventoryItemDefinition>;
   /** If this is populated, this is an objective related to the location. */
   objectiveHash?: Maybe<Scalars["Float"]>;
-  objective?: Maybe<DestinyObjectiveDefinition>;
+  objective?: Maybe<QLDestinyObjectiveDefinition>;
   /** If this is populated, this is the activity you have to be playing in order to see this location appear because of this mapping. (theoretically, a location can have multiple mappings, and some might require you to be in a specific activity when others don't) */
   activityHash?: Maybe<Scalars["Float"]>;
-  activity?: Maybe<DestinyActivityDefinition>;
+  activity?: Maybe<QLDestinyActivityDefinition>;
 };
 
-export type DestinyEquipmentSlotDefinition = {
+export type QLDestinyEquipmentSlotDefinition = {
   __typename?: "DestinyEquipmentSlotDefinition";
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** These technically point to "Equipment Category Definitions". But don't get excited. There's nothing of significant value in those definitions, so I didn't bother to expose them. You can use the hash here to group equipment slots by common functionality, which serves the same purpose as if we had the Equipment Category definitions exposed. */
   equipmentCategoryHash?: Maybe<Scalars["Float"]>;
   /** The inventory bucket that owns this equipment slot. */
   bucketTypeHash?: Maybe<Scalars["Float"]>;
-  bucketType?: Maybe<DestinyInventoryBucketDefinition>;
+  bucketType?: Maybe<QLDestinyInventoryBucketDefinition>;
   /** If True, equipped items should have their custom art dyes applied when rendering the item. Otherwise, custom art dyes on an item should be ignored if the item is equipped in this slot. */
   applyCustomArtDyes?: Maybe<Scalars["Boolean"]>;
   /** The Art Dye Channels that apply to this equipment slot. */
-  artDyeChannels?: Maybe<Array<Maybe<DestinyArtDyeReference>>>;
+  artDyeChannels?: Maybe<Array<Maybe<QLDestinyArtDyeReference>>>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -778,11 +780,11 @@ export type DestinyEquipmentSlotDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyEquippingBlockDefinition = {
+export type QLDestinyEquippingBlockDefinition = {
   __typename?: "DestinyEquippingBlockDefinition";
   /** If the item is part of a gearset, this is a reference to that gearset item. */
   gearsetItemHash?: Maybe<Scalars["Float"]>;
-  gearsetItem?: Maybe<DestinyInventoryItemDefinition>;
+  gearsetItem?: Maybe<QLDestinyInventoryItemDefinition>;
   /**
    * If defined, this is the label used to check if the item has other items of matching types already equipped.
    * For instance, when you aren't allowed to equip more than one Exotic Weapon, that's because all exotic weapons have identical uniqueLabels and the game checks the to-be-equipped item's uniqueLabel vs. all other already equipped items (other than the item in the slot that's about to be occupied).
@@ -792,7 +794,7 @@ export type DestinyEquippingBlockDefinition = {
   uniqueLabelHash?: Maybe<Scalars["Float"]>;
   /** An equipped item *must* be equipped in an Equipment Slot. This is the hash identifier of the DestinyEquipmentSlotDefinition into which it must be equipped. */
   equipmentSlotTypeHash?: Maybe<Scalars["Float"]>;
-  equipmentSlotType?: Maybe<DestinyEquipmentSlotDefinition>;
+  equipmentSlotType?: Maybe<QLDestinyEquipmentSlotDefinition>;
   /**
    * These are custom attributes on the equippability of the item.
    * For now, this can only be "equip on acquire", which would mean that the item will be automatically equipped as soon as you pick it up.
@@ -804,20 +806,20 @@ export type DestinyEquippingBlockDefinition = {
   displayStrings?: Maybe<Array<Maybe<Scalars["String"]>>>;
 };
 
-export type DestinyFactionDefinition = {
+export type QLDestinyFactionDefinition = {
   __typename?: "DestinyFactionDefinition";
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** The hash identifier for the DestinyProgressionDefinition that indicates the character's relationship with this faction in terms of experience and levels. */
   progressionHash?: Maybe<Scalars["Float"]>;
-  progression?: Maybe<DestinyProgressionDefinition>;
+  progression?: Maybe<QLDestinyProgressionDefinition>;
   /** The faction reward item hash, usually an engram. */
   rewardItemHash?: Maybe<Scalars["Float"]>;
-  rewardItem?: Maybe<DestinyInventoryItemDefinition>;
+  rewardItem?: Maybe<QLDestinyInventoryItemDefinition>;
   /** The faction reward vendor hash, used for faction engram previews. */
   rewardVendorHash?: Maybe<Scalars["Float"]>;
-  rewardVendor?: Maybe<DestinyVendorDefinition>;
+  rewardVendor?: Maybe<QLDestinyVendorDefinition>;
   /** List of vendors that are associated with this faction. The last vendor that passes the unlock flag checks is the one that should be shown. */
-  vendors?: Maybe<Array<Maybe<DestinyFactionVendorDefinition>>>;
+  vendors?: Maybe<Array<Maybe<QLDestinyFactionVendorDefinition>>>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -829,29 +831,29 @@ export type DestinyFactionDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyFactionVendorDefinition = {
+export type QLDestinyFactionVendorDefinition = {
   __typename?: "DestinyFactionVendorDefinition";
   /** The faction vendor hash. */
   vendorHash?: Maybe<Scalars["Float"]>;
-  vendor?: Maybe<DestinyVendorDefinition>;
+  vendor?: Maybe<QLDestinyVendorDefinition>;
   /** The hash identifier for a Destination at which this vendor may be located. Each destination where a Vendor may exist will only ever have a single entry. */
   destinationHash?: Maybe<Scalars["Float"]>;
-  destination?: Maybe<DestinyDestinationDefinition>;
+  destination?: Maybe<QLDestinyDestinationDefinition>;
   /** The relative path to the background image representing this Vendor at this location, for use in a banner. */
   backgroundImagePath?: Maybe<Scalars["String"]>;
 };
 
-export type DestinyGearArtArrangementReference = {
+export type QLDestinyGearArtArrangementReference = {
   __typename?: "DestinyGearArtArrangementReference";
   classHash?: Maybe<Scalars["Float"]>;
   artArrangementHash?: Maybe<Scalars["Float"]>;
 };
 
-export type DestinyGenderDefinition = {
+export type QLDestinyGenderDefinition = {
   __typename?: "DestinyGenderDefinition";
   /** This is a quick reference enumeration for all of the currently defined Genders. We use the enumeration for quicker lookups in related data, like DestinyClassDefinition.genderedClassNames. */
   genderType?: Maybe<Scalars["Int"]>;
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -863,7 +865,7 @@ export type DestinyGenderDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyHistoricalStatsDefinition = {
+export type QLDestinyHistoricalStatsDefinition = {
   __typename?: "DestinyHistoricalStatsDefinition";
   /** Unique programmer friendly ID for this stat */
   statId?: Maybe<Scalars["String"]>;
@@ -895,12 +897,12 @@ export type DestinyHistoricalStatsDefinition = {
   medalTierHash?: Maybe<Scalars["Float"]>;
 };
 
-export type DestinyIconSequenceDefinition = {
+export type QLDestinyIconSequenceDefinition = {
   __typename?: "DestinyIconSequenceDefinition";
   frames?: Maybe<Array<Maybe<Scalars["String"]>>>;
 };
 
-export type DestinyInsertPlugActionDefinition = {
+export type QLDestinyInsertPlugActionDefinition = {
   __typename?: "DestinyInsertPlugActionDefinition";
   /** How long it takes for the Plugging of the item to be completed once it is initiated, if you care. */
   actionExecuteSeconds?: Maybe<Scalars["Int"]>;
@@ -908,9 +910,9 @@ export type DestinyInsertPlugActionDefinition = {
   actionType?: Maybe<Scalars["Int"]>;
 };
 
-export type DestinyInventoryBucketDefinition = {
+export type QLDestinyInventoryBucketDefinition = {
   __typename?: "DestinyInventoryBucketDefinition";
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** Where the bucket is found. 0 = Character, 1 = Account */
   scope?: Maybe<Scalars["Int"]>;
   /** An enum value for what items can be found in the bucket. See the BucketCategory enum for more details. */
@@ -945,14 +947,14 @@ export type DestinyInventoryBucketDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyInventoryItemDefinition = {
+export type QLDestinyInventoryItemDefinition = {
   __typename?: "DestinyInventoryItemDefinition";
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** Tooltips that only come up conditionally for the item. Check the live data DestinyItemComponent.tooltipNotificationIndexes property for which of these should be shown at runtime. */
-  tooltipNotifications?: Maybe<Array<Maybe<DestinyItemTooltipNotification>>>;
+  tooltipNotifications?: Maybe<Array<Maybe<QLDestinyItemTooltipNotification>>>;
   /** If this item has a collectible related to it, this is the hash identifier of that collectible entry. */
   collectibleHash?: Maybe<Scalars["Float"]>;
-  collectible?: Maybe<DestinyCollectibleDefinition>;
+  collectible?: Maybe<QLDestinyCollectibleDefinition>;
   /** If available, this is the original 'active' release watermark overlay for the icon. If the item has different versions, this can be overridden by the 'display version watermark icon' from the 'quality' block. Alternatively, if there is no watermark for the version, and the item version has a power cap below the current season power cap, this can be overridden by the iconWatermarkShelved property. */
   iconWatermark?: Maybe<Scalars["String"]>;
   /** If available, this is the 'shelved' release watermark overlay for the icon. If the item version has a power cap below the current season power cap, it can be treated as 'shelved', and should be shown with this 'shelved' watermark overlay. */
@@ -964,7 +966,7 @@ export type DestinyInventoryItemDefinition = {
   /** Pulled from the Secondary Icon, this is the "special" background for the item. For Emblems, this is the background image used on the Details view: but it need not be limited to that for other types of items. */
   secondarySpecial?: Maybe<Scalars["String"]>;
   /** Sometimes, an item will have a background color. Most notably this occurs with Emblems, who use the Background Color for small character nameplates such as the "friends" view you see in-game. There are almost certainly other items that have background color as well, though I have not bothered to investigate what items have it nor what purposes they serve: use it as you will. */
-  backgroundColor?: Maybe<DestinyColor>;
+  backgroundColor?: Maybe<QLDestinyColor>;
   /** If we were able to acquire an in-game screenshot for the item, the path to that screenshot will be returned here. Note that not all items have screenshots: particularly not any non-equippable items. */
   screenshot?: Maybe<Scalars["String"]>;
   /** The localized title/name of the item's type. This can be whatever the designers want, and has no guarantee of consistency between items. */
@@ -979,62 +981,62 @@ export type DestinyInventoryItemDefinition = {
   /** An identifier that the game UI uses to determine what type of tooltip to show for the item. These have no corresponding definitions that BNet can link to: so it'll be up to you to interpret and display your UI differently according to these styles (or ignore it). */
   tooltipStyle?: Maybe<Scalars["String"]>;
   /** If the item can be "used", this block will be non-null, and will have data related to the action performed when using the item. (Guess what? 99% of the time, this action is "dismantle". Shocker) */
-  action?: Maybe<DestinyItemActionBlockDefinition>;
+  action?: Maybe<QLDestinyItemActionBlockDefinition>;
   /** If this item can exist in an inventory, this block will be non-null. In practice, every item that currently exists has one of these blocks. But note that it is not necessarily guaranteed. */
-  inventory?: Maybe<DestinyItemInventoryBlockDefinition>;
+  inventory?: Maybe<QLDestinyItemInventoryBlockDefinition>;
   /** If this item is a quest, this block will be non-null. In practice, I wish I had called this the Quest block, but at the time it wasn't clear to me whether it would end up being used for purposes other than quests. It will contain data about the steps in the quest, and mechanics we can use for displaying and tracking the quest. */
-  setData?: Maybe<DestinyItemSetBlockDefinition>;
+  setData?: Maybe<QLDestinyItemSetBlockDefinition>;
   /** If this item can have stats (such as a weapon, armor, or vehicle), this block will be non-null and populated with the stats found on the item. */
-  stats?: Maybe<DestinyItemStatBlockDefinition>;
+  stats?: Maybe<QLDestinyItemStatBlockDefinition>;
   /** If the item is an emblem that has a special Objective attached to it - for instance, if the emblem tracks PVP Kills, or what-have-you. This is a bit different from, for example, the Vanguard Kill Tracker mod, which pipes data into the "art channel". When I get some time, I would like to standardize these so you can get at the values they expose without having to care about what they're being used for and how they are wired up, but for now here's the raw data. */
   emblemObjectiveHash?: Maybe<Scalars["Float"]>;
   /** If this item can be equipped, this block will be non-null and will be populated with the conditions under which it can be equipped. */
-  equippingBlock?: Maybe<DestinyEquippingBlockDefinition>;
+  equippingBlock?: Maybe<QLDestinyEquippingBlockDefinition>;
   /** If this item can be rendered, this block will be non-null and will be populated with rendering information. */
-  translationBlock?: Maybe<DestinyItemTranslationBlockDefinition>;
+  translationBlock?: Maybe<QLDestinyItemTranslationBlockDefinition>;
   /** If this item can be Used or Acquired to gain other items (for instance, how Eververse Boxes can be consumed to get items from the box), this block will be non-null and will give summary information for the items that can be acquired. */
-  preview?: Maybe<DestinyItemPreviewBlockDefinition>;
+  preview?: Maybe<QLDestinyItemPreviewBlockDefinition>;
   /** If this item can have a level or stats, this block will be non-null and will be populated with default quality (item level, "quality", and infusion) data. See the block for more details, there's often less upfront information in D2 so you'll want to be aware of how you use quality and item level on the definition level now. */
-  quality?: Maybe<DestinyItemQualityBlockDefinition>;
+  quality?: Maybe<QLDestinyItemQualityBlockDefinition>;
   /** The conceptual "Value" of an item, if any was defined. See the DestinyItemValueBlockDefinition for more details. */
-  value?: Maybe<DestinyItemValueBlockDefinition>;
+  value?: Maybe<QLDestinyItemValueBlockDefinition>;
   /** If this item has a known source, this block will be non-null and populated with source information. Unfortunately, at this time we are not generating sources: that is some aggressively manual work which we didn't have time for, and I'm hoping to get back to at some point in the future. */
-  sourceData?: Maybe<DestinyItemSourceBlockDefinition>;
+  sourceData?: Maybe<QLDestinyItemSourceBlockDefinition>;
   /** If this item has Objectives (extra tasks that can be accomplished related to the item... most frequently when the item is a Quest Step and the Objectives need to be completed to move on to the next Quest Step), this block will be non-null and the objectives defined herein. */
-  objectives?: Maybe<DestinyItemObjectiveBlockDefinition>;
+  objectives?: Maybe<QLDestinyItemObjectiveBlockDefinition>;
   /** If this item has available metrics to be shown, this block will be non-null have the appropriate hashes defined. */
-  metrics?: Maybe<DestinyItemMetricBlockDefinition>;
+  metrics?: Maybe<QLDestinyItemMetricBlockDefinition>;
   /** If this item *is* a Plug, this will be non-null and the info defined herein. See DestinyItemPlugDefinition for more information. */
-  plug?: Maybe<DestinyItemPlugDefinition>;
+  plug?: Maybe<QLDestinyItemPlugDefinition>;
   /** If this item has related items in a "Gear Set", this will be non-null and the relationships defined herein. */
-  gearset?: Maybe<DestinyItemGearsetBlockDefinition>;
+  gearset?: Maybe<QLDestinyItemGearsetBlockDefinition>;
   /** If this item is a "reward sack" that can be opened to provide other items, this will be non-null and the properties of the sack contained herein. */
-  sack?: Maybe<DestinyItemSackBlockDefinition>;
+  sack?: Maybe<QLDestinyItemSackBlockDefinition>;
   /** If this item has any Sockets, this will be non-null and the individual sockets on the item will be defined herein. */
-  sockets?: Maybe<DestinyItemSocketBlockDefinition>;
+  sockets?: Maybe<QLDestinyItemSocketBlockDefinition>;
   /** Summary data about the item. */
-  summary?: Maybe<DestinyItemSummaryBlockDefinition>;
+  summary?: Maybe<QLDestinyItemSummaryBlockDefinition>;
   /** If the item has a Talent Grid, this will be non-null and the properties of the grid defined herein. Note that, while many items still have talent grids, the only ones with meaningful Nodes still on them will be Subclass/"Build" items. */
-  talentGrid?: Maybe<DestinyItemTalentGridBlockDefinition>;
+  talentGrid?: Maybe<QLDestinyItemTalentGridBlockDefinition>;
   /** If the item has stats, this block will be defined. It has the "raw" investment stats for the item. These investment stats don't take into account the ways that the items can spawn, nor do they take into account any Stat Group transformations. I have retained them for debugging purposes, but I do not know how useful people will find them. */
-  investmentStats?: Maybe<Array<Maybe<DestinyItemInvestmentStatDefinition>>>;
+  investmentStats?: Maybe<Array<Maybe<QLDestinyItemInvestmentStatDefinition>>>;
   /** If the item has any *intrinsic* Perks (Perks that it will provide regardless of Sockets, Talent Grid, and other transitory state), they will be defined here. */
-  perks?: Maybe<Array<Maybe<DestinyItemPerkEntryDefinition>>>;
+  perks?: Maybe<Array<Maybe<QLDestinyItemPerkEntryDefinition>>>;
   /** If the item has any related Lore (DestinyLoreDefinition), this will be the hash identifier you can use to look up the lore definition. */
   loreHash?: Maybe<Scalars["Float"]>;
-  lore?: Maybe<DestinyLoreDefinition>;
+  lore?: Maybe<QLDestinyLoreDefinition>;
   /**
    * There are times when the game will show you a "summary/vague" version of an item - such as a description of its type represented as a DestinyInventoryItemDefinition - rather than display the item itself.
    * This happens sometimes when summarizing possible rewards in a tooltip. This is the item displayed instead, if it exists.
    */
   summaryItemHash?: Maybe<Scalars["Float"]>;
-  summaryItem?: Maybe<DestinyInventoryItemDefinition>;
+  summaryItem?: Maybe<QLDestinyInventoryItemDefinition>;
   /** If any animations were extracted from game content for this item, these will be the definitions of those animations. */
-  animations?: Maybe<Array<Maybe<DestinyAnimationReference>>>;
+  animations?: Maybe<Array<Maybe<QLDestinyAnimationReference>>>;
   /** BNet may forbid the execution of actions on this item via the API. If that is occurring, allowActions will be set to false. */
   allowActions?: Maybe<Scalars["Boolean"]>;
   /** If we added any help or informational URLs about this item, these will be those links. */
-  links?: Maybe<Array<Maybe<HyperlinkReference>>>;
+  links?: Maybe<Array<Maybe<QLHyperlinkReference>>>;
   /**
    * The boolean will indicate to us (and you!) whether something *could* happen when you transfer this item from the Postmaster that might be considered a "destructive" action.
    * It is not feasible currently to tell you (or ourelves!) in a consistent way whether this *will* actually cause a destructive action, so we are playing it safe: if it has the potential to do so, we will not allow it to be transferred from the Postmaster by default. You will need to check for this flag before transferring an item from the Postmaster, or else you'll end up receiving an error.
@@ -1051,7 +1053,7 @@ export type DestinyInventoryItemDefinition = {
    * The algorithm for these is, unfortunately, volatile. If you believe you see a miscategorized item, please let us know on the Bungie API forums.
    */
   itemCategoryHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
-  itemCategory?: Maybe<DestinyItemCategoryDefinition>;
+  itemCategory?: Maybe<QLDestinyItemCategoryDefinition>;
   /** In Destiny 1, we identified some items as having particular categories that we'd like to know about for various internal logic purposes. These are defined in SpecialItemType, and while these days the itemCategoryHashes are the preferred way of identifying types, we have retained this enum for its convenience. */
   specialItemType?: Maybe<Scalars["Int"]>;
   /**
@@ -1069,7 +1071,7 @@ export type DestinyInventoryItemDefinition = {
    * If you see a mis-classed item, please inform the developers in the Bungie API forum.
    */
   classType?: Maybe<Scalars["Int"]>;
-  breakerType?: Maybe<DestinyBreakerTypeDefinition>;
+  breakerType?: Maybe<QLDestinyBreakerTypeDefinition>;
   /** Since we also have a breaker type definition, this is the hash for that breaker type for your convenience. Whether you use the enum or hash and look up the definition depends on what's cleanest for your code. */
   breakerTypeHash?: Maybe<Scalars["Float"]>;
   /**
@@ -1079,7 +1081,7 @@ export type DestinyInventoryItemDefinition = {
   equippable?: Maybe<Scalars["Boolean"]>;
   /** Theoretically, an item can have many possible damage types. In *practice*, this is not true, but just in case weapons start being made that have multiple (for instance, an item where a socket has reusable plugs for every possible damage type that you can choose from freely), this field will return all of the possible damage types that are available to the weapon by default. */
   damageTypeHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
-  damageType?: Maybe<DestinyDamageTypeDefinition>;
+  damageType?: Maybe<QLDestinyDamageTypeDefinition>;
   /**
    * This is the list of all damage types that we know ahead of time the item can take on. Unfortunately, this does not preclude the possibility of something funky happening to give the item a damage type that cannot be predicted beforehand: for example, if some designer decides to create arbitrary non-reusable plugs that cause damage type to change.
    * This damage type prediction will only use the following to determine potential damage types:
@@ -1088,7 +1090,7 @@ export type DestinyInventoryItemDefinition = {
    * - Known, reusable plugs for sockets
    */
   damageTypes?: Maybe<Array<Maybe<Scalars["Int"]>>>;
-  defaultDamageType?: Maybe<DestinyDamageTypeDefinition>;
+  defaultDamageType?: Maybe<QLDestinyDamageTypeDefinition>;
   /**
    * Similar to defaultDamageType, but represented as the hash identifier for a DestinyDamageTypeDefinition.
    * I will likely regret leaving in the enumeration versions of these properties, but for now they're very convenient.
@@ -1096,7 +1098,7 @@ export type DestinyInventoryItemDefinition = {
   defaultDamageTypeHash?: Maybe<Scalars["Float"]>;
   /** If this item is related directly to a Season of Destiny, this is the hash identifier for that season. */
   seasonHash?: Maybe<Scalars["Float"]>;
-  season?: Maybe<DestinySeasonDefinition>;
+  season?: Maybe<QLDestinySeasonDefinition>;
   /** If true, this is a dummy vendor-wrapped item template. Items purchased from Eververse will be "wrapped" by one of these items so that we can safely provide refund capabilities before the item is "unwrapped". */
   isWrapper?: Maybe<Scalars["Boolean"]>;
   /** Traits are metadata tags applied to this item. For example: armor slot, weapon type, foundry, faction, etc. These IDs come from the game and don't map to any content, but should still be useful. */
@@ -1114,7 +1116,7 @@ export type DestinyInventoryItemDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyItemActionBlockDefinition = {
+export type QLDestinyItemActionBlockDefinition = {
   __typename?: "DestinyItemActionBlockDefinition";
   /** Localized text for the verb of the action being performed. */
   verbName?: Maybe<Scalars["String"]>;
@@ -1129,9 +1131,13 @@ export type DestinyItemActionBlockDefinition = {
   /** The number of seconds to delay before allowing this action to be performed again. */
   requiredCooldownSeconds?: Maybe<Scalars["Int"]>;
   /** If the action requires other items to exist or be destroyed, this is the list of those items and requirements. */
-  requiredItems?: Maybe<Array<Maybe<DestinyItemActionRequiredItemDefinition>>>;
+  requiredItems?: Maybe<
+    Array<Maybe<QLDestinyItemActionRequiredItemDefinition>>
+  >;
   /** If performing this action earns you Progression, this is the list of progressions and values granted for those progressions by performing this action. */
-  progressionRewards?: Maybe<Array<Maybe<DestinyProgressionRewardDefinition>>>;
+  progressionRewards?: Maybe<
+    Array<Maybe<QLDestinyProgressionRewardDefinition>>
+  >;
   /** The internal identifier for the action. */
   actionTypeLabel?: Maybe<Scalars["String"]>;
   /** Theoretically, an item could have a localized string for a hint about the location in which the action should be performed. In practice, no items yet have this property. */
@@ -1146,20 +1152,20 @@ export type DestinyItemActionBlockDefinition = {
   useOnAcquire?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyItemActionRequiredItemDefinition = {
+export type QLDestinyItemActionRequiredItemDefinition = {
   __typename?: "DestinyItemActionRequiredItemDefinition";
   /** The minimum quantity of the item you have to have. */
   count?: Maybe<Scalars["Int"]>;
   /** The hash identifier of the item you need to have. Use it to look up the DestinyInventoryItemDefinition for more info. */
   itemHash?: Maybe<Scalars["Float"]>;
-  item?: Maybe<DestinyInventoryItemDefinition>;
+  item?: Maybe<QLDestinyInventoryItemDefinition>;
   /** If true, the item/quantity will be deleted from your inventory when the action is performed. Otherwise, you'll retain these required items after the action is complete. */
   deleteOnAction?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyItemCategoryDefinition = {
+export type QLDestinyItemCategoryDefinition = {
   __typename?: "DestinyItemCategoryDefinition";
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** If True, this category should be visible in UI. Sometimes we make categories that we don't think are interesting externally. It's up to you if you want to skip on showing them. */
   visible?: Maybe<Scalars["Boolean"]>;
   /** If True, this category has been deprecated: it may have no items left, or there may be only legacy items that remain in it which are no longer relevant to the game. */
@@ -1197,7 +1203,7 @@ export type DestinyItemCategoryDefinition = {
    * (I hope someone named Carl reads this someday)
    */
   groupedCategoryHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
-  groupedCategory?: Maybe<DestinyItemCategoryDefinition>;
+  groupedCategory?: Maybe<QLDestinyItemCategoryDefinition>;
   /** All item category hashes of "parent" categories: categories that contain this as a child through the hierarchy of groupedCategoryHashes. It's a bit redundant, but having this child-centric list speeds up some calculations. */
   parentCategoryHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
   /** If true, this category is only used for grouping, and should not be evaluated with its own checks. Rather, the item only has this category if it has one of its child categories. */
@@ -1213,31 +1219,31 @@ export type DestinyItemCategoryDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyItemCreationEntryLevelDefinition = {
+export type QLDestinyItemCreationEntryLevelDefinition = {
   __typename?: "DestinyItemCreationEntryLevelDefinition";
   level?: Maybe<Scalars["Int"]>;
 };
 
-export type DestinyItemGearsetBlockDefinition = {
+export type QLDestinyItemGearsetBlockDefinition = {
   __typename?: "DestinyItemGearsetBlockDefinition";
   /** The maximum possible number of items that can be collected. */
   trackingValueMax?: Maybe<Scalars["Int"]>;
-  itemList?: Maybe<DestinyInventoryItemDefinition>;
+  itemList?: Maybe<QLDestinyInventoryItemDefinition>;
 };
 
-export type DestinyItemIntrinsicSocketEntryDefinition = {
+export type QLDestinyItemIntrinsicSocketEntryDefinition = {
   __typename?: "DestinyItemIntrinsicSocketEntryDefinition";
   /** Indicates the plug that is intrinsically inserted into this socket. */
   plugItemHash?: Maybe<Scalars["Float"]>;
-  plugItem?: Maybe<DestinyInventoryItemDefinition>;
+  plugItem?: Maybe<QLDestinyInventoryItemDefinition>;
   /** Indicates the type of this intrinsic socket. */
   socketTypeHash?: Maybe<Scalars["Float"]>;
-  socketType?: Maybe<DestinySocketTypeDefinition>;
+  socketType?: Maybe<QLDestinySocketTypeDefinition>;
   /** If true, then this socket is visible in the item's "default" state. If you have an instance, you should always check the runtime state, as that can override this visibility setting: but if you're looking at the item on a conceptual level, this property can be useful for hiding data such as legacy sockets - which remain defined on items for infrastructure purposes, but can be confusing for users to see. */
   defaultVisible?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyItemInventoryBlockDefinition = {
+export type QLDestinyItemInventoryBlockDefinition = {
   __typename?: "DestinyItemInventoryBlockDefinition";
   /** If this string is populated, you can't have more than one stack with this label in a given inventory. Note that this is different from the equipping block's unique label, which is used for equipping uniqueness. */
   stackUniqueLabel?: Maybe<Scalars["String"]>;
@@ -1245,10 +1251,10 @@ export type DestinyItemInventoryBlockDefinition = {
   maxStackSize?: Maybe<Scalars["Int"]>;
   /** The hash identifier for the DestinyInventoryBucketDefinition to which this item belongs. I should have named this "bucketHash", but too many things refer to it now. Sigh. */
   bucketTypeHash?: Maybe<Scalars["Float"]>;
-  bucketType?: Maybe<DestinyInventoryBucketDefinition>;
+  bucketType?: Maybe<QLDestinyInventoryBucketDefinition>;
   /** If the item is picked up by the lost loot queue, this is the hash identifier for the DestinyInventoryBucketDefinition into which it will be placed. Again, I should have named this recoveryBucketHash instead. */
   recoveryBucketTypeHash?: Maybe<Scalars["Float"]>;
-  recoveryBucketType?: Maybe<DestinyInventoryBucketDefinition>;
+  recoveryBucketType?: Maybe<QLDestinyInventoryBucketDefinition>;
   /** The hash identifier for the Tier Type of the item, use to look up its DestinyItemTierTypeDefinition if you need to show localized data for the item's tier. */
   tierTypeHash?: Maybe<Scalars["Float"]>;
   /** The enumeration matching the tier type of the item to known values, again for convenience sake. */
@@ -1266,40 +1272,40 @@ export type DestinyItemInventoryBlockDefinition = {
   suppressExpirationWhenObjectivesComplete?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyItemInvestmentStatDefinition = {
+export type QLDestinyItemInvestmentStatDefinition = {
   __typename?: "DestinyItemInvestmentStatDefinition";
   /** The hash identifier for the DestinyStatDefinition defining this stat. */
   statTypeHash?: Maybe<Scalars["Float"]>;
-  statType?: Maybe<DestinyStatDefinition>;
+  statType?: Maybe<QLDestinyStatDefinition>;
   /** The raw "Investment" value for the stat, before transformations are performed to turn this raw stat into stats that are displayed in the game UI. */
   value?: Maybe<Scalars["Int"]>;
   /** If this is true, the stat will only be applied on the item in certain game state conditions, and we can't know statically whether or not this stat will be applied. Check the "live" API data instead for whether this value is being applied on a specific instance of the item in question, and you can use this to decide whether you want to show the stat on the generic view of the item, or whether you want to show some kind of caveat or warning about the stat value being conditional on game state. */
   isConditionallyActive?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyItemMetricBlockDefinition = {
+export type QLDestinyItemMetricBlockDefinition = {
   __typename?: "DestinyItemMetricBlockDefinition";
   /** Hash identifiers for any DestinyPresentationNodeDefinition entry that can be used to list available metrics. Any metric listed directly below these nodes, or in any of these nodes' children will be made available for selection. */
   availableMetricCategoryNodeHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
-  availableMetricCategoryNode?: Maybe<DestinyPresentationNodeDefinition>;
+  availableMetricCategoryNode?: Maybe<QLDestinyPresentationNodeDefinition>;
 };
 
-export type DestinyItemObjectiveBlockDefinition = {
+export type QLDestinyItemObjectiveBlockDefinition = {
   __typename?: "DestinyItemObjectiveBlockDefinition";
   /** The hashes to Objectives (DestinyObjectiveDefinition) that are part of this Quest Step, in the order that they should be rendered. */
   objectiveHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
-  objective?: Maybe<DestinyObjectiveDefinition>;
+  objective?: Maybe<QLDestinyObjectiveDefinition>;
   /**
    * For every entry in objectiveHashes, there is a corresponding entry in this array at the same index. If the objective is meant to be associated with a specific DestinyActivityDefinition, there will be a valid hash at that index. Otherwise, it will be invalid (0).
    * Rendered somewhat obsolete by perObjectiveDisplayProperties, which currently has much the same information but may end up with more info in the future.
    */
   displayActivityHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
-  displayActivity?: Maybe<DestinyActivityDefinition>;
+  displayActivity?: Maybe<QLDestinyActivityDefinition>;
   /** If True, all objectives must be completed for the step to be completed. If False, any one objective can be completed for the step to be completed. */
   requireFullObjectiveCompletion?: Maybe<Scalars["Boolean"]>;
   /** The hash for the DestinyInventoryItemDefinition representing the Quest to which this Quest Step belongs. */
   questlineItemHash?: Maybe<Scalars["Float"]>;
-  questlineItem?: Maybe<DestinyInventoryItemDefinition>;
+  questlineItem?: Maybe<QLDestinyInventoryItemDefinition>;
   /** The localized string for narrative text related to this quest step, if any. */
   narrative?: Maybe<Scalars["String"]>;
   /** The localized string describing an action to be performed associated with the objectives, if any. */
@@ -1310,29 +1316,29 @@ export type DestinyItemObjectiveBlockDefinition = {
   questTypeHash?: Maybe<Scalars["Float"]>;
   /** One entry per Objective on the item, it will have related display information. */
   perObjectiveDisplayProperties?: Maybe<
-    Array<Maybe<DestinyObjectiveDisplayProperties>>
+    Array<Maybe<QLDestinyObjectiveDisplayProperties>>
   >;
   displayAsStatTracker?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyItemPerkEntryDefinition = {
+export type QLDestinyItemPerkEntryDefinition = {
   __typename?: "DestinyItemPerkEntryDefinition";
   /** If this perk is not active, this is the string to show for why it's not providing its benefits. */
   requirementDisplayString?: Maybe<Scalars["String"]>;
   /** A hash identifier for the DestinySandboxPerkDefinition being provided on the item. */
   perkHash?: Maybe<Scalars["Float"]>;
-  perk?: Maybe<DestinySandboxPerkDefinition>;
+  perk?: Maybe<QLDestinySandboxPerkDefinition>;
   /** Indicates whether this perk should be shown, or if it should be shown disabled. */
   perkVisibility?: Maybe<Scalars["Int"]>;
 };
 
-export type DestinyItemPlugDefinition = {
+export type QLDestinyItemPlugDefinition = {
   __typename?: "DestinyItemPlugDefinition";
   /**
    * The rules around when this plug can be inserted into a socket, aside from the socket's individual restrictions.
    * The live data DestinyItemPlugComponent.insertFailIndexes will be an index into this array, so you can pull out the failure strings appropriate for the user.
    */
-  insertionRules?: Maybe<Array<Maybe<DestinyPlugRuleDefinition>>>;
+  insertionRules?: Maybe<Array<Maybe<QLDestinyPlugRuleDefinition>>>;
   /** The string identifier for the plug's category. Use the socket's DestinySocketTypeDefinition.plugWhitelist to determine whether this plug can be inserted into the socket. */
   plugCategoryIdentifier?: Maybe<Scalars["String"]>;
   /** The hash for the plugCategoryIdentifier. You can use this instead if you wish: I put both in the definition for debugging purposes. */
@@ -1341,18 +1347,18 @@ export type DestinyItemPlugDefinition = {
   onActionRecreateSelf?: Maybe<Scalars["Boolean"]>;
   /** If inserting this plug requires materials, this is the hash identifier for looking up the DestinyMaterialRequirementSetDefinition for those requirements. */
   insertionMaterialRequirementHash?: Maybe<Scalars["Float"]>;
-  insertionMaterialRequirement?: Maybe<DestinyMaterialRequirementSetDefinition>;
+  insertionMaterialRequirement?: Maybe<QLDestinyMaterialRequirementSetDefinition>;
   /** In the game, if you're inspecting a plug item directly, this will be the item shown with the plug attached. Look up the DestinyInventoryItemDefinition for this hash for the item. */
   previewItemOverrideHash?: Maybe<Scalars["Float"]>;
-  previewItemOverride?: Maybe<DestinyInventoryItemDefinition>;
+  previewItemOverride?: Maybe<QLDestinyInventoryItemDefinition>;
   /** It's not enough for the plug to be inserted. It has to be enabled as well. For it to be enabled, it may require materials. This is the hash identifier for the DestinyMaterialRequirementSetDefinition for those requirements, if there is one. */
   enabledMaterialRequirementHash?: Maybe<Scalars["Float"]>;
-  enabledMaterialRequirement?: Maybe<DestinyMaterialRequirementSetDefinition>;
+  enabledMaterialRequirement?: Maybe<QLDestinyMaterialRequirementSetDefinition>;
   /**
    * The rules around whether the plug, once inserted, is enabled and providing its benefits.
    * The live data DestinyItemPlugComponent.enableFailIndexes will be an index into this array, so you can pull out the failure strings appropriate for the user.
    */
-  enabledRules?: Maybe<Array<Maybe<DestinyPlugRuleDefinition>>>;
+  enabledRules?: Maybe<Array<Maybe<QLDestinyPlugRuleDefinition>>>;
   /** Plugs can have arbitrary, UI-defined identifiers that the UI designers use to determine the style applied to plugs. Unfortunately, we have neither a definitive list of these labels nor advance warning of when new labels might be applied or how that relates to how they get rendered. If you want to, you can refer to known labels to change your own styles: but know that new ones can be created arbitrarily, and we have no way of associating the labels with any specific UI style guidance... you'll have to piece that together on your end. Or do what we do, and just show plugs more generically, without specialized styles. */
   uiPlugLabel?: Maybe<Scalars["String"]>;
   plugStyle?: Maybe<Scalars["Int"]>;
@@ -1369,32 +1375,32 @@ export type DestinyItemPlugDefinition = {
    * In totally unrelated news, Plugs can now override properties of their parent items. This is some of the relevant definition data for those overrides.
    * If this is populated, it will have the override data to be applied when this plug is applied to an item.
    */
-  parentItemOverride?: Maybe<DestinyParentItemOverride>;
+  parentItemOverride?: Maybe<QLDestinyParentItemOverride>;
   /** IF not null, this plug provides Energy capacity to the item in which it is socketed. In Armor 2.0 for example, is implemented in a similar way to Masterworks, where visually it's a single area of the UI being clicked on to "Upgrade" to higher energy levels, but it's actually socketing new plugs. */
-  energyCapacity?: Maybe<DestinyEnergyCapacityEntry>;
+  energyCapacity?: Maybe<QLDestinyEnergyCapacityEntry>;
   /** IF not null, this plug has an energy cost. This contains the details of that cost. */
-  energyCost?: Maybe<DestinyEnergyCostEntry>;
+  energyCost?: Maybe<QLDestinyEnergyCostEntry>;
 };
 
-export type DestinyItemPreviewBlockDefinition = {
+export type QLDestinyItemPreviewBlockDefinition = {
   __typename?: "DestinyItemPreviewBlockDefinition";
   /** A string that the game UI uses as a hint for which detail screen to show for the item. You, too, can leverage this for your own custom screen detail views. Note, however, that these are arbitrarily defined by designers: there's no guarantees of a fixed, known number of these - so fall back to something reasonable if you don't recognize it. */
   screenStyle?: Maybe<Scalars["String"]>;
   /** If the preview data is derived from a fake "Preview" Vendor, this will be the hash identifier for the DestinyVendorDefinition of that fake vendor. */
   previewVendorHash?: Maybe<Scalars["Float"]>;
-  previewVendor?: Maybe<DestinyVendorDefinition>;
+  previewVendor?: Maybe<QLDestinyVendorDefinition>;
   /** If this item should show you Artifact information when you preview it, this is the hash identifier of the DestinyArtifactDefinition for the artifact whose data should be shown. */
   artifactHash?: Maybe<Scalars["Float"]>;
-  artifact?: Maybe<DestinyArtifactDefinition>;
+  artifact?: Maybe<QLDestinyArtifactDefinition>;
   /** If the preview has an associated action (like "Open"), this will be the localized string for that action. */
   previewActionString?: Maybe<Scalars["String"]>;
   /** This is a list of the items being previewed, categorized in the same way as they are in the preview UI. */
   derivedItemCategories?: Maybe<
-    Array<Maybe<DestinyDerivedItemCategoryDefinition>>
+    Array<Maybe<QLDestinyDerivedItemCategoryDefinition>>
   >;
 };
 
-export type DestinyItemQualityBlockDefinition = {
+export type QLDestinyItemQualityBlockDefinition = {
   __typename?: "DestinyItemQualityBlockDefinition";
   /**
    * The "base" defined level of an item. This is a list because, in theory, each Expansion could define its own base level for an item.
@@ -1418,20 +1424,20 @@ export type DestinyItemQualityBlockDefinition = {
   infusionCategoryHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
   /** An item can refer to pre-set level requirements. They are defined in DestinyProgressionLevelRequirementDefinition, and you can use this hash to find the appropriate definition. */
   progressionLevelRequirementHash?: Maybe<Scalars["Float"]>;
-  progressionLevelRequirement?: Maybe<DestinyProgressionLevelRequirementDefinition>;
+  progressionLevelRequirement?: Maybe<QLDestinyProgressionLevelRequirementDefinition>;
   /** The latest version available for this item. */
   currentVersion?: Maybe<Scalars["Float"]>;
   /** The list of versions available for this item. */
-  versions?: Maybe<Array<Maybe<DestinyItemVersionDefinition>>>;
+  versions?: Maybe<Array<Maybe<QLDestinyItemVersionDefinition>>>;
   /** Icon overlays to denote the item version and power cap status. */
   displayVersionWatermarkIcons?: Maybe<Array<Maybe<Scalars["String"]>>>;
 };
 
-export type DestinyItemQuantity = {
+export type QLDestinyItemQuantity = {
   __typename?: "DestinyItemQuantity";
   /** The hash identifier for the item in question. Use it to look up the item's DestinyInventoryItemDefinition. */
   itemHash?: Maybe<Scalars["Float"]>;
-  item?: Maybe<DestinyInventoryItemDefinition>;
+  item?: Maybe<QLDestinyInventoryItemDefinition>;
   /** If this quantity is referring to a specific instance of an item, this will have the item's instance ID. Normally, this will be null. */
   itemInstanceId?: Maybe<Scalars["Int"]>;
   /** The amount of the item needed/available depending on the context of where DestinyItemQuantity is being used. */
@@ -1440,7 +1446,7 @@ export type DestinyItemQuantity = {
   hasConditionalVisibility?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyItemSackBlockDefinition = {
+export type QLDestinyItemSackBlockDefinition = {
   __typename?: "DestinyItemSackBlockDefinition";
   /** A description of what will happen when you open the sack. As far as I can tell, this is blank currently. Unknown whether it will eventually be populated with useful info. */
   detailAction?: Maybe<Scalars["String"]>;
@@ -1451,10 +1457,10 @@ export type DestinyItemSackBlockDefinition = {
   openOnAcquire?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyItemSetBlockDefinition = {
+export type QLDestinyItemSetBlockDefinition = {
   __typename?: "DestinyItemSetBlockDefinition";
   /** A collection of hashes of set items, for items such as Quest Metadata items that possess this data. */
-  itemList?: Maybe<Array<Maybe<DestinyItemSetBlockEntryDefinition>>>;
+  itemList?: Maybe<Array<Maybe<QLDestinyItemSetBlockEntryDefinition>>>;
   /** If true, items in the set can only be added in increasing order, and adding an item will remove any previous item. For Quests, this is by necessity true. Only one quest step is present at a time, and previous steps are removed as you advance in the quest. */
   requireOrderedSetItemAdd?: Maybe<Scalars["Boolean"]>;
   /** If true, the UI should treat this quest as "featured" */
@@ -1469,52 +1475,52 @@ export type DestinyItemSetBlockDefinition = {
   questStepSummary?: Maybe<Scalars["String"]>;
 };
 
-export type DestinyItemSetBlockEntryDefinition = {
+export type QLDestinyItemSetBlockEntryDefinition = {
   __typename?: "DestinyItemSetBlockEntryDefinition";
   /** Used for tracking which step a user reached. These values will be populated in the user's internal state, which we expose externally as a more usable DestinyQuestStatus object. If this item has been obtained, this value will be set in trackingUnlockValueHash. */
   trackingValue?: Maybe<Scalars["Int"]>;
   /** This is the hash identifier for a DestinyInventoryItemDefinition representing this quest step. */
   itemHash?: Maybe<Scalars["Float"]>;
-  item?: Maybe<DestinyInventoryItemDefinition>;
+  item?: Maybe<QLDestinyInventoryItemDefinition>;
 };
 
-export type DestinyItemSocketBlockDefinition = {
+export type QLDestinyItemSocketBlockDefinition = {
   __typename?: "DestinyItemSocketBlockDefinition";
   /** This was supposed to be a string that would give per-item details about sockets. In practice, it turns out that all this ever has is the localized word "details". ... that's lame, but perhaps it will become something cool in the future. */
   detail?: Maybe<Scalars["String"]>;
   /** Each non-intrinsic (or mutable) socket on an item is defined here. Check inside for more info. */
-  socketEntries?: Maybe<Array<Maybe<DestinyItemSocketEntryDefinition>>>;
+  socketEntries?: Maybe<Array<Maybe<QLDestinyItemSocketEntryDefinition>>>;
   /** Each intrinsic (or immutable/permanent) socket on an item is defined here, along with the plug that is permanently affixed to the socket. */
   intrinsicSockets?: Maybe<
-    Array<Maybe<DestinyItemIntrinsicSocketEntryDefinition>>
+    Array<Maybe<QLDestinyItemIntrinsicSocketEntryDefinition>>
   >;
   /** A convenience property, that refers to the sockets in the "sockets" property, pre-grouped by category and ordered in the manner that they should be grouped in the UI. You could form this yourself with the existing data, but why would you want to? Enjoy life man. */
-  socketCategories?: Maybe<Array<Maybe<DestinyItemSocketCategoryDefinition>>>;
+  socketCategories?: Maybe<Array<Maybe<QLDestinyItemSocketCategoryDefinition>>>;
 };
 
-export type DestinyItemSocketCategoryDefinition = {
+export type QLDestinyItemSocketCategoryDefinition = {
   __typename?: "DestinyItemSocketCategoryDefinition";
   /** The hash for the Socket Category: a quick way to go get the header display information for the category. Use it to look up DestinySocketCategoryDefinition info. */
   socketCategoryHash?: Maybe<Scalars["Float"]>;
-  socketCategory?: Maybe<DestinySocketCategoryDefinition>;
+  socketCategory?: Maybe<QLDestinySocketCategoryDefinition>;
   /** Use these indexes to look up the sockets in the "sockets.socketEntries" property on the item definition. These are the indexes under the category, in game-rendered order. */
   socketIndexes?: Maybe<Array<Maybe<Scalars["Int"]>>>;
 };
 
-export type DestinyItemSocketEntryDefinition = {
+export type QLDestinyItemSocketEntryDefinition = {
   __typename?: "DestinyItemSocketEntryDefinition";
   /** All sockets have a type, and this is the hash identifier for this particular type. Use it to look up the DestinySocketTypeDefinition: read there for more information on how socket types affect the behavior of the socket. */
   socketTypeHash?: Maybe<Scalars["Float"]>;
-  socketType?: Maybe<DestinySocketTypeDefinition>;
+  socketType?: Maybe<QLDestinySocketTypeDefinition>;
   /** If a valid hash, this is the hash identifier for the DestinyInventoryItemDefinition representing the Plug that will be initially inserted into the item on item creation. Otherwise, this Socket will either start without a plug inserted, or will have one randomly inserted. */
   singleInitialItemHash?: Maybe<Scalars["Float"]>;
-  singleInitialItem?: Maybe<DestinyInventoryItemDefinition>;
+  singleInitialItem?: Maybe<QLDestinyInventoryItemDefinition>;
   /**
    * This is a list of pre-determined plugs that can *always* be plugged into this socket, without the character having the plug in their inventory.
    * If this list is populated, you will not be allowed to plug an arbitrary item in the socket: you will only be able to choose from one of these reusable plugs.
    */
   reusablePlugItems?: Maybe<
-    Array<Maybe<DestinyItemSocketEntryPlugItemDefinition>>
+    Array<Maybe<QLDestinyItemSocketEntryPlugItemDefinition>>
   >;
   /**
    * If this is true, then the socket will not be initialized with a plug if the item is purchased from a Vendor.
@@ -1530,47 +1536,47 @@ export type DestinyItemSocketEntryDefinition = {
    *  As of Shadowkeep, these will come up much more frequently and be driven by game content rather than custom curation.
    */
   reusablePlugSetHash?: Maybe<Scalars["Float"]>;
-  reusablePlugSet?: Maybe<DestinyPlugSetDefinition>;
+  reusablePlugSet?: Maybe<QLDestinyPlugSetDefinition>;
   /**
    * This field replaces "randomizedPlugItems" as of Shadowkeep launch. If a socket has randomized plugs, this is a pointer to the set of plugs that could be used, as defined in DestinyPlugSetDefinition.
    *  If null, the item has no randomized plugs.
    */
   randomizedPlugSetHash?: Maybe<Scalars["Float"]>;
-  randomizedPlugSet?: Maybe<DestinyPlugSetDefinition>;
+  randomizedPlugSet?: Maybe<QLDestinyPlugSetDefinition>;
   /** If true, then this socket is visible in the item's "default" state. If you have an instance, you should always check the runtime state, as that can override this visibility setting: but if you're looking at the item on a conceptual level, this property can be useful for hiding data such as legacy sockets - which remain defined on items for infrastructure purposes, but can be confusing for users to see. */
   defaultVisible?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyItemSocketEntryPlugItemDefinition = {
+export type QLDestinyItemSocketEntryPlugItemDefinition = {
   __typename?: "DestinyItemSocketEntryPlugItemDefinition";
   /** The hash identifier of a DestinyInventoryItemDefinition representing the plug that can be inserted. */
   plugItemHash?: Maybe<Scalars["Float"]>;
-  plugItem?: Maybe<DestinyInventoryItemDefinition>;
+  plugItem?: Maybe<QLDestinyInventoryItemDefinition>;
 };
 
-export type DestinyItemSocketEntryPlugItemRandomizedDefinition = {
+export type QLDestinyItemSocketEntryPlugItemRandomizedDefinition = {
   __typename?: "DestinyItemSocketEntryPlugItemRandomizedDefinition";
   /** Indicates if the plug can be rolled on the current version of the item. For example, older versions of weapons may have plug rolls that are no longer possible on the current versions. */
   currentlyCanRoll?: Maybe<Scalars["Boolean"]>;
   /** The hash identifier of a DestinyInventoryItemDefinition representing the plug that can be inserted. */
   plugItemHash?: Maybe<Scalars["Float"]>;
-  plugItem?: Maybe<DestinyInventoryItemDefinition>;
+  plugItem?: Maybe<QLDestinyInventoryItemDefinition>;
 };
 
-export type DestinyItemSourceBlockDefinition = {
+export type QLDestinyItemSourceBlockDefinition = {
   __typename?: "DestinyItemSourceBlockDefinition";
   /** The list of hash identifiers for Reward Sources that hint where the item can be found (DestinyRewardSourceDefinition). */
   sourceHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
-  source?: Maybe<DestinyRewardSourceDefinition>;
+  source?: Maybe<QLDestinyRewardSourceDefinition>;
   /** A collection of details about the stats that were computed for the ways we found that the item could be spawned. */
-  sources?: Maybe<Array<Maybe<DestinyItemSourceDefinition>>>;
+  sources?: Maybe<Array<Maybe<QLDestinyItemSourceDefinition>>>;
   /** If we found that this item is exclusive to a specific platform, this will be set to the BungieMembershipType enumeration that matches that platform. */
   exclusive?: Maybe<Scalars["Int"]>;
   /** A denormalized reference back to vendors that potentially sell this item. */
-  vendorSources?: Maybe<Array<Maybe<DestinyItemVendorSourceReference>>>;
+  vendorSources?: Maybe<Array<Maybe<QLDestinyItemVendorSourceReference>>>;
 };
 
-export type DestinyItemSourceDefinition = {
+export type QLDestinyItemSourceDefinition = {
   __typename?: "DestinyItemSourceDefinition";
   /** The level at which the item spawns. Essentially the Primary Key for this source data: there will be multiple of these source entries per item that has source data, grouped by the level at which the item spawns. */
   level?: Maybe<Scalars["Int"]>;
@@ -1584,10 +1590,10 @@ export type DestinyItemSourceDefinition = {
   maxLevelRequired?: Maybe<Scalars["Int"]>;
   /** The DestinyRewardSourceDefinitions found that can spawn the item at this level. */
   sourceHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
-  source?: Maybe<DestinyRewardSourceDefinition>;
+  source?: Maybe<QLDestinyRewardSourceDefinition>;
 };
 
-export type DestinyItemStatBlockDefinition = {
+export type QLDestinyItemStatBlockDefinition = {
   __typename?: "DestinyItemStatBlockDefinition";
   /**
    * If true, the game won't show the "primary" stat on this item when you inspect it.
@@ -1599,8 +1605,8 @@ export type DestinyItemStatBlockDefinition = {
    * If you are using live data or precomputed stats data on the DestinyInventoryItemDefinition.stats.stats property, you don't have to worry about statGroupHash and how it alters stats: the already altered stats are provided to you. But if you want to see how the sausage gets made, or perform computations yourself, this is valuable information.
    */
   statGroupHash?: Maybe<Scalars["Float"]>;
-  statGroup?: Maybe<DestinyStatGroupDefinition>;
-  stats?: Maybe<DestinyStatDefinition>;
+  statGroup?: Maybe<QLDestinyStatGroupDefinition>;
+  stats?: Maybe<QLDestinyStatDefinition>;
   /** A quick and lazy way to determine whether any stat other than the "primary" stat is actually visible on the item. Items often have stats that we return in case people find them useful, but they're not part of the "Stat Group" and thus we wouldn't display them in our UI. If this is False, then we're not going to display any of these stats other than the primary one. */
   hasDisplayableStats?: Maybe<Scalars["Boolean"]>;
   /**
@@ -1608,20 +1614,20 @@ export type DestinyItemStatBlockDefinition = {
    * Use this hash to look up the stat's value using DestinyInventoryItemDefinition.stats.stats, and the renderable data for the primary stat in the related DestinyStatDefinition.
    */
   primaryBaseStatHash?: Maybe<Scalars["Float"]>;
-  primaryBaseStat?: Maybe<DestinyStatDefinition>;
+  primaryBaseStat?: Maybe<QLDestinyStatDefinition>;
 };
 
-export type DestinyItemSummaryBlockDefinition = {
+export type QLDestinyItemSummaryBlockDefinition = {
   __typename?: "DestinyItemSummaryBlockDefinition";
   /** Apparently when rendering an item in a reward, this should be used as a sort priority. We're not doing it presently. */
   sortPriority?: Maybe<Scalars["Int"]>;
 };
 
-export type DestinyItemTalentGridBlockDefinition = {
+export type QLDestinyItemTalentGridBlockDefinition = {
   __typename?: "DestinyItemTalentGridBlockDefinition";
   /** The hash identifier of the DestinyTalentGridDefinition attached to this item. */
   talentGridHash?: Maybe<Scalars["Float"]>;
-  talentGrid?: Maybe<DestinyTalentGridDefinition>;
+  talentGrid?: Maybe<QLDestinyTalentGridDefinition>;
   /** This is meant to be a subtitle for looking at the talent grid. In practice, somewhat frustratingly, this always merely says the localized word for "Details". Great. Maybe it'll have more if talent grids ever get used for more than builds and subclasses again. */
   itemDetailString?: Maybe<Scalars["String"]>;
   /** A shortcut string identifier for the "build" in question, if this talent grid has an associated build. Doesn't map to anything we can expose at the moment. */
@@ -1632,11 +1638,11 @@ export type DestinyItemTalentGridBlockDefinition = {
   hudIcon?: Maybe<Scalars["String"]>;
 };
 
-export type DestinyItemTierTypeDefinition = {
+export type QLDestinyItemTierTypeDefinition = {
   __typename?: "DestinyItemTierTypeDefinition";
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** If this tier defines infusion properties, they will be contained here. */
-  infusionProcess?: Maybe<DestinyItemTierTypeInfusionBlock>;
+  infusionProcess?: Maybe<QLDestinyItemTierTypeInfusionBlock>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -1648,7 +1654,7 @@ export type DestinyItemTierTypeDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyItemTierTypeInfusionBlock = {
+export type QLDestinyItemTierTypeInfusionBlock = {
   __typename?: "DestinyItemTierTypeInfusionBlock";
   /** The default portion of quality that will transfer from the infuser to the infusee item. (InfuserQuality - InfuseeQuality) * baseQualityTransferRatio = base quality transferred. */
   baseQualityTransferRatio?: Maybe<Scalars["Float"]>;
@@ -1656,69 +1662,69 @@ export type DestinyItemTierTypeInfusionBlock = {
   minimumQualityIncrement?: Maybe<Scalars["Int"]>;
 };
 
-export type DestinyItemTooltipNotification = {
+export type QLDestinyItemTooltipNotification = {
   __typename?: "DestinyItemTooltipNotification";
   displayString?: Maybe<Scalars["String"]>;
   displayStyle?: Maybe<Scalars["String"]>;
 };
 
-export type DestinyItemTranslationBlockDefinition = {
+export type QLDestinyItemTranslationBlockDefinition = {
   __typename?: "DestinyItemTranslationBlockDefinition";
   weaponPatternIdentifier?: Maybe<Scalars["String"]>;
   weaponPatternHash?: Maybe<Scalars["Float"]>;
-  defaultDyes?: Maybe<Array<Maybe<DyeReference>>>;
-  lockedDyes?: Maybe<Array<Maybe<DyeReference>>>;
-  customDyes?: Maybe<Array<Maybe<DyeReference>>>;
-  arrangements?: Maybe<Array<Maybe<DestinyGearArtArrangementReference>>>;
+  defaultDyes?: Maybe<Array<Maybe<QLDyeReference>>>;
+  lockedDyes?: Maybe<Array<Maybe<QLDyeReference>>>;
+  customDyes?: Maybe<Array<Maybe<QLDyeReference>>>;
+  arrangements?: Maybe<Array<Maybe<QLDestinyGearArtArrangementReference>>>;
   hasGeometry?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyItemValueBlockDefinition = {
+export type QLDestinyItemValueBlockDefinition = {
   __typename?: "DestinyItemValueBlockDefinition";
   /** References to the items that make up this item's "value", and the quantity. */
-  itemValue?: Maybe<Array<Maybe<DestinyItemQuantity>>>;
+  itemValue?: Maybe<Array<Maybe<QLDestinyItemQuantity>>>;
   /** If there's a localized text description of the value provided, this will be said description. */
   valueDescription?: Maybe<Scalars["String"]>;
 };
 
-export type DestinyItemVendorSourceReference = {
+export type QLDestinyItemVendorSourceReference = {
   __typename?: "DestinyItemVendorSourceReference";
   /** The identifier for the vendor that may sell this item. */
   vendorHash?: Maybe<Scalars["Float"]>;
-  vendor?: Maybe<DestinyVendorDefinition>;
+  vendor?: Maybe<QLDestinyVendorDefinition>;
   /** The Vendor sale item indexes that represent the sale information for this item. The same vendor may sell an item in multiple "ways", hence why this is a list. (for instance, a weapon may be "sold" as a reward in a quest, for Glimmer, and for Masterwork Cores: each of those ways would be represented by a different vendor sale item with a different index) */
   vendorItemIndexes?: Maybe<Array<Maybe<Scalars["Int"]>>>;
 };
 
-export type DestinyItemVersionDefinition = {
+export type QLDestinyItemVersionDefinition = {
   __typename?: "DestinyItemVersionDefinition";
   /** A reference to the power cap for this item version. */
   powerCapHash?: Maybe<Scalars["Float"]>;
-  powerCap?: Maybe<DestinyPowerCapDefinition>;
+  powerCap?: Maybe<QLDestinyPowerCapDefinition>;
 };
 
-export type DestinyLinkedGraphDefinition = {
+export type QLDestinyLinkedGraphDefinition = {
   __typename?: "DestinyLinkedGraphDefinition";
   description?: Maybe<Scalars["String"]>;
   name?: Maybe<Scalars["String"]>;
-  unlockExpression?: Maybe<DestinyUnlockExpressionDefinition>;
+  unlockExpression?: Maybe<QLDestinyUnlockExpressionDefinition>;
   linkedGraphId?: Maybe<Scalars["Float"]>;
-  linkedGraphs?: Maybe<Array<Maybe<DestinyLinkedGraphEntryDefinition>>>;
+  linkedGraphs?: Maybe<Array<Maybe<QLDestinyLinkedGraphEntryDefinition>>>;
   overview?: Maybe<Scalars["String"]>;
 };
 
-export type DestinyLinkedGraphEntryDefinition = {
+export type QLDestinyLinkedGraphEntryDefinition = {
   __typename?: "DestinyLinkedGraphEntryDefinition";
   activityGraphHash?: Maybe<Scalars["Float"]>;
 };
 
-export type DestinyLocationDefinition = {
+export type QLDestinyLocationDefinition = {
   __typename?: "DestinyLocationDefinition";
   /** If the location has a Vendor on it, this is the hash identifier for that Vendor. Look them up with DestinyVendorDefinition. */
   vendorHash?: Maybe<Scalars["Float"]>;
-  vendor?: Maybe<DestinyVendorDefinition>;
+  vendor?: Maybe<QLDestinyVendorDefinition>;
   /** A Location may refer to different specific spots in the world based on the world's current state. This is a list of those potential spots, and the data we can use at runtime to determine which one of the spots is the currently valid one. */
-  locationReleases?: Maybe<Array<Maybe<DestinyLocationReleaseDefinition>>>;
+  locationReleases?: Maybe<Array<Maybe<QLDestinyLocationReleaseDefinition>>>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -1730,10 +1736,10 @@ export type DestinyLocationDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyLocationReleaseDefinition = {
+export type QLDestinyLocationReleaseDefinition = {
   __typename?: "DestinyLocationReleaseDefinition";
   /** Sadly, these don't appear to be populated anymore (ever?) */
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   smallTransparentIcon?: Maybe<Scalars["String"]>;
   mapIcon?: Maybe<Scalars["String"]>;
   largeTransparentIcon?: Maybe<Scalars["String"]>;
@@ -1741,10 +1747,10 @@ export type DestinyLocationReleaseDefinition = {
   spawnPoint?: Maybe<Scalars["Float"]>;
   /** The Destination being pointed to by this location. */
   destinationHash?: Maybe<Scalars["Float"]>;
-  destination?: Maybe<DestinyDestinationDefinition>;
+  destination?: Maybe<QLDestinyDestinationDefinition>;
   /** The Activity being pointed to by this location. */
   activityHash?: Maybe<Scalars["Float"]>;
-  activity?: Maybe<DestinyActivityDefinition>;
+  activity?: Maybe<QLDestinyActivityDefinition>;
   /** The Activity Graph being pointed to by this location. */
   activityGraphHash?: Maybe<Scalars["Float"]>;
   /** The Activity Graph Node being pointed to by this location. (Remember that Activity Graph Node hashes are only unique within an Activity Graph: so use the combination to find the node being spoken of) */
@@ -1761,9 +1767,9 @@ export type DestinyLocationReleaseDefinition = {
   worldPosition?: Maybe<Array<Maybe<Scalars["Int"]>>>;
 };
 
-export type DestinyLoreDefinition = {
+export type QLDestinyLoreDefinition = {
   __typename?: "DestinyLoreDefinition";
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   subtitle?: Maybe<Scalars["String"]>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
@@ -1776,11 +1782,11 @@ export type DestinyLoreDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyMaterialRequirement = {
+export type QLDestinyMaterialRequirement = {
   __typename?: "DestinyMaterialRequirement";
   /** The hash identifier of the material required. Use it to look up the material's DestinyInventoryItemDefinition. */
   itemHash?: Maybe<Scalars["Float"]>;
-  item?: Maybe<DestinyInventoryItemDefinition>;
+  item?: Maybe<QLDestinyInventoryItemDefinition>;
   /** If True, the material will be removed from the character's inventory when the action is performed. */
   deleteOnAction?: Maybe<Scalars["Boolean"]>;
   /** The amount of the material required. */
@@ -1789,10 +1795,10 @@ export type DestinyMaterialRequirement = {
   omitFromRequirements?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyMaterialRequirementSetDefinition = {
+export type QLDestinyMaterialRequirementSetDefinition = {
   __typename?: "DestinyMaterialRequirementSetDefinition";
   /** The list of all materials that are required. */
-  materials?: Maybe<Array<Maybe<DestinyMaterialRequirement>>>;
+  materials?: Maybe<Array<Maybe<QLDestinyMaterialRequirement>>>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -1804,19 +1810,19 @@ export type DestinyMaterialRequirementSetDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyMetricDefinition = {
+export type QLDestinyMetricDefinition = {
   __typename?: "DestinyMetricDefinition";
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   trackingObjectiveHash?: Maybe<Scalars["Float"]>;
-  trackingObjective?: Maybe<DestinyObjectiveDefinition>;
+  trackingObjective?: Maybe<QLDestinyObjectiveDefinition>;
   lowerValueIsBetter?: Maybe<Scalars["Boolean"]>;
   presentationNodeType?: Maybe<Scalars["Int"]>;
   traitIds?: Maybe<Array<Maybe<Scalars["String"]>>>;
   traitHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
-  trait?: Maybe<DestinyTraitDefinition>;
+  trait?: Maybe<QLDestinyTraitDefinition>;
   /** A quick reference to presentation nodes that have this node as a child. Presentation nodes can be parented under multiple parents. */
   parentNodeHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
-  parentNode?: Maybe<DestinyPresentationNodeDefinition>;
+  parentNode?: Maybe<QLDestinyPresentationNodeDefinition>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -1828,43 +1834,43 @@ export type DestinyMetricDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyMilestoneChallengeActivityDefinition = {
+export type QLDestinyMilestoneChallengeActivityDefinition = {
   __typename?: "DestinyMilestoneChallengeActivityDefinition";
   /** The activity for which this challenge is active. */
   activityHash?: Maybe<Scalars["Float"]>;
-  challenges?: Maybe<Array<Maybe<DestinyMilestoneChallengeDefinition>>>;
+  challenges?: Maybe<Array<Maybe<QLDestinyMilestoneChallengeDefinition>>>;
   /** If the activity and its challenge is visible on any of these nodes, it will be returned. */
   activityGraphNodes?: Maybe<
-    Array<Maybe<DestinyMilestoneChallengeActivityGraphNodeEntry>>
+    Array<Maybe<QLDestinyMilestoneChallengeActivityGraphNodeEntry>>
   >;
   /**
    * Phases related to this activity, if there are any.
    * These will be listed in the order in which they will appear in the actual activity.
    */
-  phases?: Maybe<Array<Maybe<DestinyMilestoneChallengeActivityPhase>>>;
+  phases?: Maybe<Array<Maybe<QLDestinyMilestoneChallengeActivityPhase>>>;
 };
 
-export type DestinyMilestoneChallengeActivityGraphNodeEntry = {
+export type QLDestinyMilestoneChallengeActivityGraphNodeEntry = {
   __typename?: "DestinyMilestoneChallengeActivityGraphNodeEntry";
   activityGraphHash?: Maybe<Scalars["Float"]>;
   activityGraphNodeHash?: Maybe<Scalars["Float"]>;
 };
 
-export type DestinyMilestoneChallengeActivityPhase = {
+export type QLDestinyMilestoneChallengeActivityPhase = {
   __typename?: "DestinyMilestoneChallengeActivityPhase";
   /** The hash identifier of the activity's phase. */
   phaseHash?: Maybe<Scalars["Float"]>;
 };
 
-export type DestinyMilestoneChallengeDefinition = {
+export type QLDestinyMilestoneChallengeDefinition = {
   __typename?: "DestinyMilestoneChallengeDefinition";
   /** The challenge related to this milestone. */
   challengeObjectiveHash?: Maybe<Scalars["Float"]>;
 };
 
-export type DestinyMilestoneDefinition = {
+export type QLDestinyMilestoneDefinition = {
   __typename?: "DestinyMilestoneDefinition";
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** A hint to the UI to indicate what to show as the display properties for this Milestone when showing "Live" milestone data. Feel free to show more than this if desired: this hint is meant to simplify our own UI, but it may prove useful to you as well. */
   displayPreference?: Maybe<Scalars["Int"]>;
   /** A custom image someone made just for the milestone. Isn't that special? */
@@ -1886,11 +1892,13 @@ export type DestinyMilestoneDefinition = {
   /** If you're going to show Vendors for the Milestone, you can use this as a localized "header" for the section where you show that vendor data. It'll provide a more context-relevant clue about what the vendor's role is in the Milestone. */
   vendorsDisplayTitle?: Maybe<Scalars["String"]>;
   /** Sometimes, milestones will have rewards provided by Vendors. This definition gives the information needed to understand which vendors are relevant, the order in which they should be returned if order matters, and the conditions under which the Vendor is relevant to the user. */
-  vendors?: Maybe<Array<Maybe<DestinyMilestoneVendorDefinition>>>;
+  vendors?: Maybe<Array<Maybe<QLDestinyMilestoneVendorDefinition>>>;
   /** Some milestones are explicit objectives that you can see and interact with in the game. Some milestones are more conceptual, built by BNet to help advise you on activities and events that happen in-game but that aren't explicitly shown in game as Milestones. If this is TRUE, you can see this as a milestone in the game. If this is FALSE, it's an event or activity you can participate in, but you won't see it as a Milestone in the game's UI. */
   isInGameMilestone?: Maybe<Scalars["Boolean"]>;
   /** A Milestone can now be represented by one or more activities directly (without a backing Quest), and that activity can have many challenges, modifiers, and related to it. */
-  activities?: Maybe<Array<Maybe<DestinyMilestoneChallengeActivityDefinition>>>;
+  activities?: Maybe<
+    Array<Maybe<QLDestinyMilestoneChallengeActivityDefinition>>
+  >;
   defaultOrder?: Maybe<Scalars["Int"]>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
@@ -1903,14 +1911,14 @@ export type DestinyMilestoneDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyMilestoneVendorDefinition = {
+export type QLDestinyMilestoneVendorDefinition = {
   __typename?: "DestinyMilestoneVendorDefinition";
   /** The hash of the vendor whose wares should be shown as associated with the Milestone. */
   vendorHash?: Maybe<Scalars["Float"]>;
-  vendor?: Maybe<DestinyVendorDefinition>;
+  vendor?: Maybe<QLDestinyVendorDefinition>;
 };
 
-export type DestinyNodeActivationRequirement = {
+export type QLDestinyNodeActivationRequirement = {
   __typename?: "DestinyNodeActivationRequirement";
   /**
    * The Progression level on the Talent Grid required to activate this node.
@@ -1922,23 +1930,23 @@ export type DestinyNodeActivationRequirement = {
    * In this case, only a single DestinyMaterialRequirementSetDefinition will be chosen from this list, and we won't know which one will be chosen until an instance of the item is created.
    */
   materialRequirementHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
-  materialRequirement?: Maybe<DestinyMaterialRequirementSetDefinition>;
+  materialRequirement?: Maybe<QLDestinyMaterialRequirementSetDefinition>;
 };
 
-export type DestinyNodeSocketReplaceResponse = {
+export type QLDestinyNodeSocketReplaceResponse = {
   __typename?: "DestinyNodeSocketReplaceResponse";
   /** The hash identifier of the socket type to find amidst the item's sockets (the item to which this talent grid is attached). See DestinyInventoryItemDefinition.sockets.socketEntries to find the socket type of sockets on the item in question. */
   socketTypeHash?: Maybe<Scalars["Float"]>;
-  socketType?: Maybe<DestinySocketTypeDefinition>;
+  socketType?: Maybe<QLDestinySocketTypeDefinition>;
   /** The hash identifier of the plug item that will be inserted into the socket found. */
   plugItemHash?: Maybe<Scalars["Float"]>;
-  plugItem?: Maybe<DestinyInventoryItemDefinition>;
+  plugItem?: Maybe<QLDestinyInventoryItemDefinition>;
 };
 
-export type DestinyNodeStepDefinition = {
+export type QLDestinyNodeStepDefinition = {
   __typename?: "DestinyNodeStepDefinition";
   /** These are the display properties actually used to render the Talent Node. The currently active step's displayProperties are shown. */
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /**
    * The index of this step in the list of Steps on the Talent Node.
    * Unfortunately, this is the closest thing we have to an identifier for the Step: steps are not provided a content version agnostic identifier. This means that, when you are dealing with talent nodes, you will need to first ensure that you have the latest version of content.
@@ -1948,11 +1956,11 @@ export type DestinyNodeStepDefinition = {
   nodeStepHash?: Maybe<Scalars["Float"]>;
   /** If you can interact with this node in some way, this is the localized description of that interaction. */
   interactionDescription?: Maybe<Scalars["String"]>;
-  damageType?: Maybe<DestinyDamageTypeDefinition>;
+  damageType?: Maybe<QLDestinyDamageTypeDefinition>;
   /** If the step provides a damage type, this will be the hash identifier used to look up the damage type's DestinyDamageTypeDefinition. */
   damageTypeHash?: Maybe<Scalars["Float"]>;
   /** If the step has requirements for activation (they almost always do, if nothing else than for the Talent Grid's Progression to have reached a certain level), they will be defined here. */
-  activationRequirement?: Maybe<DestinyNodeActivationRequirement>;
+  activationRequirement?: Maybe<QLDestinyNodeActivationRequirement>;
   /**
    * There was a time when talent nodes could be activated multiple times, and the effects of subsequent Steps would be compounded on each other, essentially "upgrading" the node. We have moved away from this, but theoretically the capability still exists.
    * I continue to return this in case it is used in the future: if true and this step is the current step in the node, you are allowed to activate the node a second time to receive the benefits of the next step in the node, which will then become the active step.
@@ -1967,7 +1975,7 @@ export type DestinyNodeStepDefinition = {
   isNextStepRandom?: Maybe<Scalars["Boolean"]>;
   /** The list of hash identifiers for Perks (DestinySandboxPerkDefinition) that are applied when this step is active. Perks provide a variety of benefits and modifications - examine DestinySandboxPerkDefinition to learn more. */
   perkHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
-  perk?: Maybe<DestinySandboxPerkDefinition>;
+  perk?: Maybe<QLDestinySandboxPerkDefinition>;
   /**
    * When the Talent Grid's progression reaches this value, the circular "progress bar" that surrounds the talent node should be shown.
    * This also indicates the lower bound of said progress bar, with the upper bound being the progress required to reach activationRequirement.gridLevel. (at some point I should precalculate the upper bound and put it in the definition to save people time)
@@ -1975,28 +1983,28 @@ export type DestinyNodeStepDefinition = {
   startProgressionBarAtProgress?: Maybe<Scalars["Int"]>;
   /** When the step provides stat benefits on the item or character, this is the list of hash identifiers for stats (DestinyStatDefinition) that are provided. */
   statHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
-  stat?: Maybe<DestinyStatDefinition>;
+  stat?: Maybe<QLDestinyStatDefinition>;
   /** If this is true, the step affects the item's Quality in some way. See DestinyInventoryItemDefinition for more information about the meaning of Quality. I already made a joke about Zen and the Art of Motorcycle Maintenance elsewhere in the documentation, so I will avoid doing it again. Oops too late */
   affectsQuality?: Maybe<Scalars["Boolean"]>;
   /** In Destiny 1, the Armory's Perk Filtering was driven by a concept of TalentNodeStepGroups: categorizations of talent nodes based on their functionality. While the Armory isn't a BNet-facing thing for now, and the new Armory will need to account for Sockets rather than Talent Nodes, this categorization capability feels useful enough to still keep around. */
-  stepGroups?: Maybe<DestinyTalentNodeStepGroups>;
+  stepGroups?: Maybe<QLDestinyTalentNodeStepGroups>;
   /** If true, this step can affect the level of the item. See DestinyInventoryItemDefintion for more information about item levels and their effect on stats. */
   affectsLevel?: Maybe<Scalars["Boolean"]>;
   /** If this step is activated, this will be a list of information used to replace socket items with new Plugs. See DestinyInventoryItemDefinition for more information about sockets and plugs. */
-  socketReplacements?: Maybe<Array<Maybe<DestinyNodeSocketReplaceResponse>>>;
+  socketReplacements?: Maybe<Array<Maybe<QLDestinyNodeSocketReplaceResponse>>>;
 };
 
-export type DestinyObjectiveDefinition = {
+export type QLDestinyObjectiveDefinition = {
   __typename?: "DestinyObjectiveDefinition";
   /** Ideally, this should tell you what your task is. I'm not going to lie to you though. Sometimes this doesn't have useful information at all. Which sucks, but there's nothing either of us can do about it. */
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** The value that the unlock value defined in unlockValueHash must reach in order for the objective to be considered Completed. Used in calculating progress and completion status. */
   completionValue?: Maybe<Scalars["Int"]>;
   /** A shortcut for determining the most restrictive gating that this Objective is set to use. This includes both the dynamic determination of progress and of completion values. See the DestinyGatingScope enum's documentation for more details. */
   scope?: Maybe<Scalars["Int"]>;
   /** OPTIONAL: a hash identifier for the location at which this objective must be accomplished, if there is a location defined. Look up the DestinyLocationDefinition for this hash for that additional location info. */
   locationHash?: Maybe<Scalars["Float"]>;
-  location?: Maybe<DestinyLocationDefinition>;
+  location?: Maybe<QLDestinyLocationDefinition>;
   /** If true, the value is allowed to go negative. */
   allowNegativeValue?: Maybe<Scalars["Boolean"]>;
   /**
@@ -2014,9 +2022,9 @@ export type DestinyObjectiveDefinition = {
   /** Text to describe the progress bar. */
   progressDescription?: Maybe<Scalars["String"]>;
   /** If this objective enables Perks intrinsically, the conditions for that enabling are defined here. */
-  perks?: Maybe<DestinyObjectivePerkEntryDefinition>;
+  perks?: Maybe<QLDestinyObjectivePerkEntryDefinition>;
   /** If this objective enables modifications on a player's stats intrinsically, the conditions are defined here. */
-  stats?: Maybe<DestinyObjectiveStatEntryDefinition>;
+  stats?: Maybe<QLDestinyObjectiveStatEntryDefinition>;
   /** If nonzero, this is the minimum value at which the objective's progression should be shown. Otherwise, don't show it yet. */
   minimumVisibilityThreshold?: Maybe<Scalars["Int"]>;
   /** If True, the progress will continue even beyond the point where the objective met its minimum completion requirements. Your UI will have to accommodate it. */
@@ -2038,33 +2046,33 @@ export type DestinyObjectiveDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyObjectiveDisplayProperties = {
+export type QLDestinyObjectiveDisplayProperties = {
   __typename?: "DestinyObjectiveDisplayProperties";
   /** The activity associated with this objective in the context of this item, if any. */
   activityHash?: Maybe<Scalars["Float"]>;
-  activity?: Maybe<DestinyActivityDefinition>;
+  activity?: Maybe<QLDestinyActivityDefinition>;
   /** If true, the game shows this objective on item preview screens. */
   displayOnItemPreviewScreen?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyObjectivePerkEntryDefinition = {
+export type QLDestinyObjectivePerkEntryDefinition = {
   __typename?: "DestinyObjectivePerkEntryDefinition";
   /** The hash identifier of the DestinySandboxPerkDefinition that will be applied to the character. */
   perkHash?: Maybe<Scalars["Float"]>;
-  perk?: Maybe<DestinySandboxPerkDefinition>;
+  perk?: Maybe<QLDestinySandboxPerkDefinition>;
   /** An enumeration indicating whether it will be applied as long as the Objective is active, when it's completed, or until it's completed. */
   style?: Maybe<Scalars["Int"]>;
 };
 
-export type DestinyObjectiveStatEntryDefinition = {
+export type QLDestinyObjectiveStatEntryDefinition = {
   __typename?: "DestinyObjectiveStatEntryDefinition";
   /** The stat being modified, and the value used. */
-  stat?: Maybe<DestinyItemInvestmentStatDefinition>;
+  stat?: Maybe<QLDestinyItemInvestmentStatDefinition>;
   /** Whether it will be applied as long as the objective is active, when it's completed, or until it's completed. */
   style?: Maybe<Scalars["Int"]>;
 };
 
-export type DestinyParentItemOverride = {
+export type QLDestinyParentItemOverride = {
   __typename?: "DestinyParentItemOverride";
   additionalEquipRequirementsDisplayStrings?: Maybe<
     Array<Maybe<Scalars["String"]>>
@@ -2072,9 +2080,9 @@ export type DestinyParentItemOverride = {
   pipIcon?: Maybe<Scalars["String"]>;
 };
 
-export type DestinyPlaceDefinition = {
+export type QLDestinyPlaceDefinition = {
   __typename?: "DestinyPlaceDefinition";
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -2086,22 +2094,22 @@ export type DestinyPlaceDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyPlugRuleDefinition = {
+export type QLDestinyPlugRuleDefinition = {
   __typename?: "DestinyPlugRuleDefinition";
   /** The localized string to show if this rule fails. */
   failureMessage?: Maybe<Scalars["String"]>;
 };
 
-export type DestinyPlugSetDefinition = {
+export type QLDestinyPlugSetDefinition = {
   __typename?: "DestinyPlugSetDefinition";
   /** If you want to show these plugs in isolation, these are the display properties for them. */
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /**
    * This is a list of pre-determined plugs that can be plugged into this socket, without the character having the plug in their inventory.
    * If this list is populated, you will not be allowed to plug an arbitrary item in the socket: you will only be able to choose from one of these reusable plugs.
    */
   reusablePlugItems?: Maybe<
-    Array<Maybe<DestinyItemSocketEntryPlugItemRandomizedDefinition>>
+    Array<Maybe<QLDestinyItemSocketEntryPlugItemRandomizedDefinition>>
   >;
   /**
    * Mostly for our debugging or reporting bugs, BNet is making "fake" plug sets in a desperate effort to reduce socket sizes.
@@ -2119,7 +2127,7 @@ export type DestinyPlugSetDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyPlugWhitelistEntryDefinition = {
+export type QLDestinyPlugWhitelistEntryDefinition = {
   __typename?: "DestinyPlugWhitelistEntryDefinition";
   /**
    * The hash identifier of the Plug Category to compare against the plug item's plug.plugCategoryHash.
@@ -2138,14 +2146,14 @@ export type DestinyPlugWhitelistEntryDefinition = {
   reinitializationPossiblePlugHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
 };
 
-export type DestinyPositionDefinition = {
+export type QLDestinyPositionDefinition = {
   __typename?: "DestinyPositionDefinition";
   x?: Maybe<Scalars["Int"]>;
   y?: Maybe<Scalars["Int"]>;
   z?: Maybe<Scalars["Int"]>;
 };
 
-export type DestinyPowerCapDefinition = {
+export type QLDestinyPowerCapDefinition = {
   __typename?: "DestinyPowerCapDefinition";
   /** The raw value for a power cap. */
   powerCap?: Maybe<Scalars["Int"]>;
@@ -2160,39 +2168,39 @@ export type DestinyPowerCapDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyPresentationChildBlock = {
+export type QLDestinyPresentationChildBlock = {
   __typename?: "DestinyPresentationChildBlock";
   presentationNodeType?: Maybe<Scalars["Int"]>;
   parentPresentationNodeHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
-  parentPresentationNode?: Maybe<DestinyPresentationNodeDefinition>;
+  parentPresentationNode?: Maybe<QLDestinyPresentationNodeDefinition>;
   displayStyle?: Maybe<Scalars["Int"]>;
 };
 
-export type DestinyPresentationNodeChildEntry = {
+export type QLDestinyPresentationNodeChildEntry = {
   __typename?: "DestinyPresentationNodeChildEntry";
   presentationNodeHash?: Maybe<Scalars["Float"]>;
-  presentationNode?: Maybe<DestinyPresentationNodeDefinition>;
+  presentationNode?: Maybe<QLDestinyPresentationNodeDefinition>;
 };
 
-export type DestinyPresentationNodeChildrenBlock = {
+export type QLDestinyPresentationNodeChildrenBlock = {
   __typename?: "DestinyPresentationNodeChildrenBlock";
-  presentationNodes?: Maybe<Array<Maybe<DestinyPresentationNodeChildEntry>>>;
+  presentationNodes?: Maybe<Array<Maybe<QLDestinyPresentationNodeChildEntry>>>;
   collectibles?: Maybe<
-    Array<Maybe<DestinyPresentationNodeCollectibleChildEntry>>
+    Array<Maybe<QLDestinyPresentationNodeCollectibleChildEntry>>
   >;
-  records?: Maybe<Array<Maybe<DestinyPresentationNodeRecordChildEntry>>>;
-  metrics?: Maybe<Array<Maybe<DestinyPresentationNodeMetricChildEntry>>>;
+  records?: Maybe<Array<Maybe<QLDestinyPresentationNodeRecordChildEntry>>>;
+  metrics?: Maybe<Array<Maybe<QLDestinyPresentationNodeMetricChildEntry>>>;
 };
 
-export type DestinyPresentationNodeCollectibleChildEntry = {
+export type QLDestinyPresentationNodeCollectibleChildEntry = {
   __typename?: "DestinyPresentationNodeCollectibleChildEntry";
   collectibleHash?: Maybe<Scalars["Float"]>;
-  collectible?: Maybe<DestinyCollectibleDefinition>;
+  collectible?: Maybe<QLDestinyCollectibleDefinition>;
 };
 
-export type DestinyPresentationNodeDefinition = {
+export type QLDestinyPresentationNodeDefinition = {
   __typename?: "DestinyPresentationNodeDefinition";
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** The original icon for this presentation node, before we futzed with it. */
   originalIcon?: Maybe<Scalars["String"]>;
   /** Some presentation nodes are meant to be explicitly shown on the "root" or "entry" screens for the feature to which they are related. You should use this icon when showing them on such a view, if you have a similar "entry point" view in your UI. If you don't have a UI, then I guess it doesn't matter either way does it? */
@@ -2202,28 +2210,28 @@ export type DestinyPresentationNodeDefinition = {
   scope?: Maybe<Scalars["Int"]>;
   /** If this presentation node shows a related objective (for instance, if it tracks the progress of its children), the objective being tracked is indicated here. */
   objectiveHash?: Maybe<Scalars["Float"]>;
-  objective?: Maybe<DestinyObjectiveDefinition>;
+  objective?: Maybe<QLDestinyObjectiveDefinition>;
   /** If this presentation node has an associated "Record" that you can accomplish for completing its children, this is the identifier of that Record. */
   completionRecordHash?: Maybe<Scalars["Float"]>;
-  completionRecord?: Maybe<DestinyRecordDefinition>;
+  completionRecord?: Maybe<QLDestinyRecordDefinition>;
   /** The child entities contained by this presentation node. */
-  children?: Maybe<DestinyPresentationNodeChildrenBlock>;
+  children?: Maybe<QLDestinyPresentationNodeChildrenBlock>;
   /** A hint for how to display this presentation node when it's shown in a list. */
   displayStyle?: Maybe<Scalars["Int"]>;
   /** A hint for how to display this presentation node when it's shown in its own detail screen. */
   screenStyle?: Maybe<Scalars["Int"]>;
   /** The requirements for being able to interact with this presentation node and its children. */
-  requirements?: Maybe<DestinyPresentationNodeRequirementsBlock>;
+  requirements?: Maybe<QLDestinyPresentationNodeRequirementsBlock>;
   /** If this presentation node has children, but the game doesn't let you inspect the details of those children, that is indicated here. */
   disableChildSubscreenNavigation?: Maybe<Scalars["Boolean"]>;
   maxCategoryRecordScore?: Maybe<Scalars["Int"]>;
   presentationNodeType?: Maybe<Scalars["Int"]>;
   traitIds?: Maybe<Array<Maybe<Scalars["String"]>>>;
   traitHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
-  trait?: Maybe<DestinyTraitDefinition>;
+  trait?: Maybe<QLDestinyTraitDefinition>;
   /** A quick reference to presentation nodes that have this node as a child. Presentation nodes can be parented under multiple parents. */
   parentNodeHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
-  parentNode?: Maybe<DestinyPresentationNodeDefinition>;
+  parentNode?: Maybe<QLDestinyPresentationNodeDefinition>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -2235,27 +2243,27 @@ export type DestinyPresentationNodeDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyPresentationNodeMetricChildEntry = {
+export type QLDestinyPresentationNodeMetricChildEntry = {
   __typename?: "DestinyPresentationNodeMetricChildEntry";
   metricHash?: Maybe<Scalars["Float"]>;
-  metric?: Maybe<DestinyMetricDefinition>;
+  metric?: Maybe<QLDestinyMetricDefinition>;
 };
 
-export type DestinyPresentationNodeRecordChildEntry = {
+export type QLDestinyPresentationNodeRecordChildEntry = {
   __typename?: "DestinyPresentationNodeRecordChildEntry";
   recordHash?: Maybe<Scalars["Float"]>;
-  record?: Maybe<DestinyRecordDefinition>;
+  record?: Maybe<QLDestinyRecordDefinition>;
 };
 
-export type DestinyPresentationNodeRequirementsBlock = {
+export type QLDestinyPresentationNodeRequirementsBlock = {
   __typename?: "DestinyPresentationNodeRequirementsBlock";
   /** If this node is not accessible due to Entitlements (for instance, you don't own the required game expansion), this is the message to show. */
   entitlementUnavailableMessage?: Maybe<Scalars["String"]>;
 };
 
-export type DestinyProgressionDefinition = {
+export type QLDestinyProgressionDefinition = {
   __typename?: "DestinyProgressionDefinition";
-  displayProperties?: Maybe<DestinyProgressionDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyProgressionDisplayPropertiesDefinition>;
   /**
    * The "Scope" of the progression indicates the source of the progression's live data.
    * See the DestinyProgressionScope enum for more info: but essentially, a Progression can either be backed by a stored value, or it can be a calculated derivative of other values.
@@ -2269,7 +2277,7 @@ export type DestinyProgressionDefinition = {
    * Progressions are divided into Steps, which roughly equate to "Levels" in the traditional sense of a Progression. Notably, the last step can be repeated indefinitely if repeatLastStep is true, meaning that the calculation for your level is not as simple as comparing your current progress to the max progress of the steps.
    * These and more calculations are done for you if you grab live character progression data, such as in the DestinyCharacterProgressionComponent.
    */
-  steps?: Maybe<Array<Maybe<DestinyProgressionStepDefinition>>>;
+  steps?: Maybe<Array<Maybe<QLDestinyProgressionStepDefinition>>>;
   /**
    * If true, the Progression is something worth showing to users.
    * If false, BNet isn't going to show it. But that doesn't mean you can't. We're all friends here.
@@ -2280,12 +2288,12 @@ export type DestinyProgressionDefinition = {
    * This is purely for convenience, if you're looking at a progression and want to know if and who it's related to in terms of Faction Reputation.
    */
   factionHash?: Maybe<Scalars["Float"]>;
-  faction?: Maybe<DestinyFactionDefinition>;
+  faction?: Maybe<QLDestinyFactionDefinition>;
   /** The #RGB string value for the color related to this progression, if there is one. */
-  color?: Maybe<DestinyColor>;
+  color?: Maybe<QLDestinyColor>;
   /** For progressions that have it, this is the rank icon we use in the Companion, displayed above the progressions' rank value. */
   rankIcon?: Maybe<Scalars["String"]>;
-  rewardItems?: Maybe<Array<Maybe<DestinyProgressionRewardItemQuantity>>>;
+  rewardItems?: Maybe<Array<Maybe<QLDestinyProgressionRewardItemQuantity>>>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -2297,7 +2305,7 @@ export type DestinyProgressionDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyProgressionDisplayPropertiesDefinition = {
+export type QLDestinyProgressionDisplayPropertiesDefinition = {
   __typename?: "DestinyProgressionDisplayPropertiesDefinition";
   /** When progressions show your "experience" gained, that bar has units (i.e. "Experience", "Bad Dudes Snuffed Out", whatever). This is the localized string for that unit of measurement. */
   displayUnitsName?: Maybe<Scalars["String"]>;
@@ -2309,25 +2317,25 @@ export type DestinyProgressionDisplayPropertiesDefinition = {
    * They are currently represented as 96px x 96px images.
    */
   icon?: Maybe<Scalars["String"]>;
-  iconSequences?: Maybe<Array<Maybe<DestinyIconSequenceDefinition>>>;
+  iconSequences?: Maybe<Array<Maybe<QLDestinyIconSequenceDefinition>>>;
   /** If this item has a high-res icon (at least for now, many things won't), then the path to that icon will be here. */
   highResIcon?: Maybe<Scalars["String"]>;
   hasIcon?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyProgressionLevelRequirementDefinition = {
+export type QLDestinyProgressionLevelRequirementDefinition = {
   __typename?: "DestinyProgressionLevelRequirementDefinition";
   /**
    * A curve of level requirements, weighted by the related progressions' level.
    * Interpolate against this curve with the character's progression level to determine what the level requirement of the generated item that is using this data will be.
    */
-  requirementCurve?: Maybe<Array<Maybe<InterpolationPointFloat>>>;
+  requirementCurve?: Maybe<Array<Maybe<QLInterpolationPointFloat>>>;
   /**
    * The progression whose level should be used to determine the level requirement.
    * Look up the DestinyProgressionDefinition with this hash for more information about the progression in question.
    */
   progressionHash?: Maybe<Scalars["Float"]>;
-  progression?: Maybe<DestinyProgressionDefinition>;
+  progression?: Maybe<QLDestinyProgressionDefinition>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -2339,10 +2347,10 @@ export type DestinyProgressionLevelRequirementDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyProgressionMappingDefinition = {
+export type QLDestinyProgressionMappingDefinition = {
   __typename?: "DestinyProgressionMappingDefinition";
   /** Infrequently defined in practice. Defer to the individual progressions' display properties. */
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** The localized unit of measurement for progression across the progressions defined in this mapping. Unfortunately, this is very infrequently defined. Defer to the individual progressions' display units. */
   displayUnits?: Maybe<Scalars["String"]>;
   /**
@@ -2356,18 +2364,18 @@ export type DestinyProgressionMappingDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyProgressionRewardDefinition = {
+export type QLDestinyProgressionRewardDefinition = {
   __typename?: "DestinyProgressionRewardDefinition";
   /** The hash identifier of the DestinyProgressionMappingDefinition that contains the progressions for which experience should be applied. */
   progressionMappingHash?: Maybe<Scalars["Float"]>;
-  progressionMapping?: Maybe<DestinyProgressionMappingDefinition>;
+  progressionMapping?: Maybe<QLDestinyProgressionMappingDefinition>;
   /** The amount of experience to give to each of the mapped progressions. */
   amount?: Maybe<Scalars["Int"]>;
   /** If true, the game's internal mechanisms to throttle progression should be applied. */
   applyThrottles?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyProgressionRewardItemQuantity = {
+export type QLDestinyProgressionRewardItemQuantity = {
   __typename?: "DestinyProgressionRewardItemQuantity";
   rewardedAtProgressionLevel?: Maybe<Scalars["Int"]>;
   acquisitionBehavior?: Maybe<Scalars["Int"]>;
@@ -2375,7 +2383,7 @@ export type DestinyProgressionRewardItemQuantity = {
   claimUnlockDisplayStrings?: Maybe<Array<Maybe<Scalars["String"]>>>;
   /** The hash identifier for the item in question. Use it to look up the item's DestinyInventoryItemDefinition. */
   itemHash?: Maybe<Scalars["Float"]>;
-  item?: Maybe<DestinyInventoryItemDefinition>;
+  item?: Maybe<QLDestinyInventoryItemDefinition>;
   /** If this quantity is referring to a specific instance of an item, this will have the item's instance ID. Normally, this will be null. */
   itemInstanceId?: Maybe<Scalars["Int"]>;
   /** The amount of the item needed/available depending on the context of where DestinyItemQuantity is being used. */
@@ -2384,7 +2392,7 @@ export type DestinyProgressionRewardItemQuantity = {
   hasConditionalVisibility?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyProgressionStepDefinition = {
+export type QLDestinyProgressionStepDefinition = {
   __typename?: "DestinyProgressionStepDefinition";
   /** Very rarely, Progressions will have localized text describing the Level of the progression. This will be that localized text, if it exists. Otherwise, the standard appears to be to simply show the level numerically. */
   stepName?: Maybe<Scalars["String"]>;
@@ -2393,17 +2401,17 @@ export type DestinyProgressionStepDefinition = {
   /** The total amount of progression points/"experience" you will need to initially reach this step. If this is the last step and the progression is repeating indefinitely (DestinyProgressionDefinition.repeatLastStep), this will also be the progress needed to level it up further by repeating this step again. */
   progressTotal?: Maybe<Scalars["Int"]>;
   /** A listing of items rewarded as a result of reaching this level. */
-  rewardItems?: Maybe<Array<Maybe<DestinyItemQuantity>>>;
+  rewardItems?: Maybe<Array<Maybe<QLDestinyItemQuantity>>>;
   /** If this progression step has a specific icon related to it, this is the icon to show. */
   icon?: Maybe<Scalars["String"]>;
 };
 
-export type DestinyRaceDefinition = {
+export type QLDestinyRaceDefinition = {
   __typename?: "DestinyRaceDefinition";
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** An enumeration defining the existing, known Races/Species for player characters. This value will be the enum value matching this definition. */
   raceType?: Maybe<Scalars["Int"]>;
-  genderedRaceNamesByGender?: Maybe<DestinyGenderDefinition>;
+  genderedRaceNamesByGender?: Maybe<QLDestinyGenderDefinition>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -2415,7 +2423,7 @@ export type DestinyRaceDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyRecordCompletionBlock = {
+export type QLDestinyRecordCompletionBlock = {
   __typename?: "DestinyRecordCompletionBlock";
   /** The number of objectives that must be completed before the objective is considered "complete" */
   partialCompletionObjectiveCountThreshold?: Maybe<Scalars["Int"]>;
@@ -2424,37 +2432,37 @@ export type DestinyRecordCompletionBlock = {
   toastStyle?: Maybe<Scalars["Int"]>;
 };
 
-export type DestinyRecordDefinition = {
+export type QLDestinyRecordDefinition = {
   __typename?: "DestinyRecordDefinition";
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** Indicates whether this Record's state is determined on a per-character or on an account-wide basis. */
   scope?: Maybe<Scalars["Int"]>;
-  presentationInfo?: Maybe<DestinyPresentationChildBlock>;
+  presentationInfo?: Maybe<QLDestinyPresentationChildBlock>;
   loreHash?: Maybe<Scalars["Float"]>;
-  lore?: Maybe<DestinyLoreDefinition>;
+  lore?: Maybe<QLDestinyLoreDefinition>;
   objectiveHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
-  objective?: Maybe<DestinyObjectiveDefinition>;
+  objective?: Maybe<QLDestinyObjectiveDefinition>;
   recordValueStyle?: Maybe<Scalars["Int"]>;
   forTitleGilding?: Maybe<Scalars["Boolean"]>;
-  titleInfo?: Maybe<DestinyRecordTitleBlock>;
-  completionInfo?: Maybe<DestinyRecordCompletionBlock>;
-  stateInfo?: Maybe<SchemaRecordStateBlock>;
-  requirements?: Maybe<DestinyPresentationNodeRequirementsBlock>;
-  expirationInfo?: Maybe<DestinyRecordExpirationBlock>;
+  titleInfo?: Maybe<QLDestinyRecordTitleBlock>;
+  completionInfo?: Maybe<QLDestinyRecordCompletionBlock>;
+  stateInfo?: Maybe<QLSchemaRecordStateBlock>;
+  requirements?: Maybe<QLDestinyPresentationNodeRequirementsBlock>;
+  expirationInfo?: Maybe<QLDestinyRecordExpirationBlock>;
   /** Some records have multiple 'interval' objectives, and the record may be claimed at each completed interval */
-  intervalInfo?: Maybe<DestinyRecordIntervalBlock>;
+  intervalInfo?: Maybe<QLDestinyRecordIntervalBlock>;
   /**
    * If there is any publicly available information about rewards earned for achieving this record, this is the list of those items.
    *  However, note that some records intentionally have "hidden" rewards. These will not be returned in this list.
    */
-  rewardItems?: Maybe<Array<Maybe<DestinyItemQuantity>>>;
+  rewardItems?: Maybe<Array<Maybe<QLDestinyItemQuantity>>>;
   presentationNodeType?: Maybe<Scalars["Int"]>;
   traitIds?: Maybe<Array<Maybe<Scalars["String"]>>>;
   traitHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
-  trait?: Maybe<DestinyTraitDefinition>;
+  trait?: Maybe<QLDestinyTraitDefinition>;
   /** A quick reference to presentation nodes that have this node as a child. Presentation nodes can be parented under multiple parents. */
   parentNodeHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
-  parentNode?: Maybe<DestinyPresentationNodeDefinition>;
+  parentNode?: Maybe<QLDestinyPresentationNodeDefinition>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -2466,42 +2474,42 @@ export type DestinyRecordDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyRecordExpirationBlock = {
+export type QLDestinyRecordExpirationBlock = {
   __typename?: "DestinyRecordExpirationBlock";
   hasExpiration?: Maybe<Scalars["Boolean"]>;
   description?: Maybe<Scalars["String"]>;
   icon?: Maybe<Scalars["String"]>;
 };
 
-export type DestinyRecordIntervalBlock = {
+export type QLDestinyRecordIntervalBlock = {
   __typename?: "DestinyRecordIntervalBlock";
-  intervalObjectives?: Maybe<Array<Maybe<DestinyRecordIntervalObjective>>>;
-  intervalRewards?: Maybe<Array<Maybe<DestinyRecordIntervalRewards>>>;
+  intervalObjectives?: Maybe<Array<Maybe<QLDestinyRecordIntervalObjective>>>;
+  intervalRewards?: Maybe<Array<Maybe<QLDestinyRecordIntervalRewards>>>;
   originalObjectiveArrayInsertionIndex?: Maybe<Scalars["Int"]>;
 };
 
-export type DestinyRecordIntervalObjective = {
+export type QLDestinyRecordIntervalObjective = {
   __typename?: "DestinyRecordIntervalObjective";
   intervalObjectiveHash?: Maybe<Scalars["Float"]>;
   intervalScoreValue?: Maybe<Scalars["Int"]>;
 };
 
-export type DestinyRecordIntervalRewards = {
+export type QLDestinyRecordIntervalRewards = {
   __typename?: "DestinyRecordIntervalRewards";
-  intervalRewardItems?: Maybe<Array<Maybe<DestinyItemQuantity>>>;
+  intervalRewardItems?: Maybe<Array<Maybe<QLDestinyItemQuantity>>>;
 };
 
-export type DestinyRecordTitleBlock = {
+export type QLDestinyRecordTitleBlock = {
   __typename?: "DestinyRecordTitleBlock";
   hasTitle?: Maybe<Scalars["Boolean"]>;
-  titlesByGender?: Maybe<DestinyGenderDefinition>;
+  titlesByGender?: Maybe<QLDestinyGenderDefinition>;
   gildingTrackingRecordHash?: Maybe<Scalars["Float"]>;
-  gildingTrackingRecord?: Maybe<DestinyRecordDefinition>;
+  gildingTrackingRecord?: Maybe<QLDestinyRecordDefinition>;
 };
 
-export type DestinyReportReasonCategoryDefinition = {
+export type QLDestinyReportReasonCategoryDefinition = {
   __typename?: "DestinyReportReasonCategoryDefinition";
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -2513,9 +2521,9 @@ export type DestinyReportReasonCategoryDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyRewardSourceDefinition = {
+export type QLDestinyRewardSourceDefinition = {
   __typename?: "DestinyRewardSourceDefinition";
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** Sources are grouped into categories: common ways that items are provided. I hope to see this expand in Destiny 2 once we have time to generate accurate reward source data. */
   category?: Maybe<Scalars["Int"]>;
   /**
@@ -2529,10 +2537,10 @@ export type DestinyRewardSourceDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinySandboxPerkDefinition = {
+export type QLDestinySandboxPerkDefinition = {
   __typename?: "DestinySandboxPerkDefinition";
   /** These display properties are by no means guaranteed to be populated. Usually when it is, it's only because we back-filled them with the displayProperties of some Talent Node or Plug item that happened to be uniquely providing that perk. */
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** The string identifier for the perk. */
   perkIdentifier?: Maybe<Scalars["String"]>;
   /** If true, you can actually show the perk in the UI. Otherwise, it doesn't have useful player-facing information. */
@@ -2551,7 +2559,7 @@ export type DestinySandboxPerkDefinition = {
    * An old holdover from the original Armory, this was an attempt to group perks by functionality.
    * It is as yet unpopulated, and there will be quite a bit of work needed to restore it to its former working order.
    */
-  perkGroups?: Maybe<DestinyTalentNodeStepGroups>;
+  perkGroups?: Maybe<QLDestinyTalentNodeStepGroups>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -2563,25 +2571,25 @@ export type DestinySandboxPerkDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinySeasonDefinition = {
+export type QLDestinySeasonDefinition = {
   __typename?: "DestinySeasonDefinition";
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   backgroundImagePath?: Maybe<Scalars["String"]>;
   seasonNumber?: Maybe<Scalars["Int"]>;
   startDate?: Maybe<Scalars["String"]>;
   endDate?: Maybe<Scalars["String"]>;
   seasonPassHash?: Maybe<Scalars["Float"]>;
-  seasonPass?: Maybe<DestinySeasonPassDefinition>;
+  seasonPass?: Maybe<QLDestinySeasonPassDefinition>;
   seasonPassProgressionHash?: Maybe<Scalars["Float"]>;
-  seasonPassProgression?: Maybe<DestinyProgressionDefinition>;
+  seasonPassProgression?: Maybe<QLDestinyProgressionDefinition>;
   artifactItemHash?: Maybe<Scalars["Float"]>;
-  artifactItem?: Maybe<DestinyInventoryItemDefinition>;
+  artifactItem?: Maybe<QLDestinyInventoryItemDefinition>;
   sealPresentationNodeHash?: Maybe<Scalars["Float"]>;
-  sealPresentationNode?: Maybe<DestinyPresentationNodeDefinition>;
+  sealPresentationNode?: Maybe<QLDestinyPresentationNodeDefinition>;
   seasonalChallengesPresentationNodeHash?: Maybe<Scalars["Float"]>;
-  seasonalChallengesPresentationNode?: Maybe<DestinyPresentationNodeDefinition>;
+  seasonalChallengesPresentationNode?: Maybe<QLDestinyPresentationNodeDefinition>;
   /** Optional - Defines the promotional text, images, and links to preview this season. */
-  preview?: Maybe<DestinySeasonPreviewDefinition>;
+  preview?: Maybe<QLDestinySeasonPreviewDefinition>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -2593,18 +2601,18 @@ export type DestinySeasonDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinySeasonPassDefinition = {
+export type QLDestinySeasonPassDefinition = {
   __typename?: "DestinySeasonPassDefinition";
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** This is the progression definition related to the progression for the initial levels 1-100 that provide item rewards for the Season pass. Further experience after you reach the limit is provided in the "Prestige" progression referred to by prestigeProgressionHash. */
   rewardProgressionHash?: Maybe<Scalars["Float"]>;
-  rewardProgression?: Maybe<DestinyProgressionDefinition>;
+  rewardProgression?: Maybe<QLDestinyProgressionDefinition>;
   /**
    * I know what you're thinking, but I promise we're not going to duplicate and drown you. Instead, we're giving you sweet, sweet power bonuses.
    *  Prestige progression is further progression that you can make on the Season pass after you gain max ranks, that will ultimately increase your power/light level over the theoretical limit.
    */
   prestigeProgressionHash?: Maybe<Scalars["Float"]>;
-  prestigeProgression?: Maybe<DestinyProgressionDefinition>;
+  prestigeProgression?: Maybe<QLDestinyProgressionDefinition>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -2616,7 +2624,7 @@ export type DestinySeasonPassDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinySeasonPreviewDefinition = {
+export type QLDestinySeasonPreviewDefinition = {
   __typename?: "DestinySeasonPreviewDefinition";
   /** A localized description of the season. */
   description?: Maybe<Scalars["String"]>;
@@ -2625,10 +2633,10 @@ export type DestinySeasonPreviewDefinition = {
   /** An optional link to a localized video, probably YouTube. */
   videoLink?: Maybe<Scalars["String"]>;
   /** A list of images to preview the seasonal content. Should have at least three to show. */
-  images?: Maybe<Array<Maybe<DestinySeasonPreviewImageDefinition>>>;
+  images?: Maybe<Array<Maybe<QLDestinySeasonPreviewImageDefinition>>>;
 };
 
-export type DestinySeasonPreviewImageDefinition = {
+export type QLDestinySeasonPreviewImageDefinition = {
   __typename?: "DestinySeasonPreviewImageDefinition";
   /** A thumbnail icon path to preview seasonal content, probably 480x270. */
   thumbnailImage?: Maybe<Scalars["String"]>;
@@ -2636,9 +2644,9 @@ export type DestinySeasonPreviewImageDefinition = {
   highResImage?: Maybe<Scalars["String"]>;
 };
 
-export type DestinySocketCategoryDefinition = {
+export type QLDestinySocketCategoryDefinition = {
   __typename?: "DestinySocketCategoryDefinition";
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /**
    * A string hinting to the game's UI system about how the sockets in this category should be displayed.
    * BNet doesn't use it: it's up to you to find valid values and make your own special UI if you want to honor this category style.
@@ -2657,20 +2665,20 @@ export type DestinySocketCategoryDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinySocketTypeDefinition = {
+export type QLDestinySocketTypeDefinition = {
   __typename?: "DestinySocketTypeDefinition";
   /** There are fields for this display data, but they appear to be unpopulated as of now. I am not sure where in the UI these would show if they even were populated, but I will continue to return this data in case it becomes useful. */
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** Defines what happens when a plug is inserted into sockets of this type. */
-  insertAction?: Maybe<DestinyInsertPlugActionDefinition>;
+  insertAction?: Maybe<QLDestinyInsertPlugActionDefinition>;
   /**
    * A list of Plug "Categories" that are allowed to be plugged into sockets of this type.
    * These should be compared against a given plug item's DestinyInventoryItemDefinition.plug.plugCategoryHash, which indicates the plug item's category.
    * If the plug's category matches any whitelisted plug, or if the whitelist is empty, it is allowed to be inserted.
    */
-  plugWhitelist?: Maybe<Array<Maybe<DestinyPlugWhitelistEntryDefinition>>>;
+  plugWhitelist?: Maybe<Array<Maybe<QLDestinyPlugWhitelistEntryDefinition>>>;
   socketCategoryHash?: Maybe<Scalars["Float"]>;
-  socketCategory?: Maybe<DestinySocketCategoryDefinition>;
+  socketCategory?: Maybe<QLDestinySocketCategoryDefinition>;
   /** Sometimes a socket isn't visible. These are some of the conditions under which sockets of this type are not visible. Unfortunately, the truth of visibility is much, much more complex. Best to rely on the live data for whether the socket is visible and enabled. */
   visibility?: Maybe<Scalars["Int"]>;
   alwaysRandomizeSockets?: Maybe<Scalars["Boolean"]>;
@@ -2680,7 +2688,7 @@ export type DestinySocketTypeDefinition = {
   overridesUiAppearance?: Maybe<Scalars["Boolean"]>;
   avoidDuplicatesOnInitialization?: Maybe<Scalars["Boolean"]>;
   currencyScalars?: Maybe<
-    Array<Maybe<DestinySocketTypeScalarMaterialRequirementEntry>>
+    Array<Maybe<QLDestinySocketTypeScalarMaterialRequirementEntry>>
   >;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
@@ -2693,15 +2701,15 @@ export type DestinySocketTypeDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinySocketTypeScalarMaterialRequirementEntry = {
+export type QLDestinySocketTypeScalarMaterialRequirementEntry = {
   __typename?: "DestinySocketTypeScalarMaterialRequirementEntry";
   currencyItemHash?: Maybe<Scalars["Float"]>;
   scalarValue?: Maybe<Scalars["Int"]>;
 };
 
-export type DestinyStatDefinition = {
+export type QLDestinyStatDefinition = {
   __typename?: "DestinyStatDefinition";
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** Stats can exist on a character or an item, and they may potentially be aggregated in different ways. The DestinyStatAggregationType enum value indicates the way that this stat is being aggregated. */
   aggregationType?: Maybe<Scalars["Int"]>;
   /**
@@ -2722,14 +2730,14 @@ export type DestinyStatDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyStatDisplayDefinition = {
+export type QLDestinyStatDisplayDefinition = {
   __typename?: "DestinyStatDisplayDefinition";
   /**
    * The hash identifier for the stat being transformed into a Display stat.
    * Use it to look up the DestinyStatDefinition, or key into a DestinyInventoryItemDefinition's stats property.
    */
   statHash?: Maybe<Scalars["Float"]>;
-  stat?: Maybe<DestinyStatDefinition>;
+  stat?: Maybe<QLDestinyStatDefinition>;
   /** Regardless of the output of interpolation, this is the maximum possible value that the stat can be. It should also be used as the upper bound for displaying the stat as a progress bar (the minimum always being 0) */
   maximumValue?: Maybe<Scalars["Int"]>;
   /** If this is true, the stat should be displayed as a number. Otherwise, display it as a progress bar. Or, you know, do whatever you want. There's no displayAsNumeric police. */
@@ -2738,10 +2746,10 @@ export type DestinyStatDisplayDefinition = {
    * The interpolation table representing how the Investment Stat is transformed into a Display Stat.
    * See DestinyStatDefinition for a description of the stages of stat transformation.
    */
-  displayInterpolation?: Maybe<Array<Maybe<InterpolationPoint>>>;
+  displayInterpolation?: Maybe<Array<Maybe<QLInterpolationPoint>>>;
 };
 
-export type DestinyStatGroupDefinition = {
+export type QLDestinyStatGroupDefinition = {
   __typename?: "DestinyStatGroupDefinition";
   /**
    * The maximum possible value that any stat in this group can be transformed into.
@@ -2754,7 +2762,7 @@ export type DestinyStatGroupDefinition = {
    * Any stat that requires scaling to be transformed from an "Investment" stat to a "Display" stat will have an entry in this list. For more information on what those types of stats mean and the transformation process, see DestinyStatDefinition.
    * In retrospect, I wouldn't mind if this was a dictionary keyed by the stat hash instead. But I'm going to leave it be because [[After Apple Picking]].
    */
-  scaledStats?: Maybe<Array<Maybe<DestinyStatDisplayDefinition>>>;
+  scaledStats?: Maybe<Array<Maybe<QLDestinyStatDisplayDefinition>>>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -2766,7 +2774,7 @@ export type DestinyStatGroupDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyTalentGridDefinition = {
+export type QLDestinyTalentGridDefinition = {
   __typename?: "DestinyTalentGridDefinition";
   /** The maximum possible level of the Talent Grid: at this level, any nodes are allowed to be activated. */
   maxGridLevel?: Maybe<Scalars["Int"]>;
@@ -2774,22 +2782,24 @@ export type DestinyTalentGridDefinition = {
   gridLevelPerColumn?: Maybe<Scalars["Int"]>;
   /** The hash identifier of the Progression (DestinyProgressionDefinition) that drives whether and when Talent Nodes can be activated on the Grid. Items will have instances of this Progression, and will gain experience that will eventually cause the grid to increase in level. As the grid's level increases, it will cross the threshold where nodes can be activated. See DestinyTalentGridStepDefinition's activation requirements for more information. */
   progressionHash?: Maybe<Scalars["Float"]>;
-  progression?: Maybe<DestinyProgressionDefinition>;
+  progression?: Maybe<QLDestinyProgressionDefinition>;
   /** The list of Talent Nodes on the Grid (recall that Nodes themselves are really just locations in the UI to show whatever their current Step is. You will only know the current step for a node by retrieving instanced data through platform calls to the API that return DestinyItemTalentGridComponent). */
-  nodes?: Maybe<Array<Maybe<DestinyTalentNodeDefinition>>>;
+  nodes?: Maybe<Array<Maybe<QLDestinyTalentNodeDefinition>>>;
   /**
    * Talent Nodes can exist in "exclusive sets": these are sets of nodes in which only a single node in the set can be activated at any given time. Activating a node in this set will automatically deactivate the other nodes in the set (referred to as a "Swap").
    * If a node in the exclusive set has already been activated, the game will not charge you materials to activate another node in the set, even if you have never activated it before, because you already paid the cost to activate one node in the set.
    * Not to be confused with Exclusive Groups. (how the heck do we NOT get confused by that? Jeez) See the groups property for information about that only-tangentially-related concept.
    */
-  exclusiveSets?: Maybe<Array<Maybe<DestinyTalentNodeExclusiveSetDefinition>>>;
+  exclusiveSets?: Maybe<
+    Array<Maybe<QLDestinyTalentNodeExclusiveSetDefinition>>
+  >;
   /** This is a quick reference to the indexes of nodes that are not part of exclusive sets. Handy for knowing which talent nodes can only be activated directly, rather than via swapping. */
   independentNodeIndexes?: Maybe<Array<Maybe<Scalars["Int"]>>>;
   /**
    * BNet wants to show talent nodes grouped by similar purpose with localized titles. This is the ordered list of those categories: if you want to show nodes by category, you can iterate over this list, render the displayProperties for the category as the title, and then iterate over the talent nodes referenced by the category to show the related nodes.
    * Note that this is different from Exclusive Groups or Sets, because these categories also incorporate "Independent" nodes that belong to neither sets nor groups. These are purely for visual grouping of nodes rather than functional grouping.
    */
-  nodeCategories?: Maybe<Array<Maybe<DestinyTalentNodeCategory>>>;
+  nodeCategories?: Maybe<Array<Maybe<QLDestinyTalentNodeCategory>>>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -2801,19 +2811,19 @@ export type DestinyTalentGridDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyTalentNodeCategory = {
+export type QLDestinyTalentNodeCategory = {
   __typename?: "DestinyTalentNodeCategory";
   /** Mostly just for debug purposes, but if you find it useful you can have it. This is BNet's manually created identifier for this category. */
   identifier?: Maybe<Scalars["String"]>;
   /** If true, we found the localized content in a related DestinyLoreDefinition instead of local BNet localization files. This is mostly for ease of my own future investigations. */
   isLoreDriven?: Maybe<Scalars["Boolean"]>;
   /** Will contain at least the "name", which will be the title of the category. We will likely not have description and an icon yet, but I'm going to keep my options open. */
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** The set of all hash identifiers for Talent Nodes (DestinyTalentNodeDefinition) in this Talent Grid that are part of this Category. */
   nodeHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
 };
 
-export type DestinyTalentNodeDefinition = {
+export type QLDestinyTalentNodeDefinition = {
   __typename?: "DestinyTalentNodeDefinition";
   /** The index into the DestinyTalentGridDefinition's "nodes" property where this node is located. Used to uniquely identify the node within the Talent Grid. Note that this is content version dependent: make sure you have the latest version of content before trying to use these properties. */
   nodeIndex?: Maybe<Scalars["Int"]>;
@@ -2849,14 +2859,14 @@ export type DestinyTalentNodeDefinition = {
    * At one point, you were going to be able to repurchase talent nodes that had random steps, to "re-roll" the current step of the node (and thus change the properties of your item). This was to be the activation requirement for performing that re-roll.
    * The system still exists to do this, as far as I know, so it may yet come back around!
    */
-  randomActivationRequirement?: Maybe<DestinyNodeActivationRequirement>;
+  randomActivationRequirement?: Maybe<QLDestinyNodeActivationRequirement>;
   /** If this is true, the node can be "re-rolled" to acquire a different random current step. This is not used, but still exists for a theoretical future of talent grids. */
   isRandomRepurchasable?: Maybe<Scalars["Boolean"]>;
   /**
    * At this point, "steps" have been obfuscated into conceptual entities, aggregating the underlying notions of "properties" and "true steps".
    * If you need to know a step as it truly exists - such as when recreating Node logic when processing Vendor data - you'll have to use the "realSteps" property below.
    */
-  steps?: Maybe<Array<Maybe<DestinyNodeStepDefinition>>>;
+  steps?: Maybe<Array<Maybe<QLDestinyNodeStepDefinition>>>;
   /**
    * The nodeHash values for nodes that are in an Exclusive Set with this node.
    * See DestinyTalentGridDefinition.exclusiveSets for more info about exclusive sets.
@@ -2874,20 +2884,20 @@ export type DestinyTalentNodeDefinition = {
   groupHash?: Maybe<Scalars["Float"]>;
   /** Talent nodes can be associated with a piece of Lore, generally rendered in a tooltip. This is the hash identifier of the lore element to show, if there is one to be show. */
   loreHash?: Maybe<Scalars["Float"]>;
-  lore?: Maybe<DestinyLoreDefinition>;
+  lore?: Maybe<QLDestinyLoreDefinition>;
   /** Comes from the talent grid node style: this identifier should be used to determine how to render the node in the UI. */
   nodeStyleIdentifier?: Maybe<Scalars["String"]>;
   /** Comes from the talent grid node style: if true, then this node should be ignored for determining whether the grid is complete. */
   ignoreForCompletion?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyTalentNodeExclusiveSetDefinition = {
+export type QLDestinyTalentNodeExclusiveSetDefinition = {
   __typename?: "DestinyTalentNodeExclusiveSetDefinition";
   /** The list of node indexes for the exclusive set. Historically, these were indexes. I would have liked to replace this with nodeHashes for consistency, but it's way too late for that. (9:09 PM, he's right!) */
   nodeIndexes?: Maybe<Array<Maybe<Scalars["Int"]>>>;
 };
 
-export type DestinyTalentNodeStepGroups = {
+export type QLDestinyTalentNodeStepGroups = {
   __typename?: "DestinyTalentNodeStepGroups";
   weaponPerformance?: Maybe<Scalars["Int"]>;
   impactEffects?: Maybe<Scalars["Int"]>;
@@ -2896,11 +2906,11 @@ export type DestinyTalentNodeStepGroups = {
   damageTypes?: Maybe<Scalars["Int"]>;
 };
 
-export type DestinyTraitCategoryDefinition = {
+export type QLDestinyTraitCategoryDefinition = {
   __typename?: "DestinyTraitCategoryDefinition";
   traitCategoryId?: Maybe<Scalars["String"]>;
   traitHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
-  trait?: Maybe<DestinyTraitCategoryDefinition>;
+  trait?: Maybe<QLDestinyTraitCategoryDefinition>;
   traitIds?: Maybe<Array<Maybe<Scalars["String"]>>>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
@@ -2913,12 +2923,12 @@ export type DestinyTraitCategoryDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyTraitDefinition = {
+export type QLDestinyTraitDefinition = {
   __typename?: "DestinyTraitDefinition";
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   traitCategoryId?: Maybe<Scalars["String"]>;
   traitCategoryHash?: Maybe<Scalars["Float"]>;
-  traitCategory?: Maybe<DestinyTraitCategoryDefinition>;
+  traitCategory?: Maybe<QLDestinyTraitCategoryDefinition>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -2930,10 +2940,10 @@ export type DestinyTraitDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyUnlockDefinition = {
+export type QLDestinyUnlockDefinition = {
   __typename?: "DestinyUnlockDefinition";
   /** Sometimes, but not frequently, these unlock flags also have human readable information: usually when they are being directly tested for some requirement, in which case the string is a localized description of why the requirement check failed. */
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
    * When entities refer to each other in Destiny content, it is this hash that they are referring to.
@@ -2945,13 +2955,13 @@ export type DestinyUnlockDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyUnlockExpressionDefinition = {
+export type QLDestinyUnlockExpressionDefinition = {
   __typename?: "DestinyUnlockExpressionDefinition";
   /** A shortcut for determining the most restrictive gating that this expression performs. See the DestinyGatingScope enum's documentation for more details. */
   scope?: Maybe<Scalars["Int"]>;
 };
 
-export type DestinyUnlockValueDefinition = {
+export type QLDestinyUnlockValueDefinition = {
   __typename?: "DestinyUnlockValueDefinition";
   /**
    * The unique identifier for this entity. Guaranteed to be unique for the type of entity, but not globally.
@@ -2964,17 +2974,17 @@ export type DestinyUnlockValueDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyVendorAcceptedItemDefinition = {
+export type QLDestinyVendorAcceptedItemDefinition = {
   __typename?: "DestinyVendorAcceptedItemDefinition";
   /** The "source" bucket for a transfer. When a user wants to transfer an item, the appropriate DestinyVendorDefinition's acceptedItems property is evaluated, looking for an entry where acceptedInventoryBucketHash matches the bucket that the item being transferred is currently located. If it exists, the item will be transferred into whatever bucket is defined by destinationInventoryBucketHash. */
   acceptedInventoryBucketHash?: Maybe<Scalars["Float"]>;
-  acceptedInventoryBucket?: Maybe<DestinyInventoryBucketDefinition>;
+  acceptedInventoryBucket?: Maybe<QLDestinyInventoryBucketDefinition>;
   /** This is the bucket where the item being transferred will be put, given that it was being transferred *from* the bucket defined in acceptedInventoryBucketHash. */
   destinationInventoryBucketHash?: Maybe<Scalars["Float"]>;
-  destinationInventoryBucket?: Maybe<DestinyInventoryBucketDefinition>;
+  destinationInventoryBucket?: Maybe<QLDestinyInventoryBucketDefinition>;
 };
 
-export type DestinyVendorActionDefinition = {
+export type QLDestinyVendorActionDefinition = {
   __typename?: "DestinyVendorActionDefinition";
   description?: Maybe<Scalars["String"]>;
   executeSeconds?: Maybe<Scalars["Int"]>;
@@ -2987,7 +2997,7 @@ export type DestinyVendorActionDefinition = {
   autoPerformAction?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyVendorCategoryEntryDefinition = {
+export type QLDestinyVendorCategoryEntryDefinition = {
   __typename?: "DestinyVendorCategoryEntryDefinition";
   /** The index of the category in the original category definitions for the vendor. */
   categoryIndex?: Maybe<Scalars["Int"]>;
@@ -3010,7 +3020,7 @@ export type DestinyVendorCategoryEntryDefinition = {
   /** The localized title of the category. */
   displayTitle?: Maybe<Scalars["String"]>;
   /** If this category has an overlay prompt that should appear, this contains the details of that prompt. */
-  overlay?: Maybe<DestinyVendorCategoryOverlayDefinition>;
+  overlay?: Maybe<QLDestinyVendorCategoryOverlayDefinition>;
   /** A shortcut for the vendor item indexes sold under this category. Saves us from some expensive reorganization at runtime. */
   vendorItemIndexes?: Maybe<Array<Maybe<Scalars["Int"]>>>;
   /** Sometimes a category isn't actually used to sell items, but rather to preview them. This implies different UI (and manual placement of the category in the UI) in the game, and special treatment. */
@@ -3021,7 +3031,7 @@ export type DestinyVendorCategoryEntryDefinition = {
   resetOffsetMinutesOverride?: Maybe<Scalars["Int"]>;
 };
 
-export type DestinyVendorCategoryOverlayDefinition = {
+export type QLDestinyVendorCategoryOverlayDefinition = {
   __typename?: "DestinyVendorCategoryOverlayDefinition";
   choiceDescription?: Maybe<Scalars["String"]>;
   description?: Maybe<Scalars["String"]>;
@@ -3031,9 +3041,9 @@ export type DestinyVendorCategoryOverlayDefinition = {
   currencyItemHash?: Maybe<Scalars["Float"]>;
 };
 
-export type DestinyVendorDefinition = {
+export type QLDestinyVendorDefinition = {
   __typename?: "DestinyVendorDefinition";
-  displayProperties?: Maybe<DestinyVendorDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyVendorDisplayPropertiesDefinition>;
   /** The type of reward progression that this vendor has. Default - The original rank progression from token redemption. Ritual - Progression from ranks in ritual content. For example: Crucible (Shaxx), Gambit (Drifter), and Battlegrounds (War Table). */
   vendorProgressionType?: Maybe<Scalars["Int"]>;
   /** If the vendor has a custom localized string describing the "buy" action, that is returned here. */
@@ -3045,7 +3055,7 @@ export type DestinyVendorDefinition = {
    * Apparently this is usually a related currency, like a reputation token. But it need not be restricted to that.
    */
   displayItemHash?: Maybe<Scalars["Float"]>;
-  displayItem?: Maybe<DestinyInventoryItemDefinition>;
+  displayItem?: Maybe<QLDestinyInventoryItemDefinition>;
   /** If this is true, you aren't allowed to buy whatever the vendor is selling. */
   inhibitBuying?: Maybe<Scalars["Boolean"]>;
   /** If this is true, you're not allowed to sell whatever the vendor is buying. */
@@ -3055,7 +3065,7 @@ export type DestinyVendorDefinition = {
    * The game UI and BNet often mine the faction definition for additional elements and details to place on the screen, such as the faction's Progression status (aka "Reputation").
    */
   factionHash?: Maybe<Scalars["Float"]>;
-  faction?: Maybe<DestinyFactionDefinition>;
+  faction?: Maybe<QLDestinyFactionDefinition>;
   /**
    * A number used for calculating the frequency of a vendor's inventory resetting/refreshing.
    * Don't worry about calculating this - we do it on the server side and send you the next refresh date with the live data.
@@ -3069,7 +3079,7 @@ export type DestinyVendorDefinition = {
    */
   failureStrings?: Maybe<Array<Maybe<Scalars["String"]>>>;
   /** If we were able to predict the dates when this Vendor will be visible/available, this will be the list of those date ranges. Sadly, we're not able to predict this very frequently, so this will often be useless data. */
-  unlockRanges?: Maybe<Array<Maybe<DateRange>>>;
+  unlockRanges?: Maybe<Array<Maybe<QLDateRange>>>;
   /** The internal identifier for the Vendor. A holdover from the old days of Vendors, but we don't have time to refactor it away. */
   vendorIdentifier?: Maybe<Scalars["String"]>;
   /** A portrait of the Vendor's smiling mug. Or frothing tentacles. */
@@ -3085,43 +3095,43 @@ export type DestinyVendorDefinition = {
   /** If TRUE, consolidate categories that only differ by trivial properties (such as having minor differences in name) */
   consolidateCategories?: Maybe<Scalars["Boolean"]>;
   /** Describes "actions" that can be performed on a vendor. Currently, none of these exist. But theoretically a Vendor could let you interact with it by performing actions. We'll see what these end up looking like if they ever get used. */
-  actions?: Maybe<Array<Maybe<DestinyVendorActionDefinition>>>;
+  actions?: Maybe<Array<Maybe<QLDestinyVendorActionDefinition>>>;
   /**
    * These are the headers for sections of items that the vendor is selling. When you see items organized by category in the header, it is these categories that it is showing.
    * Well, technically not *exactly* these. On BNet, it doesn't make sense to have categories be "paged" as we do in Destiny, so we run some heuristics to attempt to aggregate pages of categories together.
    * These are the categories post-concatenation, if the vendor had concatenation applied. If you want the pre-aggregated category data, use originalCategories.
    */
-  categories?: Maybe<Array<Maybe<DestinyVendorCategoryEntryDefinition>>>;
+  categories?: Maybe<Array<Maybe<QLDestinyVendorCategoryEntryDefinition>>>;
   /** See the categories property for a description of categories and why originalCategories exists. */
   originalCategories?: Maybe<
-    Array<Maybe<DestinyVendorCategoryEntryDefinition>>
+    Array<Maybe<QLDestinyVendorCategoryEntryDefinition>>
   >;
   /**
    * Display Categories are different from "categories" in that these are specifically for visual grouping and display of categories in Vendor UI.
    * The "categories" structure is for validation of the contained items, and can be categorized entirely separately from "Display Categories", there need be and often will be no meaningful relationship between the two.
    */
-  displayCategories?: Maybe<Array<Maybe<DestinyDisplayCategoryDefinition>>>;
+  displayCategories?: Maybe<Array<Maybe<QLDestinyDisplayCategoryDefinition>>>;
   /** In addition to selling items, vendors can have "interactions": UI where you "talk" with the vendor and they offer you a reward, some item, or merely acknowledge via dialog that you did something cool. */
-  interactions?: Maybe<Array<Maybe<DestinyVendorInteractionDefinition>>>;
+  interactions?: Maybe<Array<Maybe<QLDestinyVendorInteractionDefinition>>>;
   /** If the vendor shows you items from your own inventory - such as the Vault vendor does - this data describes the UI around showing those inventory buckets and which ones get shown. */
   inventoryFlyouts?: Maybe<
-    Array<Maybe<DestinyVendorInventoryFlyoutDefinition>>
+    Array<Maybe<QLDestinyVendorInventoryFlyoutDefinition>>
   >;
   /**
    * If the vendor sells items (or merely has a list of items to show like the "Sack" vendors do), this is the list of those items that the vendor can sell. From this list, only a subset will be available from the vendor at any given time, selected randomly and reset on the vendor's refresh interval.
    * Note that a vendor can sell the same item multiple ways: for instance, nothing stops a vendor from selling you some specific weapon but using two different currencies, or the same weapon at multiple "item levels".
    */
-  itemList?: Maybe<Array<Maybe<DestinyVendorItemDefinition>>>;
+  itemList?: Maybe<Array<Maybe<QLDestinyVendorItemDefinition>>>;
   /** BNet doesn't use this data yet, but it appears to be an optional list of flavor text about services that the Vendor can provide. */
-  services?: Maybe<Array<Maybe<DestinyVendorServiceDefinition>>>;
+  services?: Maybe<Array<Maybe<QLDestinyVendorServiceDefinition>>>;
   /** If the Vendor is actually a vehicle for the transferring of items (like the Vault and Postmaster vendors), this defines the list of source->destination buckets for transferring. */
-  acceptedItems?: Maybe<Array<Maybe<DestinyVendorAcceptedItemDefinition>>>;
+  acceptedItems?: Maybe<Array<Maybe<QLDestinyVendorAcceptedItemDefinition>>>;
   /** As many of you know, Vendor data has historically been pretty brutal on the BNet servers. In an effort to reduce this workload, only Vendors with this flag set will be returned on Vendor requests. This allows us to filter out Vendors that don't dynamic data that's particularly useful: things like "Preview/Sack" vendors, for example, that you can usually suss out the details for using just the definitions themselves. */
   returnWithVendorRequest?: Maybe<Scalars["Boolean"]>;
   /** A vendor can be at different places in the world depending on the game/character/account state. This is the list of possible locations for the vendor, along with conditions we use to determine which one is currently active. */
-  locations?: Maybe<Array<Maybe<DestinyVendorLocationDefinition>>>;
+  locations?: Maybe<Array<Maybe<QLDestinyVendorLocationDefinition>>>;
   /** A vendor can be a part of 0 or 1 "groups" at a time: a group being a collection of Vendors related by either location or function/purpose. It's used for our our Companion Vendor UI. Only one of these can be active for a Vendor at a time. */
-  groups?: Maybe<Array<Maybe<DestinyVendorGroupReference>>>;
+  groups?: Maybe<Array<Maybe<QLDestinyVendorGroupReference>>>;
   /** Some items don't make sense to return in the API, for example because they represent an action to be performed rather than an item being sold. I'd rather we not do this, but at least in the short term this is a workable workaround. */
   ignoreSaleItemHashes?: Maybe<Array<Maybe<Scalars["Float"]>>>;
   /**
@@ -3135,7 +3145,7 @@ export type DestinyVendorDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyVendorDisplayPropertiesDefinition = {
+export type QLDestinyVendorDisplayPropertiesDefinition = {
   __typename?: "DestinyVendorDisplayPropertiesDefinition";
   /** I regret calling this a "large icon". It's more like a medium-sized image with a picture of the vendor's mug on it, trying their best to look cool. Not what one would call an icon. */
   largeIcon?: Maybe<Scalars["String"]>;
@@ -3144,7 +3154,7 @@ export type DestinyVendorDisplayPropertiesDefinition = {
   originalIcon?: Maybe<Scalars["String"]>;
   /** Vendors, in addition to expected display property data, may also show some "common requirements" as statically defined definition data. This might be when a vendor accepts a single type of currency, or when the currency is unique to the vendor and the designers wanted to show that currency when you interact with the vendor. */
   requirementsDisplay?: Maybe<
-    Array<Maybe<DestinyVendorRequirementDisplayEntryDefinition>>
+    Array<Maybe<QLDestinyVendorRequirementDisplayEntryDefinition>>
   >;
   /** This is the icon used in parts of the game UI such as the vendor's waypoint. */
   smallTransparentIcon?: Maybe<Scalars["String"]>;
@@ -3160,13 +3170,13 @@ export type DestinyVendorDisplayPropertiesDefinition = {
    * They are currently represented as 96px x 96px images.
    */
   icon?: Maybe<Scalars["String"]>;
-  iconSequences?: Maybe<Array<Maybe<DestinyIconSequenceDefinition>>>;
+  iconSequences?: Maybe<Array<Maybe<QLDestinyIconSequenceDefinition>>>;
   /** If this item has a high-res icon (at least for now, many things won't), then the path to that icon will be here. */
   highResIcon?: Maybe<Scalars["String"]>;
   hasIcon?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyVendorGroupDefinition = {
+export type QLDestinyVendorGroupDefinition = {
   __typename?: "DestinyVendorGroupDefinition";
   /** The recommended order in which to render the groups, Ascending order. */
   order?: Maybe<Scalars["Int"]>;
@@ -3183,27 +3193,27 @@ export type DestinyVendorGroupDefinition = {
   redacted?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyVendorGroupReference = {
+export type QLDestinyVendorGroupReference = {
   __typename?: "DestinyVendorGroupReference";
   /** The DestinyVendorGroupDefinition to which this Vendor can belong. */
   vendorGroupHash?: Maybe<Scalars["Float"]>;
-  vendorGroup?: Maybe<DestinyVendorGroupDefinition>;
+  vendorGroup?: Maybe<QLDestinyVendorGroupDefinition>;
 };
 
-export type DestinyVendorInteractionDefinition = {
+export type QLDestinyVendorInteractionDefinition = {
   __typename?: "DestinyVendorInteractionDefinition";
   /** The position of this interaction in its parent array. Note that this is NOT content agnostic, and should not be used as such. */
   interactionIndex?: Maybe<Scalars["Int"]>;
   /** The potential replies that the user can make to the interaction. */
-  replies?: Maybe<Array<Maybe<DestinyVendorInteractionReplyDefinition>>>;
+  replies?: Maybe<Array<Maybe<QLDestinyVendorInteractionReplyDefinition>>>;
   /** If >= 0, this is the category of sale items to show along with this interaction dialog. */
   vendorCategoryIndex?: Maybe<Scalars["Int"]>;
   /** If this interaction dialog is about a quest, this is the questline related to the interaction. You can use this to show the quest overview, or even the character's status with the quest if you use it to find the character's current Quest Step by checking their inventory against this questlineItemHash's DestinyInventoryItemDefinition.setData. */
   questlineItemHash?: Maybe<Scalars["Float"]>;
-  questlineItem?: Maybe<DestinyInventoryItemDefinition>;
+  questlineItem?: Maybe<QLDestinyInventoryItemDefinition>;
   /** If this interaction is meant to show you sacks, this is the list of types of sacks to be shown. If empty, the interaction is not meant to show sacks. */
   sackInteractionList?: Maybe<
-    Array<Maybe<DestinyVendorInteractionSackEntryDefinition>>
+    Array<Maybe<QLDestinyVendorInteractionSackEntryDefinition>>
   >;
   /** A UI hint for the behavior of the interaction screen. This is useful to determine what type of interaction is occurring, such as a prompt to receive a rank up reward or a prompt to choose a reward for completing a quest. The hash isn't as useful as the Enum in retrospect, well what can you do. Try using interactionType instead. */
   uiInteractionType?: Maybe<Scalars["Float"]>;
@@ -3218,12 +3228,12 @@ export type DestinyVendorInteractionDefinition = {
   /** If the vendor interaction has flavor text, this is the rest of it. */
   flavorLineTwo?: Maybe<Scalars["String"]>;
   /** The header for the interaction dialog. */
-  headerDisplayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  headerDisplayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** The localized text telling the player what to do when they see this dialog. */
   instructions?: Maybe<Scalars["String"]>;
 };
 
-export type DestinyVendorInteractionReplyDefinition = {
+export type QLDestinyVendorInteractionReplyDefinition = {
   __typename?: "DestinyVendorInteractionReplyDefinition";
   /** The rewards granted upon responding to the vendor. */
   itemRewardsSelection?: Maybe<Scalars["Int"]>;
@@ -3233,30 +3243,30 @@ export type DestinyVendorInteractionReplyDefinition = {
   replyType?: Maybe<Scalars["Int"]>;
 };
 
-export type DestinyVendorInteractionSackEntryDefinition = {
+export type QLDestinyVendorInteractionSackEntryDefinition = {
   __typename?: "DestinyVendorInteractionSackEntryDefinition";
   sackType?: Maybe<Scalars["Float"]>;
 };
 
-export type DestinyVendorInventoryFlyoutBucketDefinition = {
+export type QLDestinyVendorInventoryFlyoutBucketDefinition = {
   __typename?: "DestinyVendorInventoryFlyoutBucketDefinition";
   /** If true, the inventory bucket should be able to be collapsed visually. */
   collapsible?: Maybe<Scalars["Boolean"]>;
   /** The inventory bucket whose contents should be shown. */
   inventoryBucketHash?: Maybe<Scalars["Float"]>;
-  inventoryBucket?: Maybe<DestinyInventoryBucketDefinition>;
+  inventoryBucket?: Maybe<QLDestinyInventoryBucketDefinition>;
   /** The methodology to use for sorting items from the flyout. */
   sortItemsBy?: Maybe<Scalars["Int"]>;
 };
 
-export type DestinyVendorInventoryFlyoutDefinition = {
+export type QLDestinyVendorInventoryFlyoutDefinition = {
   __typename?: "DestinyVendorInventoryFlyoutDefinition";
   /** If the flyout is locked, this is the reason why. */
   lockedDescription?: Maybe<Scalars["String"]>;
   /** The title and other common properties of the flyout. */
-  displayProperties?: Maybe<DestinyDisplayPropertiesDefinition>;
+  displayProperties?: Maybe<QLDestinyDisplayPropertiesDefinition>;
   /** A list of inventory buckets and other metadata to show on the screen. */
-  buckets?: Maybe<Array<Maybe<DestinyVendorInventoryFlyoutBucketDefinition>>>;
+  buckets?: Maybe<Array<Maybe<QLDestinyVendorInventoryFlyoutBucketDefinition>>>;
   /** An identifier for the flyout, in case anything else needs to refer to them. */
   flyoutId?: Maybe<Scalars["Float"]>;
   /** If this is true, don't show any of the glistening "this is a new item" UI elements, like we show on the inventory items themselves in in-game UI. */
@@ -3265,7 +3275,7 @@ export type DestinyVendorInventoryFlyoutDefinition = {
   equipmentSlotHash?: Maybe<Scalars["Float"]>;
 };
 
-export type DestinyVendorItemDefinition = {
+export type QLDestinyVendorItemDefinition = {
   __typename?: "DestinyVendorItemDefinition";
   /** The index into the DestinyVendorDefinition.saleList. This is what we use to refer to items being sold throughout live and definition data. */
   vendorItemIndex?: Maybe<Scalars["Int"]>;
@@ -3274,7 +3284,7 @@ export type DestinyVendorItemDefinition = {
    * Note that a vendor can sell the same item in multiple ways, so don't assume that itemHash is a unique identifier for this entity.
    */
   itemHash?: Maybe<Scalars["Float"]>;
-  item?: Maybe<DestinyInventoryItemDefinition>;
+  item?: Maybe<QLDestinyInventoryItemDefinition>;
   /** The amount you will recieve of the item described in itemHash if you make the purchase. */
   quantity?: Maybe<Scalars["Int"]>;
   /** An list of indexes into the DestinyVendorDefinition.failureStrings array, indicating the possible failure strings that can be relevant for this item. */
@@ -3283,13 +3293,15 @@ export type DestinyVendorItemDefinition = {
    * This is a pre-compiled aggregation of item value and priceOverrideList, so that we have one place to check for what the purchaser must pay for the item. Use this instead of trying to piece together the price separately.
    * The somewhat crappy part about this is that, now that item quantity overrides have dynamic modifiers, this will not necessarily be statically true. If you were using this instead of live data, switch to using live data.
    */
-  currencies?: Maybe<Array<Maybe<DestinyVendorItemQuantity>>>;
+  currencies?: Maybe<Array<Maybe<QLDestinyVendorItemQuantity>>>;
   /** If this item can be refunded, this is the policy for what will be refundd, how, and in what time period. */
   refundPolicy?: Maybe<Scalars["Int"]>;
   /** The amount of time before refundability of the newly purchased item will expire. */
   refundTimeLimit?: Maybe<Scalars["Int"]>;
   /** The Default level at which the item will spawn. Almost always driven by an adjusto these days. Ideally should be singular. It's a long story how this ended up as a list, but there is always either going to be 0:1 of these entities. */
-  creationLevels?: Maybe<Array<Maybe<DestinyItemCreationEntryLevelDefinition>>>;
+  creationLevels?: Maybe<
+    Array<Maybe<QLDestinyItemCreationEntryLevelDefinition>>
+  >;
   /** This is an index specifically into the display category, as opposed to the server-side Categories (which do not need to match or pair with each other in any way: server side categories are really just structures for common validation. Display Category will let us more easily categorize items visually) */
   displayCategoryIndex?: Maybe<Scalars["Int"]>;
   /** The index into the DestinyVendorDefinition.categories array, so you can find the category associated with this item. */
@@ -3301,7 +3313,7 @@ export type DestinyVendorItemDefinition = {
   /** The maximum character level at which this item is available for sale. */
   maximumLevel?: Maybe<Scalars["Int"]>;
   /** The action to be performed when purchasing the item, if it's not just "buy". */
-  action?: Maybe<DestinyVendorSaleItemActionBlockDefinition>;
+  action?: Maybe<QLDestinyVendorSaleItemActionBlockDefinition>;
   /** The string identifier for the category selling this item. */
   displayCategory?: Maybe<Scalars["String"]>;
   /** The inventory bucket into which this item will be placed upon purchase. */
@@ -3328,7 +3340,7 @@ export type DestinyVendorItemDefinition = {
   expirationTooltip?: Maybe<Scalars["String"]>;
   /** If this is populated, the purchase of this item should redirect to purchasing these other items instead. */
   redirectToSaleIndexes?: Maybe<Array<Maybe<Scalars["Int"]>>>;
-  socketOverrides?: Maybe<Array<Maybe<DestinyVendorItemSocketOverride>>>;
+  socketOverrides?: Maybe<Array<Maybe<QLDestinyVendorItemSocketOverride>>>;
   /**
    * If true, this item is some sort of dummy sale item that cannot actually be purchased. It may be a display only item, or some fluff left by a content designer for testing purposes, or something that got disabled because it was a terrible idea. You get the picture. We won't know *why* it can't be purchased, only that it can't be. Sorry.
    * This is also only whether it's unpurchasable as a static property according to game content. There are other reasons why an item may or may not be purchasable at runtime, so even if this isn't set to True you should trust the runtime value for this sale item over the static definition if this is unset.
@@ -3336,11 +3348,11 @@ export type DestinyVendorItemDefinition = {
   unpurchasable?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyVendorItemQuantity = {
+export type QLDestinyVendorItemQuantity = {
   __typename?: "DestinyVendorItemQuantity";
   /** The hash identifier for the item in question. Use it to look up the item's DestinyInventoryItemDefinition. */
   itemHash?: Maybe<Scalars["Float"]>;
-  item?: Maybe<DestinyInventoryItemDefinition>;
+  item?: Maybe<QLDestinyInventoryItemDefinition>;
   /** If this quantity is referring to a specific instance of an item, this will have the item's instance ID. Normally, this will be null. */
   itemInstanceId?: Maybe<Scalars["Int"]>;
   /** The amount of the item needed/available depending on the context of where DestinyItemQuantity is being used. */
@@ -3349,31 +3361,31 @@ export type DestinyVendorItemQuantity = {
   hasConditionalVisibility?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyVendorItemSocketOverride = {
+export type QLDestinyVendorItemSocketOverride = {
   __typename?: "DestinyVendorItemSocketOverride";
   /**
    * If this is populated, the socket will be overridden with a specific plug.
    * If this isn't populated, it's being overridden by something more complicated that is only known by the Game Server and God, which means we can't tell you in advance what it'll be.
    */
   singleItemHash?: Maybe<Scalars["Float"]>;
-  singleItem?: Maybe<DestinyInventoryItemDefinition>;
+  singleItem?: Maybe<QLDestinyInventoryItemDefinition>;
   /** If this is greater than -1, the number of randomized plugs on this socket will be set to this quantity instead of whatever it's set to by default. */
   randomizedOptionsCount?: Maybe<Scalars["Int"]>;
   /** This appears to be used to select which socket ultimately gets the override defined here. */
   socketTypeHash?: Maybe<Scalars["Float"]>;
-  socketType?: Maybe<DestinySocketTypeDefinition>;
+  socketType?: Maybe<QLDestinySocketTypeDefinition>;
 };
 
-export type DestinyVendorLocationDefinition = {
+export type QLDestinyVendorLocationDefinition = {
   __typename?: "DestinyVendorLocationDefinition";
   /** The hash identifier for a Destination at which this vendor may be located. Each destination where a Vendor may exist will only ever have a single entry. */
   destinationHash?: Maybe<Scalars["Float"]>;
-  destination?: Maybe<DestinyDestinationDefinition>;
+  destination?: Maybe<QLDestinyDestinationDefinition>;
   /** The relative path to the background image representing this Vendor at this location, for use in a banner. */
   backgroundImagePath?: Maybe<Scalars["String"]>;
 };
 
-export type DestinyVendorRequirementDisplayEntryDefinition = {
+export type QLDestinyVendorRequirementDisplayEntryDefinition = {
   __typename?: "DestinyVendorRequirementDisplayEntryDefinition";
   icon?: Maybe<Scalars["String"]>;
   name?: Maybe<Scalars["String"]>;
@@ -3381,732 +3393,736 @@ export type DestinyVendorRequirementDisplayEntryDefinition = {
   type?: Maybe<Scalars["String"]>;
 };
 
-export type DestinyVendorSaleItemActionBlockDefinition = {
+export type QLDestinyVendorSaleItemActionBlockDefinition = {
   __typename?: "DestinyVendorSaleItemActionBlockDefinition";
   executeSeconds?: Maybe<Scalars["Float"]>;
   isPositive?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DestinyVendorServiceDefinition = {
+export type QLDestinyVendorServiceDefinition = {
   __typename?: "DestinyVendorServiceDefinition";
   /** The localized name of a service provided. */
   name?: Maybe<Scalars["String"]>;
 };
 
-export type DyeReference = {
+export type QLDyeReference = {
   __typename?: "DyeReference";
   channelHash?: Maybe<Scalars["Float"]>;
   dyeHash?: Maybe<Scalars["Float"]>;
 };
 
-export type HyperlinkReference = {
+export type QLHyperlinkReference = {
   __typename?: "HyperlinkReference";
   title?: Maybe<Scalars["String"]>;
   url?: Maybe<Scalars["String"]>;
 };
 
-export type InterpolationPoint = {
+export type QLInterpolationPoint = {
   __typename?: "InterpolationPoint";
   value?: Maybe<Scalars["Int"]>;
   weight?: Maybe<Scalars["Int"]>;
 };
 
-export type InterpolationPointFloat = {
+export type QLInterpolationPointFloat = {
   __typename?: "InterpolationPointFloat";
   value?: Maybe<Scalars["Float"]>;
   weight?: Maybe<Scalars["Float"]>;
 };
 
-export type Query = {
+export type QLQuery = {
   __typename?: "Query";
-  DestinyProgressionDefinition?: Maybe<DestinyProgressionDefinition>;
+  DestinyProgressionDefinition?: Maybe<QLDestinyProgressionDefinition>;
   ManyDestinyProgressionDefinition?: Maybe<
-    Array<Maybe<DestinyProgressionDefinition>>
+    Array<Maybe<QLDestinyProgressionDefinition>>
   >;
-  DestinyInventoryItemDefinition?: Maybe<DestinyInventoryItemDefinition>;
+  DestinyInventoryItemDefinition?: Maybe<QLDestinyInventoryItemDefinition>;
   ManyDestinyInventoryItemDefinition?: Maybe<
-    Array<Maybe<DestinyInventoryItemDefinition>>
+    Array<Maybe<QLDestinyInventoryItemDefinition>>
   >;
-  DestinyInventoryBucketDefinition?: Maybe<DestinyInventoryBucketDefinition>;
+  DestinyInventoryBucketDefinition?: Maybe<QLDestinyInventoryBucketDefinition>;
   ManyDestinyInventoryBucketDefinition?: Maybe<
-    Array<Maybe<DestinyInventoryBucketDefinition>>
+    Array<Maybe<QLDestinyInventoryBucketDefinition>>
   >;
-  DestinyItemTierTypeDefinition?: Maybe<DestinyItemTierTypeDefinition>;
+  DestinyItemTierTypeDefinition?: Maybe<QLDestinyItemTierTypeDefinition>;
   ManyDestinyItemTierTypeDefinition?: Maybe<
-    Array<Maybe<DestinyItemTierTypeDefinition>>
+    Array<Maybe<QLDestinyItemTierTypeDefinition>>
   >;
-  DestinyStatDefinition?: Maybe<DestinyStatDefinition>;
-  ManyDestinyStatDefinition?: Maybe<Array<Maybe<DestinyStatDefinition>>>;
-  DestinyStatGroupDefinition?: Maybe<DestinyStatGroupDefinition>;
+  DestinyStatDefinition?: Maybe<QLDestinyStatDefinition>;
+  ManyDestinyStatDefinition?: Maybe<Array<Maybe<QLDestinyStatDefinition>>>;
+  DestinyStatGroupDefinition?: Maybe<QLDestinyStatGroupDefinition>;
   ManyDestinyStatGroupDefinition?: Maybe<
-    Array<Maybe<DestinyStatGroupDefinition>>
+    Array<Maybe<QLDestinyStatGroupDefinition>>
   >;
-  DestinyEquipmentSlotDefinition?: Maybe<DestinyEquipmentSlotDefinition>;
+  DestinyEquipmentSlotDefinition?: Maybe<QLDestinyEquipmentSlotDefinition>;
   ManyDestinyEquipmentSlotDefinition?: Maybe<
-    Array<Maybe<DestinyEquipmentSlotDefinition>>
+    Array<Maybe<QLDestinyEquipmentSlotDefinition>>
   >;
-  DestinyVendorDefinition?: Maybe<DestinyVendorDefinition>;
-  ManyDestinyVendorDefinition?: Maybe<Array<Maybe<DestinyVendorDefinition>>>;
-  DestinySocketTypeDefinition?: Maybe<DestinySocketTypeDefinition>;
+  DestinyVendorDefinition?: Maybe<QLDestinyVendorDefinition>;
+  ManyDestinyVendorDefinition?: Maybe<Array<Maybe<QLDestinyVendorDefinition>>>;
+  DestinySocketTypeDefinition?: Maybe<QLDestinySocketTypeDefinition>;
   ManyDestinySocketTypeDefinition?: Maybe<
-    Array<Maybe<DestinySocketTypeDefinition>>
+    Array<Maybe<QLDestinySocketTypeDefinition>>
   >;
-  DestinySocketCategoryDefinition?: Maybe<DestinySocketCategoryDefinition>;
+  DestinySocketCategoryDefinition?: Maybe<QLDestinySocketCategoryDefinition>;
   ManyDestinySocketCategoryDefinition?: Maybe<
-    Array<Maybe<DestinySocketCategoryDefinition>>
+    Array<Maybe<QLDestinySocketCategoryDefinition>>
   >;
-  DestinyDestinationDefinition?: Maybe<DestinyDestinationDefinition>;
+  DestinyDestinationDefinition?: Maybe<QLDestinyDestinationDefinition>;
   ManyDestinyDestinationDefinition?: Maybe<
-    Array<Maybe<DestinyDestinationDefinition>>
+    Array<Maybe<QLDestinyDestinationDefinition>>
   >;
-  DestinyActivityGraphDefinition?: Maybe<DestinyActivityGraphDefinition>;
+  DestinyActivityGraphDefinition?: Maybe<QLDestinyActivityGraphDefinition>;
   ManyDestinyActivityGraphDefinition?: Maybe<
-    Array<Maybe<DestinyActivityGraphDefinition>>
+    Array<Maybe<QLDestinyActivityGraphDefinition>>
   >;
-  DestinyActivityDefinition?: Maybe<DestinyActivityDefinition>;
+  DestinyActivityDefinition?: Maybe<QLDestinyActivityDefinition>;
   ManyDestinyActivityDefinition?: Maybe<
-    Array<Maybe<DestinyActivityDefinition>>
+    Array<Maybe<QLDestinyActivityDefinition>>
   >;
-  DestinyActivityModifierDefinition?: Maybe<DestinyActivityModifierDefinition>;
+  DestinyActivityModifierDefinition?: Maybe<QLDestinyActivityModifierDefinition>;
   ManyDestinyActivityModifierDefinition?: Maybe<
-    Array<Maybe<DestinyActivityModifierDefinition>>
+    Array<Maybe<QLDestinyActivityModifierDefinition>>
   >;
-  DestinyObjectiveDefinition?: Maybe<DestinyObjectiveDefinition>;
+  DestinyObjectiveDefinition?: Maybe<QLDestinyObjectiveDefinition>;
   ManyDestinyObjectiveDefinition?: Maybe<
-    Array<Maybe<DestinyObjectiveDefinition>>
+    Array<Maybe<QLDestinyObjectiveDefinition>>
   >;
-  DestinySandboxPerkDefinition?: Maybe<DestinySandboxPerkDefinition>;
+  DestinySandboxPerkDefinition?: Maybe<QLDestinySandboxPerkDefinition>;
   ManyDestinySandboxPerkDefinition?: Maybe<
-    Array<Maybe<DestinySandboxPerkDefinition>>
+    Array<Maybe<QLDestinySandboxPerkDefinition>>
   >;
-  DestinyLocationDefinition?: Maybe<DestinyLocationDefinition>;
+  DestinyLocationDefinition?: Maybe<QLDestinyLocationDefinition>;
   ManyDestinyLocationDefinition?: Maybe<
-    Array<Maybe<DestinyLocationDefinition>>
+    Array<Maybe<QLDestinyLocationDefinition>>
   >;
-  DestinyActivityModeDefinition?: Maybe<DestinyActivityModeDefinition>;
+  DestinyActivityModeDefinition?: Maybe<QLDestinyActivityModeDefinition>;
   ManyDestinyActivityModeDefinition?: Maybe<
-    Array<Maybe<DestinyActivityModeDefinition>>
+    Array<Maybe<QLDestinyActivityModeDefinition>>
   >;
-  DestinyPlaceDefinition?: Maybe<DestinyPlaceDefinition>;
-  ManyDestinyPlaceDefinition?: Maybe<Array<Maybe<DestinyPlaceDefinition>>>;
-  DestinyActivityTypeDefinition?: Maybe<DestinyActivityTypeDefinition>;
+  DestinyPlaceDefinition?: Maybe<QLDestinyPlaceDefinition>;
+  ManyDestinyPlaceDefinition?: Maybe<Array<Maybe<QLDestinyPlaceDefinition>>>;
+  DestinyActivityTypeDefinition?: Maybe<QLDestinyActivityTypeDefinition>;
   ManyDestinyActivityTypeDefinition?: Maybe<
-    Array<Maybe<DestinyActivityTypeDefinition>>
+    Array<Maybe<QLDestinyActivityTypeDefinition>>
   >;
-  DestinyVendorGroupDefinition?: Maybe<DestinyVendorGroupDefinition>;
+  DestinyVendorGroupDefinition?: Maybe<QLDestinyVendorGroupDefinition>;
   ManyDestinyVendorGroupDefinition?: Maybe<
-    Array<Maybe<DestinyVendorGroupDefinition>>
+    Array<Maybe<QLDestinyVendorGroupDefinition>>
   >;
-  DestinyFactionDefinition?: Maybe<DestinyFactionDefinition>;
-  ManyDestinyFactionDefinition?: Maybe<Array<Maybe<DestinyFactionDefinition>>>;
-  DestinyArtifactDefinition?: Maybe<DestinyArtifactDefinition>;
+  DestinyFactionDefinition?: Maybe<QLDestinyFactionDefinition>;
+  ManyDestinyFactionDefinition?: Maybe<
+    Array<Maybe<QLDestinyFactionDefinition>>
+  >;
+  DestinyArtifactDefinition?: Maybe<QLDestinyArtifactDefinition>;
   ManyDestinyArtifactDefinition?: Maybe<
-    Array<Maybe<DestinyArtifactDefinition>>
+    Array<Maybe<QLDestinyArtifactDefinition>>
   >;
-  DestinyPowerCapDefinition?: Maybe<DestinyPowerCapDefinition>;
+  DestinyPowerCapDefinition?: Maybe<QLDestinyPowerCapDefinition>;
   ManyDestinyPowerCapDefinition?: Maybe<
-    Array<Maybe<DestinyPowerCapDefinition>>
+    Array<Maybe<QLDestinyPowerCapDefinition>>
   >;
-  DestinyProgressionLevelRequirementDefinition?: Maybe<DestinyProgressionLevelRequirementDefinition>;
+  DestinyProgressionLevelRequirementDefinition?: Maybe<QLDestinyProgressionLevelRequirementDefinition>;
   ManyDestinyProgressionLevelRequirementDefinition?: Maybe<
-    Array<Maybe<DestinyProgressionLevelRequirementDefinition>>
+    Array<Maybe<QLDestinyProgressionLevelRequirementDefinition>>
   >;
-  DestinyRewardSourceDefinition?: Maybe<DestinyRewardSourceDefinition>;
+  DestinyRewardSourceDefinition?: Maybe<QLDestinyRewardSourceDefinition>;
   ManyDestinyRewardSourceDefinition?: Maybe<
-    Array<Maybe<DestinyRewardSourceDefinition>>
+    Array<Maybe<QLDestinyRewardSourceDefinition>>
   >;
-  DestinyTraitDefinition?: Maybe<DestinyTraitDefinition>;
-  ManyDestinyTraitDefinition?: Maybe<Array<Maybe<DestinyTraitDefinition>>>;
-  DestinyTraitCategoryDefinition?: Maybe<DestinyTraitCategoryDefinition>;
+  DestinyTraitDefinition?: Maybe<QLDestinyTraitDefinition>;
+  ManyDestinyTraitDefinition?: Maybe<Array<Maybe<QLDestinyTraitDefinition>>>;
+  DestinyTraitCategoryDefinition?: Maybe<QLDestinyTraitCategoryDefinition>;
   ManyDestinyTraitCategoryDefinition?: Maybe<
-    Array<Maybe<DestinyTraitCategoryDefinition>>
+    Array<Maybe<QLDestinyTraitCategoryDefinition>>
   >;
-  DestinyPresentationNodeDefinition?: Maybe<DestinyPresentationNodeDefinition>;
+  DestinyPresentationNodeDefinition?: Maybe<QLDestinyPresentationNodeDefinition>;
   ManyDestinyPresentationNodeDefinition?: Maybe<
-    Array<Maybe<DestinyPresentationNodeDefinition>>
+    Array<Maybe<QLDestinyPresentationNodeDefinition>>
   >;
-  DestinyCollectibleDefinition?: Maybe<DestinyCollectibleDefinition>;
+  DestinyCollectibleDefinition?: Maybe<QLDestinyCollectibleDefinition>;
   ManyDestinyCollectibleDefinition?: Maybe<
-    Array<Maybe<DestinyCollectibleDefinition>>
+    Array<Maybe<QLDestinyCollectibleDefinition>>
   >;
-  DestinyMaterialRequirementSetDefinition?: Maybe<DestinyMaterialRequirementSetDefinition>;
+  DestinyMaterialRequirementSetDefinition?: Maybe<QLDestinyMaterialRequirementSetDefinition>;
   ManyDestinyMaterialRequirementSetDefinition?: Maybe<
-    Array<Maybe<DestinyMaterialRequirementSetDefinition>>
+    Array<Maybe<QLDestinyMaterialRequirementSetDefinition>>
   >;
-  DestinyRecordDefinition?: Maybe<DestinyRecordDefinition>;
-  ManyDestinyRecordDefinition?: Maybe<Array<Maybe<DestinyRecordDefinition>>>;
-  DestinyGenderDefinition?: Maybe<DestinyGenderDefinition>;
-  ManyDestinyGenderDefinition?: Maybe<Array<Maybe<DestinyGenderDefinition>>>;
-  DestinyLoreDefinition?: Maybe<DestinyLoreDefinition>;
-  ManyDestinyLoreDefinition?: Maybe<Array<Maybe<DestinyLoreDefinition>>>;
-  DestinyMetricDefinition?: Maybe<DestinyMetricDefinition>;
-  ManyDestinyMetricDefinition?: Maybe<Array<Maybe<DestinyMetricDefinition>>>;
-  DestinyEnergyTypeDefinition?: Maybe<DestinyEnergyTypeDefinition>;
+  DestinyRecordDefinition?: Maybe<QLDestinyRecordDefinition>;
+  ManyDestinyRecordDefinition?: Maybe<Array<Maybe<QLDestinyRecordDefinition>>>;
+  DestinyGenderDefinition?: Maybe<QLDestinyGenderDefinition>;
+  ManyDestinyGenderDefinition?: Maybe<Array<Maybe<QLDestinyGenderDefinition>>>;
+  DestinyLoreDefinition?: Maybe<QLDestinyLoreDefinition>;
+  ManyDestinyLoreDefinition?: Maybe<Array<Maybe<QLDestinyLoreDefinition>>>;
+  DestinyMetricDefinition?: Maybe<QLDestinyMetricDefinition>;
+  ManyDestinyMetricDefinition?: Maybe<Array<Maybe<QLDestinyMetricDefinition>>>;
+  DestinyEnergyTypeDefinition?: Maybe<QLDestinyEnergyTypeDefinition>;
   ManyDestinyEnergyTypeDefinition?: Maybe<
-    Array<Maybe<DestinyEnergyTypeDefinition>>
+    Array<Maybe<QLDestinyEnergyTypeDefinition>>
   >;
-  DestinyPlugSetDefinition?: Maybe<DestinyPlugSetDefinition>;
-  ManyDestinyPlugSetDefinition?: Maybe<Array<Maybe<DestinyPlugSetDefinition>>>;
-  DestinyTalentGridDefinition?: Maybe<DestinyTalentGridDefinition>;
+  DestinyPlugSetDefinition?: Maybe<QLDestinyPlugSetDefinition>;
+  ManyDestinyPlugSetDefinition?: Maybe<
+    Array<Maybe<QLDestinyPlugSetDefinition>>
+  >;
+  DestinyTalentGridDefinition?: Maybe<QLDestinyTalentGridDefinition>;
   ManyDestinyTalentGridDefinition?: Maybe<
-    Array<Maybe<DestinyTalentGridDefinition>>
+    Array<Maybe<QLDestinyTalentGridDefinition>>
   >;
-  DestinyDamageTypeDefinition?: Maybe<DestinyDamageTypeDefinition>;
+  DestinyDamageTypeDefinition?: Maybe<QLDestinyDamageTypeDefinition>;
   ManyDestinyDamageTypeDefinition?: Maybe<
-    Array<Maybe<DestinyDamageTypeDefinition>>
+    Array<Maybe<QLDestinyDamageTypeDefinition>>
   >;
-  DestinyItemCategoryDefinition?: Maybe<DestinyItemCategoryDefinition>;
+  DestinyItemCategoryDefinition?: Maybe<QLDestinyItemCategoryDefinition>;
   ManyDestinyItemCategoryDefinition?: Maybe<
-    Array<Maybe<DestinyItemCategoryDefinition>>
+    Array<Maybe<QLDestinyItemCategoryDefinition>>
   >;
-  DestinyBreakerTypeDefinition?: Maybe<DestinyBreakerTypeDefinition>;
+  DestinyBreakerTypeDefinition?: Maybe<QLDestinyBreakerTypeDefinition>;
   ManyDestinyBreakerTypeDefinition?: Maybe<
-    Array<Maybe<DestinyBreakerTypeDefinition>>
+    Array<Maybe<QLDestinyBreakerTypeDefinition>>
   >;
-  DestinySeasonDefinition?: Maybe<DestinySeasonDefinition>;
-  ManyDestinySeasonDefinition?: Maybe<Array<Maybe<DestinySeasonDefinition>>>;
-  DestinySeasonPassDefinition?: Maybe<DestinySeasonPassDefinition>;
+  DestinySeasonDefinition?: Maybe<QLDestinySeasonDefinition>;
+  ManyDestinySeasonDefinition?: Maybe<Array<Maybe<QLDestinySeasonDefinition>>>;
+  DestinySeasonPassDefinition?: Maybe<QLDestinySeasonPassDefinition>;
   ManyDestinySeasonPassDefinition?: Maybe<
-    Array<Maybe<DestinySeasonPassDefinition>>
+    Array<Maybe<QLDestinySeasonPassDefinition>>
   >;
-  DestinyChecklistDefinition?: Maybe<DestinyChecklistDefinition>;
+  DestinyChecklistDefinition?: Maybe<QLDestinyChecklistDefinition>;
   ManyDestinyChecklistDefinition?: Maybe<
-    Array<Maybe<DestinyChecklistDefinition>>
+    Array<Maybe<QLDestinyChecklistDefinition>>
   >;
-  DestinyRaceDefinition?: Maybe<DestinyRaceDefinition>;
-  ManyDestinyRaceDefinition?: Maybe<Array<Maybe<DestinyRaceDefinition>>>;
-  DestinyClassDefinition?: Maybe<DestinyClassDefinition>;
-  ManyDestinyClassDefinition?: Maybe<Array<Maybe<DestinyClassDefinition>>>;
-  DestinyMilestoneDefinition?: Maybe<DestinyMilestoneDefinition>;
+  DestinyRaceDefinition?: Maybe<QLDestinyRaceDefinition>;
+  ManyDestinyRaceDefinition?: Maybe<Array<Maybe<QLDestinyRaceDefinition>>>;
+  DestinyClassDefinition?: Maybe<QLDestinyClassDefinition>;
+  ManyDestinyClassDefinition?: Maybe<Array<Maybe<QLDestinyClassDefinition>>>;
+  DestinyMilestoneDefinition?: Maybe<QLDestinyMilestoneDefinition>;
   ManyDestinyMilestoneDefinition?: Maybe<
-    Array<Maybe<DestinyMilestoneDefinition>>
+    Array<Maybe<QLDestinyMilestoneDefinition>>
   >;
-  DestinyUnlockDefinition?: Maybe<DestinyUnlockDefinition>;
-  ManyDestinyUnlockDefinition?: Maybe<Array<Maybe<DestinyUnlockDefinition>>>;
-  DestinyReportReasonCategoryDefinition?: Maybe<DestinyReportReasonCategoryDefinition>;
+  DestinyUnlockDefinition?: Maybe<QLDestinyUnlockDefinition>;
+  ManyDestinyUnlockDefinition?: Maybe<Array<Maybe<QLDestinyUnlockDefinition>>>;
+  DestinyReportReasonCategoryDefinition?: Maybe<QLDestinyReportReasonCategoryDefinition>;
   ManyDestinyReportReasonCategoryDefinition?: Maybe<
-    Array<Maybe<DestinyReportReasonCategoryDefinition>>
+    Array<Maybe<QLDestinyReportReasonCategoryDefinition>>
   >;
-  DestinyHistoricalStatsDefinition?: Maybe<DestinyHistoricalStatsDefinition>;
+  DestinyHistoricalStatsDefinition?: Maybe<QLDestinyHistoricalStatsDefinition>;
   ManyDestinyHistoricalStatsDefinition?: Maybe<
-    Array<Maybe<DestinyHistoricalStatsDefinition>>
+    Array<Maybe<QLDestinyHistoricalStatsDefinition>>
   >;
   JSONDefinition?: Maybe<Scalars["JSONObject"]>;
 };
 
-export type QueryDestinyProgressionDefinitionArgs = {
+export type QLQueryDestinyProgressionDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyProgressionDefinitionArgs = {
+export type QLQueryManyDestinyProgressionDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyInventoryItemDefinitionArgs = {
+export type QLQueryDestinyInventoryItemDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyInventoryItemDefinitionArgs = {
+export type QLQueryManyDestinyInventoryItemDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyInventoryBucketDefinitionArgs = {
+export type QLQueryDestinyInventoryBucketDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyInventoryBucketDefinitionArgs = {
+export type QLQueryManyDestinyInventoryBucketDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyItemTierTypeDefinitionArgs = {
+export type QLQueryDestinyItemTierTypeDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyItemTierTypeDefinitionArgs = {
+export type QLQueryManyDestinyItemTierTypeDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyStatDefinitionArgs = {
+export type QLQueryDestinyStatDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyStatDefinitionArgs = {
+export type QLQueryManyDestinyStatDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyStatGroupDefinitionArgs = {
+export type QLQueryDestinyStatGroupDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyStatGroupDefinitionArgs = {
+export type QLQueryManyDestinyStatGroupDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyEquipmentSlotDefinitionArgs = {
+export type QLQueryDestinyEquipmentSlotDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyEquipmentSlotDefinitionArgs = {
+export type QLQueryManyDestinyEquipmentSlotDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyVendorDefinitionArgs = {
+export type QLQueryDestinyVendorDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyVendorDefinitionArgs = {
+export type QLQueryManyDestinyVendorDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinySocketTypeDefinitionArgs = {
+export type QLQueryDestinySocketTypeDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinySocketTypeDefinitionArgs = {
+export type QLQueryManyDestinySocketTypeDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinySocketCategoryDefinitionArgs = {
+export type QLQueryDestinySocketCategoryDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinySocketCategoryDefinitionArgs = {
+export type QLQueryManyDestinySocketCategoryDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyDestinationDefinitionArgs = {
+export type QLQueryDestinyDestinationDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyDestinationDefinitionArgs = {
+export type QLQueryManyDestinyDestinationDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyActivityGraphDefinitionArgs = {
+export type QLQueryDestinyActivityGraphDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyActivityGraphDefinitionArgs = {
+export type QLQueryManyDestinyActivityGraphDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyActivityDefinitionArgs = {
+export type QLQueryDestinyActivityDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyActivityDefinitionArgs = {
+export type QLQueryManyDestinyActivityDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyActivityModifierDefinitionArgs = {
+export type QLQueryDestinyActivityModifierDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyActivityModifierDefinitionArgs = {
+export type QLQueryManyDestinyActivityModifierDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyObjectiveDefinitionArgs = {
+export type QLQueryDestinyObjectiveDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyObjectiveDefinitionArgs = {
+export type QLQueryManyDestinyObjectiveDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinySandboxPerkDefinitionArgs = {
+export type QLQueryDestinySandboxPerkDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinySandboxPerkDefinitionArgs = {
+export type QLQueryManyDestinySandboxPerkDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyLocationDefinitionArgs = {
+export type QLQueryDestinyLocationDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyLocationDefinitionArgs = {
+export type QLQueryManyDestinyLocationDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyActivityModeDefinitionArgs = {
+export type QLQueryDestinyActivityModeDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyActivityModeDefinitionArgs = {
+export type QLQueryManyDestinyActivityModeDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyPlaceDefinitionArgs = {
+export type QLQueryDestinyPlaceDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyPlaceDefinitionArgs = {
+export type QLQueryManyDestinyPlaceDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyActivityTypeDefinitionArgs = {
+export type QLQueryDestinyActivityTypeDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyActivityTypeDefinitionArgs = {
+export type QLQueryManyDestinyActivityTypeDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyVendorGroupDefinitionArgs = {
+export type QLQueryDestinyVendorGroupDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyVendorGroupDefinitionArgs = {
+export type QLQueryManyDestinyVendorGroupDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyFactionDefinitionArgs = {
+export type QLQueryDestinyFactionDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyFactionDefinitionArgs = {
+export type QLQueryManyDestinyFactionDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyArtifactDefinitionArgs = {
+export type QLQueryDestinyArtifactDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyArtifactDefinitionArgs = {
+export type QLQueryManyDestinyArtifactDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyPowerCapDefinitionArgs = {
+export type QLQueryDestinyPowerCapDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyPowerCapDefinitionArgs = {
+export type QLQueryManyDestinyPowerCapDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyProgressionLevelRequirementDefinitionArgs = {
+export type QLQueryDestinyProgressionLevelRequirementDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyProgressionLevelRequirementDefinitionArgs = {
+export type QLQueryManyDestinyProgressionLevelRequirementDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyRewardSourceDefinitionArgs = {
+export type QLQueryDestinyRewardSourceDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyRewardSourceDefinitionArgs = {
+export type QLQueryManyDestinyRewardSourceDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyTraitDefinitionArgs = {
+export type QLQueryDestinyTraitDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyTraitDefinitionArgs = {
+export type QLQueryManyDestinyTraitDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyTraitCategoryDefinitionArgs = {
+export type QLQueryDestinyTraitCategoryDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyTraitCategoryDefinitionArgs = {
+export type QLQueryManyDestinyTraitCategoryDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyPresentationNodeDefinitionArgs = {
+export type QLQueryDestinyPresentationNodeDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyPresentationNodeDefinitionArgs = {
+export type QLQueryManyDestinyPresentationNodeDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyCollectibleDefinitionArgs = {
+export type QLQueryDestinyCollectibleDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyCollectibleDefinitionArgs = {
+export type QLQueryManyDestinyCollectibleDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyMaterialRequirementSetDefinitionArgs = {
+export type QLQueryDestinyMaterialRequirementSetDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyMaterialRequirementSetDefinitionArgs = {
+export type QLQueryManyDestinyMaterialRequirementSetDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyRecordDefinitionArgs = {
+export type QLQueryDestinyRecordDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyRecordDefinitionArgs = {
+export type QLQueryManyDestinyRecordDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyGenderDefinitionArgs = {
+export type QLQueryDestinyGenderDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyGenderDefinitionArgs = {
+export type QLQueryManyDestinyGenderDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyLoreDefinitionArgs = {
+export type QLQueryDestinyLoreDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyLoreDefinitionArgs = {
+export type QLQueryManyDestinyLoreDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyMetricDefinitionArgs = {
+export type QLQueryDestinyMetricDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyMetricDefinitionArgs = {
+export type QLQueryManyDestinyMetricDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyEnergyTypeDefinitionArgs = {
+export type QLQueryDestinyEnergyTypeDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyEnergyTypeDefinitionArgs = {
+export type QLQueryManyDestinyEnergyTypeDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyPlugSetDefinitionArgs = {
+export type QLQueryDestinyPlugSetDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyPlugSetDefinitionArgs = {
+export type QLQueryManyDestinyPlugSetDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyTalentGridDefinitionArgs = {
+export type QLQueryDestinyTalentGridDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyTalentGridDefinitionArgs = {
+export type QLQueryManyDestinyTalentGridDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyDamageTypeDefinitionArgs = {
+export type QLQueryDestinyDamageTypeDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyDamageTypeDefinitionArgs = {
+export type QLQueryManyDestinyDamageTypeDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyItemCategoryDefinitionArgs = {
+export type QLQueryDestinyItemCategoryDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyItemCategoryDefinitionArgs = {
+export type QLQueryManyDestinyItemCategoryDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyBreakerTypeDefinitionArgs = {
+export type QLQueryDestinyBreakerTypeDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyBreakerTypeDefinitionArgs = {
+export type QLQueryManyDestinyBreakerTypeDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinySeasonDefinitionArgs = {
+export type QLQueryDestinySeasonDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinySeasonDefinitionArgs = {
+export type QLQueryManyDestinySeasonDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinySeasonPassDefinitionArgs = {
+export type QLQueryDestinySeasonPassDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinySeasonPassDefinitionArgs = {
+export type QLQueryManyDestinySeasonPassDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyChecklistDefinitionArgs = {
+export type QLQueryDestinyChecklistDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyChecklistDefinitionArgs = {
+export type QLQueryManyDestinyChecklistDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyRaceDefinitionArgs = {
+export type QLQueryDestinyRaceDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyRaceDefinitionArgs = {
+export type QLQueryManyDestinyRaceDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyClassDefinitionArgs = {
+export type QLQueryDestinyClassDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyClassDefinitionArgs = {
+export type QLQueryManyDestinyClassDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyMilestoneDefinitionArgs = {
+export type QLQueryDestinyMilestoneDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyMilestoneDefinitionArgs = {
+export type QLQueryManyDestinyMilestoneDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyUnlockDefinitionArgs = {
+export type QLQueryDestinyUnlockDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyUnlockDefinitionArgs = {
+export type QLQueryManyDestinyUnlockDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyReportReasonCategoryDefinitionArgs = {
+export type QLQueryDestinyReportReasonCategoryDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyReportReasonCategoryDefinitionArgs = {
+export type QLQueryManyDestinyReportReasonCategoryDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryDestinyHistoricalStatsDefinitionArgs = {
+export type QLQueryDestinyHistoricalStatsDefinitionArgs = {
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryManyDestinyHistoricalStatsDefinitionArgs = {
+export type QLQueryManyDestinyHistoricalStatsDefinitionArgs = {
   hashes?: Maybe<Array<Maybe<Scalars["String"]>>>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type QueryJsonDefinitionArgs = {
+export type QLQueryJsonDefinitionArgs = {
   table?: Maybe<Scalars["String"]>;
   hash?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["String"]>;
 };
 
-export type SchemaRecordStateBlock = {
+export type QLSchemaRecordStateBlock = {
   __typename?: "SchemaRecordStateBlock";
   featuredPriority?: Maybe<Scalars["Int"]>;
   obscuredString?: Maybe<Scalars["String"]>;
 };
 
-export type DisplayableItemFragment = {
+export type QLDisplayableItemFragment = {
   __typename?: "DestinyInventoryItemDefinition";
   hash?: Maybe<number>;
   itemTypeAndTierDisplayName?: Maybe<string>;
@@ -4117,16 +4133,16 @@ export type DisplayableItemFragment = {
   }>;
 };
 
-export type RandomItemFragment = {
+export type QLRandomItemFragment = {
   __typename?: "DestinyInventoryItemDefinition";
-} & DisplayableItemFragment;
+} & QLDisplayableItemFragment;
 
-export type ItemPageQueryVariables = Exact<{
+export type QLItemPageQueryVariables = Exact<{
   version?: Maybe<Scalars["String"]>;
   hash?: Maybe<Scalars["String"]>;
 }>;
 
-export type ItemPageQuery = {
+export type QLItemPageQuery = {
   __typename?: "Query";
   item?: Maybe<
     {
@@ -4158,7 +4174,7 @@ export type ItemPageQuery = {
                       plugItem?: Maybe<
                         {
                           __typename?: "DestinyInventoryItemDefinition";
-                        } & RandomItemFragment
+                        } & QLRandomItemFragment
                       >;
                     }>
                   >
@@ -4168,18 +4184,18 @@ export type ItemPageQuery = {
           >
         >;
       }>;
-    } & DisplayableItemFragment
+    } & QLDisplayableItemFragment
   >;
 };
 
-export type ModifiedDiffPageQueryVariables = Exact<{
+export type QLModifiedDiffPageQueryVariables = Exact<{
   version?: Maybe<Scalars["String"]>;
   previousVersion?: Maybe<Scalars["String"]>;
   hash?: Maybe<Scalars["String"]>;
   table?: Maybe<Scalars["String"]>;
 }>;
 
-export type ModifiedDiffPageQuery = {
+export type QLModifiedDiffPageQuery = {
   __typename?: "Query";
   definition?: Maybe<any>;
   previousDefinition?: Maybe<any>;

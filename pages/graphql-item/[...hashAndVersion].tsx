@@ -4,8 +4,8 @@ import queryGraphql from "../../lib/graphql/queryGraphql";
 import { getHashAndVersion } from "../../lib/pageUtils";
 import duration from "../../lib/duration";
 import {
-  ItemPageQuery,
-  ItemPageQueryVariables,
+  QLItemPageQuery,
+  QLItemPageQueryVariables,
 } from "../../lib/graphql/types.generated";
 import ItemPage, { ItemPageProps } from "../../components/ItemPage";
 
@@ -28,7 +28,7 @@ export const getStaticProps: GetStaticProps<ItemPageProps, Params> = async ({
     return { notFound: true, revalidate: duration("1 day") };
   }
 
-  const data = await queryGraphql<ItemPageQuery, ItemPageQueryVariables>(
+  const data = await queryGraphql<QLItemPageQuery, QLItemPageQueryVariables>(
     QUERY,
     { hash, version: version.id }
   );

@@ -9,6 +9,7 @@ generates:
     config:
       preResolveTypes: true
       inlineFragmentTypes: combine
+      typesPrefix: QL
   ./graphql-schema.json:
     plugins:
       - "introspection"

@@ -3,8 +3,8 @@ import { schema } from "../../lib/graphql/schema";
 
 const apolloServer = new ApolloServer({
   schema,
-  introspection: true,
-  playground: true,
+  // introspection: true,
+  // playground: true,
 });
 
 export const config = {

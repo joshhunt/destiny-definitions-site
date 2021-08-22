@@ -7,6 +7,7 @@ module.exports = {
       script: "yarn",
       args: "start",
       interpreter: "none",
+      max_memory_restart: "300M",
       env: {
         NODE_ENV: "production",
       },

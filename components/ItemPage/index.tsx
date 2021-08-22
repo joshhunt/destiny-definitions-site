@@ -1,11 +1,11 @@
 import React from "react";
-import { ItemPageQuery } from "../../lib/graphql/types.generated";
+import { QLItemPageQuery } from "../../lib/graphql/types.generated";
 import ItemHeader from "../ItemHeader/QLItemHeader";
 
 import s from "./styles.module.scss";
 
 export interface ItemPageProps {
-  data: ItemPageQuery;
+  data: QLItemPageQuery;
 }
 
 const ItemPage: React.FC<ItemPageProps> = ({ data: { item } }) => {
