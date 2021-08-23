@@ -39,7 +39,7 @@ async function main() {
 
     for (const tableName of tables) {
       urls.push({
-        url: `http://165.232.110.210:3000/version/${id}/${tableName}`,
+        url: `https://localhost:81/version/${id}/${tableName}`,
         id,
         tableName,
       });
@@ -48,7 +48,7 @@ async function main() {
 
   asyncLib.eachLimit(
     urls,
-    5,
+    1,
     asyncLib.asyncify(async ({ url, id, tableName }: CacheEntry) => {
       try {
         const resp = await axios.get(url);
