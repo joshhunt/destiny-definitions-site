@@ -11,8 +11,8 @@ import duration from "../../../../../lib/duration";
 import gql from "graphql-tag";
 import queryGraphql from "../../../../../lib/graphql/queryGraphql";
 import {
-  ModifiedDiffPageQuery,
-  ModifiedDiffPageQueryVariables,
+  QLModifiedDiffPageQuery,
+  QLModifiedDiffPageQueryVariables,
 } from "../../../../../lib/graphql/types.generated";
 
 interface Params {
@@ -48,8 +48,8 @@ export const getStaticProps: GetStaticProps<
   const [manifestVersion] = await Promise.all([getVersion(versionId)]);
 
   const data = await queryGraphql<
-    ModifiedDiffPageQuery,
-    ModifiedDiffPageQueryVariables
+    QLModifiedDiffPageQuery,
+    QLModifiedDiffPageQueryVariables
   >(QUERY, {
     version: versionId,
     previousVersion: previousVersion.id,

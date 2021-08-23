@@ -1,12 +1,12 @@
 import React from "react";
-import { DisplayableItemFragment } from "../../lib/graphql/types.generated";
+import { QLDisplayableItemFragment } from "../../lib/graphql/types.generated";
 import BungieImage from "../BungieImage";
 import { QuestItem } from "../QuestPage/types";
 
 import s from "./styles.module.scss";
 
 interface ItemHeaderProps {
-  item: DisplayableItemFragment;
+  item: QLDisplayableItemFragment;
 }
 
 const ItemHeader: React.FC<ItemHeaderProps> = ({ item }) => {
