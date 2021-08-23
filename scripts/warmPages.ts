@@ -41,7 +41,7 @@ async function main() {
 
     for (const tableName of tables) {
       urls.push({
-        url: `https://localhost:81/version/${id}/${tableName}`,
+        url: `http://localhost:81/version/${id}/${tableName}`,
         id,
         tableName,
       });
