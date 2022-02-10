@@ -51,7 +51,7 @@
     "lodash": "^4.17.19",
     "micro": "^9.3.4",
     "next": "^10.0.0",
-    "node-sass": "^5.0.0",
+    "node-sass": "^7.0.0",
     "nprogress": "^0.2.0",
     "openapi-types": "^9.1.0",
     "pm2": "^4.5.0",
