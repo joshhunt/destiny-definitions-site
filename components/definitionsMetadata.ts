@@ -100,4 +100,4 @@ export default [
       index,
     },
   };
-}, {} as Record<string, DefinitionMetadata>);
+}, {} as Record<string, DefinitionMetadata | undefined>);

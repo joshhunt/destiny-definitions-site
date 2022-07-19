@@ -29,8 +29,8 @@ export default function VersionDiffSummary({
       <tbody>
         {Object.entries(allDefinitionDiffs)
           .sort(([tableNameA], [tableNameB]) => {
-            const aIndex = definitionsMetadata[tableNameA].index;
-            const bIndex = definitionsMetadata[tableNameB].index;
+            const aIndex = definitionsMetadata[tableNameA]?.index ?? 9999;
+            const bIndex = definitionsMetadata[tableNameB]?.index ?? 9999;
 
             return aIndex - bIndex;
           })
@@ -41,7 +41,7 @@ export default function VersionDiffSummary({
             const meta = definitionsMetadata[tableName];
 
             return (
-              <tr key={tableName} className={meta.junk ? s.junkRow : ""}>
+              <tr key={tableName} className={meta?.junk ? s.junkRow : ""}>
                 <td>
                   <a
                     href={`/version/${id}/${tableName}`}

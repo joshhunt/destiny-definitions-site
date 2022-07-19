@@ -97,8 +97,8 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
 function createDiffCounts(allDefDiffs: AllDefinitionDiffs): VersionDiffCounts {
   return Object.entries(allDefDiffs)
     .sort(([tableNameA], [tableNameB]) => {
-      const aIndex = definitionsMetadata[tableNameA].index;
-      const bIndex = definitionsMetadata[tableNameB].index;
+      const aIndex = definitionsMetadata[tableNameA]?.index ?? 9999;
+      const bIndex = definitionsMetadata[tableNameB]?.index ?? 9999;
 
       return aIndex - bIndex;
     })
