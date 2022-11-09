@@ -1,55 +1,34 @@
-import axios from "axios";
-import redis, { ReplyError } from "redis";
+import path from "path";
+import sqliteFactory from "sqlite3";
 
-const client = redis.createClient();
+const sqlite3 = sqliteFactory.verbose();
+const dbPath = "./world_sql_content_c0b6f372037834a3fc8e8f12c3b02363.content";
+const db = new sqlite3.Database(dbPath);
 
-redis.add_command("JSON.SET");
-redis.add_command("JSON.GET");
+const DATABASES_FOLDER = path.resolve("./databases");
 
-function redisGetDefinition(
-  version: string,
+function getSqliteDefinition(
+  db: sqliteFactory.Database,
   tableName: string,
   hash: string
-): Promise<[string | null, string | null]> {
+) {
   return new Promise((resolve, reject) => {
-    const redisKey = `${version}-${tableName}`;
-    const hashKey = `hash_${hash}`;
+    const id = parseInt(hash) >> 32;
 
-    client
-      .multi([
-        ["JSON.GET", redisKey, "version"],
-        ["JSON.GET", redisKey, `definitions.${hashKey}`],
-      ])
-      .exec((err, resp) => {
-        if (err) {
-          return reject(err);
-        }
+    const sql = `SELECT id, json FROM ${tableName} WHERE id = ${id};`;
+    db.get(sql, (error, data) => {
+      if (error) {
+        return reject(error);
+      }
 
-        const [versionResult, definitionResult] = resp;
+      if (!data) {
+        return reject(
+          new Error(`Could not find ${tableName} hash ${hash} id ${id}`)
+        );
+      }
 
-        if (definitionResult instanceof ReplyError) {
-          console.log(definitionResult.message);
-          return resolve([versionResult, null]);
-        }
-
-        resolve([versionResult, definitionResult]);
-      });
-  });
-}
-
-function redisSetDefinitions(version: string, tableName: string, data: any) {
-  const redisKey = `${version}-${tableName}`;
-
-  return new Promise((resolve, reject) => {
-    client
-      .multi([["JSON.SET", redisKey, ".", JSON.stringify(data)]])
-      .exec((err, resp) => {
-        if (err) {
-          return reject(err);
-        }
-
-        resolve(resp as any);
-      });
+      resolve(JSON.parse(data.json));
+    });
   });
 }
 
@@ -58,38 +37,5 @@ export async function getDefinition(
   tableName: string,
   hash: string
 ) {
-  const [versionResult, definitionResult] = await redisGetDefinition(
-    version,
-    tableName,
-    hash
-  );
-
-  if (definitionResult) {
-    return JSON.parse(definitionResult);
-  }
-
-  if (versionResult) {
-    console.warn(
-      `Redis has version ${version}, but no definition for hash ${hash} in ${tableName}`
-    );
-    return null;
-  }
-
-  console.log("Requesting definitions", { version, tableName });
-  const { data } = await axios.get(
-    `https://destiny-definitions.s3-eu-west-1.amazonaws.com/versions/${version}/tables/${tableName}.json`
-  );
-
-  const definitionsForRedis = Object.fromEntries(
-    Object.entries(data).map(([hash, def]) => [`hash_${hash}`, def])
-  );
-
-  const forRedis = {
-    version,
-    definitions: definitionsForRedis,
-  };
-
-  await redisSetDefinitions(version, tableName, forRedis);
-
-  return data[hash];
+  return getSqliteDefinition(db, tableName, hash);
 }

@@ -92,9 +92,10 @@ export default function ModifiedDiffList({
               {config.modifiedDiffPages && (
                 <td>
                   <Link
+                    className={commonStyles.link}
                     href={`/version/${versionId}/${definitionName}/modified/${hash}`}
                   >
-                    <a className={commonStyles.link}>View diff</a>
+                    View diff
                   </Link>
                 </td>
               )}
