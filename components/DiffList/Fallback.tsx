@@ -41,6 +41,7 @@ export default function FallbackDiffList({
     <table className={s.table}>
       <thead className={s.tableHeader}>
         <tr>
+          <td className={s.shrink}>Index</td>
           <td className={s.shrink}>Hash</td>
           {hasIcon && <td>Icon</td>}
           {hasName && <td>Name</td>}
@@ -62,6 +63,7 @@ export default function FallbackDiffList({
 
           return (
             <tr key={hash}>
+              <td className={s.shrink}>{def.index}</td>
               <td className={s.shrink}>
                 <HashLink hash={hash} definitionName={definitionName} />
               </td>
