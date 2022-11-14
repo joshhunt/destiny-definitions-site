@@ -2,7 +2,7 @@ import { AllDefinitionDiffs } from "../../types";
 
 import s from "./styles.module.scss";
 import commonStyles from "../../styles/common.module.scss";
-import { friendlyDiffName } from "../../lib/utils";
+import { friendlyDiffName } from "../../../../lib/utils";
 import definitionsMetadata from "../definitionsMetadata";
 
 interface VersionDiffSummaryProps {

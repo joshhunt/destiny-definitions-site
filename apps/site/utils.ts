@@ -11,5 +11,5 @@ export function ensureDefinitionType<T>(
     throw new Error(`Definitions do not all contain ${type}`);
   }
 
-  return (definitions as unknown) as T;
+  return definitions as unknown as T;
 }

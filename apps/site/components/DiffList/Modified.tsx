@@ -10,7 +10,6 @@ import HashLink from "../HashLink";
 import commonStyles from "../../styles/common.module.scss";
 
 import s from "./styles.module.scss";
-import config from "../../config";
 
 interface ModifiedDiffListProps {
   hashes: number[];
@@ -47,7 +46,7 @@ export default function ModifiedDiffList({
           {hasIcon && <td>Icon</td>}
           {hasName && <td>Name</td>}
           <td>Properties changed</td>
-          {config.modifiedDiffPages && <td>Link</td>}
+          <td>Link</td>
         </tr>
       </thead>
 
@@ -89,16 +88,14 @@ export default function ModifiedDiffList({
 
               <td>{modifiedDiffs.diff.length}</td>
 
-              {config.modifiedDiffPages && (
-                <td>
-                  <Link
-                    className={commonStyles.link}
-                    href={`/version/${versionId}/${definitionName}/modified/${hash}`}
-                  >
-                    View diff
-                  </Link>
-                </td>
-              )}
+              <td>
+                <Link
+                  className={commonStyles.link}
+                  href={`/version/${versionId}/${definitionName}/modified/${hash}`}
+                >
+                  View diff
+                </Link>
+              </td>
             </tr>
           );
         })}

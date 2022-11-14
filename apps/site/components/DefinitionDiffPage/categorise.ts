@@ -19,7 +19,8 @@ export function doGrouping(
   definitionName: string
 ): PossiblyGroupedDiff {
   if (definitionName === "DestinyInventoryItemDefinition") {
-    const definitions = _definitions as AllDestinyManifestComponentsTagged["DestinyInventoryItemDefinition"];
+    const definitions =
+      _definitions as AllDestinyManifestComponentsTagged["DestinyInventoryItemDefinition"];
     const previousDefinitions = (_previousDefinitions ||
       _definitions) as AllDestinyManifestComponentsTagged["DestinyInventoryItemDefinition"];
 

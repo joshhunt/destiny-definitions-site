@@ -4,7 +4,6 @@ import ModifiedDiffPage, {
 } from "../../../../../components/ModifiedDiffPage";
 import { getPreviousVersion, getVersion } from "../../../../../remote";
 
-import config from "../../../../../config";
 import { format } from "date-fns";
 import { friendlyDiffName, getDisplayName } from "../../../../../lib/utils";
 import duration from "../../../../../lib/duration";
@@ -23,10 +22,6 @@ interface Params {
 }
 
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
-  if (!config.modifiedDiffPages) {
-    return { paths: [], fallback: false };
-  }
-
   return { paths: [], fallback: "blocking" };
 };
 

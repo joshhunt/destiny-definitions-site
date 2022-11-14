@@ -32,11 +32,9 @@ function diffContainsHash(diff: DefinitionDiff | undefined, hash: number) {
   return Object.values(diff || {}).some((v) => v.includes(hash));
 }
 
-export const DiffHashLink: React.FC<HashLinkProps> = ({
-  hash,
-  definitionName,
-  children,
-}) => {
+export const DiffHashLink: React.FC<
+  HashLinkProps & { children: React.ReactNode }
+> = ({ hash, definitionName, children }) => {
   const {
     versionId,
     versionDiff,

@@ -60,7 +60,7 @@ const ModifiedDiffPage: React.FC<ModifiedDiffPageProps> = ({
         compareMethod={DiffMethod.WORDS}
         useDarkTheme={true}
         styles={
-          ({
+          {
             variables: {
               dark: {
                 diffViewerTitleColor: "white",
@@ -74,7 +74,7 @@ const ModifiedDiffPage: React.FC<ModifiedDiffPageProps> = ({
                 },
               },
             },
-          } as unknown) as any
+          } as unknown as any
         }
       />
     </div>

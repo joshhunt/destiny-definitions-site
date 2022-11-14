@@ -36,15 +36,12 @@ export const getStaticProps = async ({ params }: Context) => {
     return { notFound: true, revalidate: duration("1 day") };
   }
 
-  const [
-    itemDefinitions,
-    vendorDefinitions,
-    objectiveDefinitions,
-  ] = await Promise.all([
-    getTypedDefinition(version.id, "DestinyInventoryItemDefinition"),
-    getTypedDefinition(version.id, "DestinyVendorDefinition"),
-    getTypedDefinition(version.id, "DestinyObjectiveDefinition"),
-  ]);
+  const [itemDefinitions, vendorDefinitions, objectiveDefinitions] =
+    await Promise.all([
+      getTypedDefinition(version.id, "DestinyInventoryItemDefinition"),
+      getTypedDefinition(version.id, "DestinyVendorDefinition"),
+      getTypedDefinition(version.id, "DestinyObjectiveDefinition"),
+    ]);
 
   const thisQuest = itemDefinitions[questHash];
   const questName =

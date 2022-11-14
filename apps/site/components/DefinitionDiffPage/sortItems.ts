@@ -5,7 +5,8 @@ import { sortBy } from "lodash";
 type ItemDefinition = DestinyInventoryItemDefinition & {
   __type: "DestinyInventoryItemDefinition";
 };
-type ItemDefinitions = AllDestinyManifestComponentsTagged["DestinyInventoryItemDefinition"];
+type ItemDefinitions =
+  AllDestinyManifestComponentsTagged["DestinyInventoryItemDefinition"];
 
 const noNameSorter = (itemDef: ItemDefinition) =>
   itemDef.displayProperties.name == ""
