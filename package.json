@@ -4,13 +4,14 @@
   "private": true,
   "scripts": {
     "update-api-spec": "curl https://raw.githubusercontent.com/Bungie-net/api/master/openapi.json > ./lib/graphql/api-spec-v3.json",
-    "table-names": "ts-node ./scripts/getShortDefinitionNames.ts",
-    "warm-pages": "ts-node ./scripts/warmPages.ts",
+    "table-names": "ts-node-esm ./scripts/getShortDefinitionNames.ts",
+    "warm-pages": "ts-node-esm ./scripts/warmPages.ts",
     "dev": "yarn update-api-spec && yarn table-names && next dev",
     "build": "yarn update-api-spec && yarn table-names && next build",
     "start": "next start",
     "serve": "serve ./out"
   },
+  "type": "module",
   "engines": {
     "node": "12.x"
   },
