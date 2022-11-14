@@ -1,7 +1,8 @@
 import { GetStaticProps } from "next";
 
-import { ManifestVersion, DiffsByVersion } from "../types";
-import { getVersionsIndex, getDiffForVersion } from "../remote";
+import { DiffsByVersion } from "../types";
+import { getDiffForVersion } from "../remote";
+import { ManifestVersion, S3Archive } from "@destiny-definitions/common";
 
 import s from "./indexStyles.module.scss";
 import Version from "../components/Version";
@@ -37,19 +38,25 @@ export default function Home({ versions, diffsForVersion }: HomeStaticProps) {
 }
 
 export const getStaticProps: GetStaticProps<HomeStaticProps> = async () => {
-  const data = [...((await getVersionsIndex()) ?? [])];
-  if (!data) throw new Error("Versions index is undefined");
-  data.reverse();
+  const s3Client = new S3Archive({
+    accessKeyId: process.env.S3_ACCESS_KEY_ID ?? "",
+    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY ?? "",
+    bucket: process.env.S3_BUCKET ?? "",
+    region: process.env.S3_REGION ?? "",
+  });
+
+  const indexData = await s3Client.getVersionHistory();
+  indexData.reverse();
 
   const diffsForVersion: DiffsByVersion = {};
 
-  for (const manifestVersion of data) {
+  for (const manifestVersion of indexData) {
     const diffData = await getDiffForVersion(manifestVersion.id);
     diffsForVersion[manifestVersion.id] = diffData;
   }
 
   return {
-    props: { versions: data, diffsForVersion },
+    props: { versions: indexData, diffsForVersion },
     revalidate: duration("5 minutes"),
   };
 };

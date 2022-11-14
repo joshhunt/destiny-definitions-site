@@ -1,0 +1,43 @@
+{
+  "name": "@destiny-definitions/common",
+  "version": "0.0.1",
+  "license": "AGPL",
+  "scripts": {
+    "dev": "pnpm build --watch",
+    "build": "rm -fr dist/* && tsc"
+  },
+  "main": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": [
+      "./dist/*.js",
+      "./dist/*/index.js"
+    ]
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "dependencies": {
+    "@aws-sdk/client-s3": "3.28.0",
+    "@types/lodash": "4.14.188",
+    "@types/sqlite3": "3.1.8",
+    "bungie-api-ts": "4.19.0",
+    "lodash": "4.17.21",
+    "sqlite3": "5.1.2",
+    "tiny-invariant": "1.3.1"
+  },
+  "devDependencies": {
+    "typescript": "4.8.4"
+  },
+  "publishConfig": {
+    "typesVersions": {
+      "*": {
+        "*": [
+          "dist/*.d.ts",
+          "dist/*/index.d.ts"
+        ]
+      }
+    }
+  }
+}

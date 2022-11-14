@@ -82,14 +82,6 @@ export interface PageProps extends Record<string, any> {
   meta?: Meta;
 }
 
-export interface ManifestVersion {
-  readonly id: string;
-  readonly version: string;
-  readonly s3Key: string;
-  readonly createdAt: Date;
-  readonly updatedAt: Date;
-}
-
 export interface DefinitionDiff {
   readonly removed: number[];
   readonly added: number[];

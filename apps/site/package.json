@@ -1,6 +1,7 @@
 {
-  "name": "destiny-definitions-site",
-  "version": "0.1.0",
+  "name": "@destiny-definitions/site",
+  "version": "0.2.0",
+  "license": "AGPL",
   "private": true,
   "scripts": {
     "update-api-spec": "curl https://raw.githubusercontent.com/Bungie-net/api/master/openapi.json > ./lib/graphql/api-spec-v3.json",
@@ -16,6 +17,7 @@
     "node": "18.12.x"
   },
   "dependencies": {
+    "@destiny-definitions/common": "workspace:*",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-brands-svg-icons": "^5.15.1",
     "@fortawesome/free-regular-svg-icons": "^5.15.1",
@@ -64,6 +66,6 @@
     "@types/react": "18.0.25",
     "@types/sqlite3": "3.1.8",
     "sass": "^1.56.1",
-    "typescript": "^4.8.4"
+    "typescript": "4.8.4"
   }
 }

@@ -10,7 +10,7 @@ import {
 import { keyBy, mapValues } from "lodash";
 import { AllDestinyManifestComponents } from "bungie-api-ts/destiny2";
 
-const CACHE_DIR = path.join(process.cwd(), "custom-api-cache");
+const CACHE_DIR = path.join(process.cwd(), ".custom-api-cache");
 console.log("CACHE_DIR:", CACHE_DIR);
 
 const getPath = async (name: string) => {
