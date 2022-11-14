@@ -60,14 +60,15 @@ export default function Version({
       {subtitle && <h3 className={cx("h5", s.subtitle)}>{subtitle}</h3>}
 
       <h2 className={s.versionTitle}>
-        <Link href={`/version/${manifestVersion.id}`}>
-          <a className={commonStyles.invisibleLink}>
-            {headingPrefix}
-            {format(new Date(manifestVersion.createdAt), "PPPP")}{" "}
-            <sup>
-              <FontAwesomeIcon icon={faLink} />
-            </sup>
-          </a>
+        <Link
+          className={commonStyles.invisibleLink}
+          href={`/version/${manifestVersion.id}`}
+        >
+          {headingPrefix}
+          {format(new Date(manifestVersion.createdAt), "PPPP")}{" "}
+          <sup>
+            <FontAwesomeIcon icon={faLink} />
+          </sup>
         </Link>
       </h2>
 

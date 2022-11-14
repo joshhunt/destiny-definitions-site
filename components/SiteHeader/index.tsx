@@ -24,10 +24,8 @@ export default function SiteHeader({ breadcrumbs }: SiteHeaderProps) {
           }
         >
           <h1 className={s.title}>
-            <Link href="/">
-              <a className={commonStyles.invisibleLink}>
-                Destiny Definitions Archive
-              </a>
+            <Link className={commonStyles.invisibleLink} href="/">
+              Destiny Definitions Archive
             </Link>
           </h1>
 
@@ -35,8 +33,8 @@ export default function SiteHeader({ breadcrumbs }: SiteHeaderProps) {
             breadcrumbs.map((crumb) => (
               <div key={crumb.to} className={s.childCrumb}>
                 {crumb.to ? (
-                  <Link href={crumb.to}>
-                    <a className={commonStyles.invisibleLink}>{crumb.label}</a>
+                  <Link className={commonStyles.invisibleLink} href={crumb.to}>
+                    {crumb.label}
                   </Link>
                 ) : (
                   crumb.label

@@ -1,7 +1,7 @@
 import { OpenAPIV3 } from "openapi-types";
 import fs from "fs";
 
-declare module "openapi-types/dist/index" {
+declare module "openapi-types" {
   namespace OpenAPIV3 {
     interface NonArraySchemaObject {
       "x-mobile-manifest-name"?: string;
@@ -17,7 +17,7 @@ export function getApiSpec() {
     return apiSpec;
   }
 
-  const specJSON = fs.readFileSync("lib/graphql/api-spec-v3.json").toString();
+  const specJSON = fs.readFileSync("./api-spec-v3.json").toString();
 
   apiSpec = JSON.parse(specJSON) as OpenAPIV3.Document;
   return apiSpec;

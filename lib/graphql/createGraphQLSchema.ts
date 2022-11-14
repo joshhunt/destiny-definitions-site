@@ -1,6 +1,5 @@
 import * as graphql from "graphql";
 import { OpenAPIV3 } from "openapi-types";
-import { GraphQLJSONObject } from "graphql-type-json";
 import {
   getApiSpec,
   getRootSpecs,
@@ -108,6 +107,10 @@ function createFieldsFromSpecProperties(
       fields[mappedPropertyName] = {
         type: createSchemaFromSpec(apiSpec, referencePath),
         resolve: makeResolver(propName, propSchema),
+        extensions: {
+          jsonFieldName: propName,
+          isMappedPropery: true,
+        },
       };
     }
   }
@@ -158,6 +161,7 @@ function createDefinitionSchema(
       version: { type: graphql.GraphQLString },
     },
     type: schema,
+    description: "$isRoot",
     resolve: makeRootDefinitionResolver(name),
   };
 }
@@ -176,26 +180,24 @@ function createMultipleDefinitionSchema(
   };
 }
 
-function createJSONDefinitionSchema(): GraphQLFieldConfig {
-  const type = GraphQLJSONObject;
+export function getRootSchemaNames() {
+  const apiSpec = getApiSpec();
+  const rootSpecs = getRootSpecs(apiSpec);
 
-  return {
-    args: {
-      table: { type: graphql.GraphQLString },
-      hash: { type: graphql.GraphQLString },
-      version: { type: graphql.GraphQLString },
-    },
-    type: type,
-    resolve: makeRootDefinitionResolver(),
-  };
+  const rootSchemaNames: string[] = [];
+
+  for (const path of Object.keys(rootSpecs)) {
+    const name = nameFromSpecPath(path);
+    if (!name) continue;
+    rootSchemaNames.push(name);
+  }
+
+  return rootSchemaNames;
 }
 
 export default function makeGraphQLSchema() {
   const apiSpec = getApiSpec();
   const rootSpecs = getRootSpecs(apiSpec);
-
-  // console.log("spec", apiSpec);
-  // console.log(`Root types:`, Object.keys(rootSpecs));
 
   const queryFields: graphql.GraphQLFieldConfigMap<any, any> = {};
 
@@ -211,8 +213,6 @@ export default function makeGraphQLSchema() {
     queryFields[name] = definitionSchema;
     queryFields[`Many${name}`] = multipleDefsSchema;
   }
-
-  queryFields.JSONDefinition = createJSONDefinitionSchema();
 
   const queryType = new graphql.GraphQLObjectType({
     name: "Query",
