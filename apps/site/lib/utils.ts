@@ -1,11 +1,4 @@
-import {
-  AllDestinyManifestComponentsTagged,
-  AnyDefinition,
-  AnyDefinitionTable,
-  BareDestinyDefinition,
-  DestinyInventoryItemDefinitionTagged,
-} from "../types";
-
+import { DestinyDefinitionFrom, DestinyManifestComponentName } from "bungie-api-ts/destiny2";
 import _tableNameMappings from "./tableNameMappings.json";
 
 const tableNameMappings = _tableNameMappings as Record<string, string>;
@@ -28,19 +21,20 @@ export function isAllInventoryItems(
   );
 }
 
-export function castDefinitions<T>(
-  defs: AnyDefinitionTable,
-  tableName: keyof AllDestinyManifestComponentsTagged
-) {
-  const isValid = Object.values(defs).every((d) => d.__type === tableName);
+export function castDefinitions<T extends DestinyManifestComponentName = DestinyManifestComponentName>(
+  castToTableName: T,
+  inputTableName: string,
+  defs: Record<string, unknown>,
+): Record<string, DestinyDefinitionFrom<T>> {
+  const isValid = inputTableName === castToTableName;
 
   if (!isValid) {
     throw new Error(
-      `Tried to cast table to ${tableName} but they're not all that type`
+      `Unable to cast ${inputTableName} to ${castToTableName}`
     );
   }
 
-  return (defs as unknown) as T;
+  return defs as Record<string, DestinyDefinitionFrom<T>>
 }
 
 export function getDisplayName(def: AnyDefinition & BareDestinyDefinition) {

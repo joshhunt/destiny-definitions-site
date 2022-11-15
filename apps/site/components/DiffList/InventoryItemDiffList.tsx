@@ -1,8 +1,3 @@
-import {
-  AllDestinyManifestComponentsTagged,
-  DestinyInventoryItemDefinitionTagged,
-  ItemCategory,
-} from "../../types";
 import BungieImage from "../BungieImage";
 import ItemSummary from "../ItemSummary";
 import HashLink from "../HashLink";
@@ -10,7 +5,8 @@ import HashLink from "../HashLink";
 import s from "./styles.module.scss";
 import React from "react";
 import { QuestMarker } from "../QuestMarkers";
-import QuestObjectives from "../QuestObjectives";
+import { DiffListProps } from "./types";
+import { castDefinitions } from "../../lib/utils";
 
 const CLASS_TYPE_NAME: { [k: string]: string } = {
   [1]: "Hunter",
@@ -18,39 +14,16 @@ const CLASS_TYPE_NAME: { [k: string]: string } = {
   [0]: "Titan",
 };
 
-const getWeaponSlot = (itemDef: DestinyInventoryItemDefinitionTagged) => {
-  if (itemDef.itemCategoryHashes?.includes(2)) return "Kinetic"; // kinetic
-  if (itemDef.itemCategoryHashes?.includes(3)) return "Energy"; // energy
-  if (itemDef.itemCategoryHashes?.includes(4)) return "Power"; // power
-};
-
-interface InventoryItemDiffListProps {
-  definitionName: string;
-  itemCategory: string;
-  hashes: number[];
-  definitions: AllDestinyManifestComponentsTagged["DestinyInventoryItemDefinition"];
-  otherDefinitions: Partial<AllDestinyManifestComponentsTagged>;
-}
-
 export default function InventoryItemDiffList({
-  definitionName,
-  itemCategory,
+  tableName,
   hashes,
-  definitions,
-  otherDefinitions,
-}: InventoryItemDiffListProps) {
+  definitions: genericDefinitions,
+}: Omit<DiffListProps, "title">) {
   if (hashes.length == 0) {
     return null;
   }
 
-  const {
-    DestinyCollectibleDefinition: collectibleDefs,
-    DestinyObjectiveDefinition: objectiveDefs,
-  } = otherDefinitions;
-
-  const isWeapon = itemCategory == ItemCategory.Weapon;
-  const isArmor = itemCategory == ItemCategory.Armor;
-  const isQuests = itemCategory === ItemCategory.Quest;
+  const definitions = castDefinitions("DestinyInventoryItemDefinition", tableName, genericDefinitions);
 
   const hasScreenshot = hashes.some(
     (itemHash) => definitions[itemHash]?.screenshot
@@ -64,6 +37,10 @@ export default function InventoryItemDiffList({
     (itemHash) =>
       (definitions[itemHash]?.objectives?.objectiveHashes?.length ?? 0) > 0
   );
+
+  const isQuests = false;
+  const isWeapon = false;
+  const isArmor = false;
 
   return (
     <table className={s.table}>
@@ -99,9 +76,6 @@ export default function InventoryItemDiffList({
             return null;
           }
 
-          const sourceString =
-            collectibleDefs?.[def.collectibleHash ?? ""]?.sourceString;
-
           const objectives = def?.objectives?.objectiveHashes || [];
 
           return (
@@ -117,7 +91,7 @@ export default function InventoryItemDiffList({
               )}
 
               <td className={s.shrink}>
-                <HashLink hash={hash} definitionName={definitionName} />
+                <HashLink hash={hash} tableName={tableName} />
               </td>
 
               <td>
@@ -126,12 +100,7 @@ export default function InventoryItemDiffList({
 
               {hasObjectives && (
                 <td className={s.objectives}>
-                  {objectiveDefs && (
-                    <QuestObjectives
-                      objectiveHashes={objectives}
-                      objectiveDefinitions={objectiveDefs}
-                    />
-                  )}
+                  objectives
                 </td>
               )}
 
@@ -139,13 +108,13 @@ export default function InventoryItemDiffList({
 
               {isWeapon && (
                 <>
-                  <td>{getWeaponSlot(def)}</td>
+                  <td>weapon slot</td>
                 </>
               )}
 
               {isArmor && <td>{CLASS_TYPE_NAME[def.classType]}</td>}
 
-              {hasSource && <td>{sourceString}</td>}
+              {hasSource && <td>source string</td>}
 
               {hasScreenshot && (
                 <td>

@@ -58,6 +58,8 @@ export const getStaticProps: GetStaticProps<
 
   const versionDiff = await s3Client.getVersionDiff(versionId);
   const tableDiff = versionDiff[definitionName];
+  /// @ts-ignore
+  tableDiff.modified = [];
 
   const currentHashes = [
     ...tableDiff.added,
