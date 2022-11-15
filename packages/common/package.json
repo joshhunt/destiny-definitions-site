@@ -1,19 +1,13 @@
 {
   "name": "@destiny-definitions/common",
   "version": "0.0.1",
+  "type": "module",
   "license": "AGPL",
   "scripts": {
     "dev": "pnpm build --watch",
     "build": "rm -fr dist/* && tsc"
   },
   "main": "./dist/index.js",
-  "exports": {
-    ".": "./dist/index.js",
-    "./*": [
-      "./dist/*.js",
-      "./dist/*/index.js"
-    ]
-  },
   "files": [
     "dist"
   ],

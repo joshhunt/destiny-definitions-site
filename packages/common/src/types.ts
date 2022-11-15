@@ -6,7 +6,7 @@ export interface ManifestVersion {
   readonly updatedAt: string;
 }
 
-export interface DefinitionDiff {
+export interface DefinitionTableDiff {
   readonly removed: number[];
   readonly added: number[];
   readonly unclassified: number[];
@@ -14,34 +14,20 @@ export interface DefinitionDiff {
   readonly modified?: number[];
 }
 
-export interface DefinitionDiffSummary {
-  tableName: string;
-  removed: number;
-  added: number;
-  unclassified: number;
-  reclassified: number;
-  modified: number;
+export interface VersionDiff {
+  [definitionTableName: string]: DefinitionTableDiff;
 }
-
-export interface DetailedManifestVersion extends ManifestVersion {
-  diffSummary: DefinitionDiffSummary[];
-}
-
-export type AllDefinitionDiffs = {
-  [name: string]: DefinitionDiff;
-};
-
-export type DeepPartial<T> = T extends object
-  ? {
-      [P in keyof T]?: DeepPartial<T[P]>;
-    }
-  : T;
 
 export interface GenericDefinition {
   hash: number;
+  index: number;
   displayProperties?: {
     name?: string;
     description?: string;
     icon?: string;
   };
+}
+
+export interface GenericDefinitionTable {
+  [hash: string]: GenericDefinition;
 }

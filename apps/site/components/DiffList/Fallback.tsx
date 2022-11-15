@@ -1,29 +1,29 @@
+import { GenericDefinitionTable } from "@destiny-definitions/common";
 import cx from "classnames";
 
 import { getDescription, getDisplayName, getIconSrc } from "../../lib/utils";
-import { AnyDefinitionTable, BareDestinyDefinition } from "../../types";
 import BungieImage from "../BungieImage";
 import HashLink from "../HashLink";
 
 import s from "./styles.module.scss";
 
 interface FallbackDiffListProps {
+  tableName: string;
   hashes: number[];
-  definitions: AnyDefinitionTable;
-  definitionName: string;
+  definitions: GenericDefinitionTable;
 }
 
 export default function FallbackDiffList({
   hashes,
   definitions,
-  definitionName,
+  tableName,
 }: FallbackDiffListProps) {
   if (hashes.length == 0) {
     return null;
   }
 
   const hasIcon = hashes.some((hash) => {
-    const def = definitions[hash] as BareDestinyDefinition;
+    const def = definitions[hash];
     return def?.displayProperties?.icon;
   });
 
@@ -33,7 +33,7 @@ export default function FallbackDiffList({
   });
 
   const hasDescription = hashes.some((hash) => {
-    const def = definitions[hash] as BareDestinyDefinition;
+    const def = definitions[hash];
     return def?.displayProperties?.description;
   });
 
@@ -65,7 +65,7 @@ export default function FallbackDiffList({
             <tr key={hash}>
               <td className={s.shrink}>{def.index}</td>
               <td className={s.shrink}>
-                <HashLink hash={hash} definitionName={definitionName} />
+                <HashLink hash={hash} tableName={tableName} />
               </td>
               {hasIcon && (
                 <td className={s.shrink}>

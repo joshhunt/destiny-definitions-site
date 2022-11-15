@@ -1,5 +1,7 @@
 /apps/site/.custom-api-cache
 /apps/site/.next
+/apps/*/dist
 /packages/*/dist
 node_modules
 .env.local
+__volume

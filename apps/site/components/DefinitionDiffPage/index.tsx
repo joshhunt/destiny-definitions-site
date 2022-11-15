@@ -1,79 +1,68 @@
-import {
-  DefinitionDiff,
-  AnyDefinitionTable,
-  ManifestVersion,
-  ItemCategoryValues,
-  VersionDiffCounts,
-  AllDestinyManifestComponentsTagged,
-} from "../../types";
 import { friendlyDiffName } from "../../lib/utils";
 import DiffList from "../DiffList";
-import { doGrouping } from "./categorise";
 import IndexTable from "../IndexTable";
 
 import s from "./styles.module.scss";
+import {
+  DefinitionTableDiff,
+  GenericDefinitionTable,
+  ManifestVersion,
+} from "@destiny-definitions/common";
+import DefinitionDiffFrame from "../DefinitionDiffFrame";
 
 interface DefinitionDiffStaticProps {
-  versionId: string;
-  manifestVersion: ManifestVersion;
-  definitionName: string;
-  specificDiffType: string | undefined;
-  diff: DefinitionDiff;
-  definitions: AnyDefinitionTable;
-  previousDefinitions: AnyDefinitionTable | null;
-  versionDiffCounts: VersionDiffCounts;
-  otherDefinitions: Partial<AllDestinyManifestComponentsTagged>;
+  version: ManifestVersion;
+  definitions: GenericDefinitionTable;
+  previousDefinitions: GenericDefinitionTable;
+  tableDiff: DefinitionTableDiff;
+  tableName: string;
 }
 
 export default function DefinitionDiffPage({
-  versionId,
-  manifestVersion,
-  specificDiffType,
-  definitionName,
-  diff,
+  version,
   definitions,
   previousDefinitions,
-  versionDiffCounts,
-  otherDefinitions,
+  tableDiff,
+  tableName,
 }: DefinitionDiffStaticProps) {
-  const TRUNCATION_LIMIT = 100;
+  return (
+    <DefinitionDiffFrame tableName={tableName}>
+      <DiffList
+        title="Added"
+        tableName={tableName}
+        hashes={tableDiff.added}
+        definitions={definitions}
+      />
 
-  const groupedDiff = doGrouping(
-    diff,
-    definitions,
-    previousDefinitions,
-    definitionName
+      <DiffList
+        title="Unclassified"
+        tableName={tableName}
+        hashes={tableDiff.unclassified}
+        definitions={definitions}
+      />
+
+      <DiffList
+        title="Removed"
+        tableName={tableName}
+        hashes={tableDiff.removed}
+        definitions={previousDefinitions}
+      />
+
+      <DiffList
+        title="Reclassified"
+        tableName={tableName}
+        hashes={tableDiff.reclassified}
+        definitions={previousDefinitions}
+      />
+
+      <DiffList
+        title="Modified"
+        tableName={tableName}
+        hashes={tableDiff.modified}
+        definitions={definitions}
+      />
+    </DefinitionDiffFrame>
   );
-
-  const indexData = Object.entries(groupedDiff)
-    .map(([diffSectionName, groupedHashes]) => {
-      return {
-        name: diffSectionName,
-        count: Array.isArray(groupedHashes)
-          ? groupedHashes.length
-          : Object.values(groupedHashes).reduce((acc, n) => acc + n.length, 0),
-        subItems: Array.isArray(groupedHashes)
-          ? null
-          : Object.entries(groupedHashes)
-              .map(([itemCategory, hashes]) => {
-                return {
-                  name: itemCategory,
-                  count: hashes.length,
-                };
-              })
-              .sort((a, b) => {
-                return (
-                  ItemCategoryValues.indexOf(a.name) -
-                  ItemCategoryValues.indexOf(b.name)
-                );
-              }),
-      };
-    })
-    .filter((v) => v.count > 0);
-
-  const modified = Array.isArray(groupedDiff.modified)
-    ? groupedDiff.modified.slice(0, TRUNCATION_LIMIT)
-    : truncateObject(groupedDiff.modified, TRUNCATION_LIMIT);
 
   return (
     <div className={s.root}>

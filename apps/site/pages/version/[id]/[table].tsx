@@ -1,86 +1,31 @@
-import {
-  AnyDefinitionTable,
-  DefinitionDiff,
-  ManifestVersion,
-  Breadcrumb,
-  VersionDiffCounts,
-  AllDefinitionDiffs,
-  AllDestinyManifestComponentsTagged,
-  DefinitionTableName,
-  ModifiedDeepDiffs,
-} from "../../../types";
 import { GetStaticProps, GetStaticPaths } from "next";
-import { mapValues } from "lodash";
-
-import {
-  getDiffForVersion,
-  getDefinitionForVersion,
-  getModifiedDeepDiff,
-  getVersion,
-  getPreviousVersion,
-} from "../../../remote";
+import invariant from "tiny-invariant";
 
 import React from "react";
 import DefinitionDiffPage from "../../../components/DefinitionDiffPage";
-import { format } from "date-fns";
-import definitionsMetadata from "../../../components/definitionsMetadata";
 import { DiffDataProvider } from "../../../components/diffDataContext";
-import { friendlyDiffName } from "../../../lib/utils";
 import duration from "../../../lib/duration";
 
+import {
+  DefinitionsArchive,
+  DefinitionTableDiff,
+  GenericDefinitionTable,
+  ManifestVersion,
+  S3Archive,
+} from "@destiny-definitions/common";
+
 interface DefinitionDiffStaticProps {
-  versionId: string;
-  manifestVersion: ManifestVersion;
-  specificDiffType: string | null;
-  definitionName: string;
-  diff: DefinitionDiff;
-  definitions: AnyDefinitionTable;
-  previousDefinitions: AnyDefinitionTable | null;
-  breadcrumbs: Breadcrumb[];
-  versionDiffCounts: VersionDiffCounts;
-  otherDefinitions: Partial<AllDestinyManifestComponentsTagged>;
-  allDefinitionDiffs: AllDefinitionDiffs;
-  modifiedDeepDiffs: ModifiedDeepDiffs;
+  version: ManifestVersion;
+  definitions: GenericDefinitionTable;
+  previousDefinitions: GenericDefinitionTable;
+  tableDiff: DefinitionTableDiff;
+  tableName: string;
 }
 
-export default function DefinitionDiffPageWrapper({
-  versionId,
-  manifestVersion,
-  definitionName,
-  diff,
-  definitions,
-  previousDefinitions,
-  specificDiffType,
-  versionDiffCounts,
-  otherDefinitions,
-  allDefinitionDiffs,
-  modifiedDeepDiffs,
-}: DefinitionDiffStaticProps) {
-  const contextValue = React.useMemo(
-    () => ({
-      versionDiff: allDefinitionDiffs,
-      versionId,
-      definitionName,
-      modifiedDeepDiffs,
-    }),
-    [allDefinitionDiffs, versionId, definitionName, modifiedDeepDiffs]
-  );
-
-  return (
-    <DiffDataProvider value={contextValue}>
-      <DefinitionDiffPage
-        versionId={versionId}
-        manifestVersion={manifestVersion}
-        definitionName={definitionName}
-        specificDiffType={specificDiffType ?? undefined}
-        diff={diff}
-        definitions={definitions}
-        previousDefinitions={previousDefinitions}
-        versionDiffCounts={versionDiffCounts}
-        otherDefinitions={otherDefinitions}
-      />
-    </DiffDataProvider>
-  );
+export default function DefinitionDiffPageWrapper(
+  props: DefinitionDiffStaticProps
+) {
+  return <DefinitionDiffPage {...props} />;
 }
 
 interface Params {
@@ -94,163 +39,60 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
   return { paths: [], fallback: "blocking" };
 };
 
-function createDiffCounts(allDefDiffs: AllDefinitionDiffs): VersionDiffCounts {
-  return Object.entries(allDefDiffs)
-    .sort(([tableNameA], [tableNameB]) => {
-      const aIndex = definitionsMetadata[tableNameA]?.index ?? 9999;
-      const bIndex = definitionsMetadata[tableNameB]?.index ?? 9999;
-
-      return aIndex - bIndex;
-    })
-    .filter(([tableName, diffs]) =>
-      Object.values(diffs).some((vv) => vv.length > 0)
-    )
-    .map(([tableName, diffs]) => ({
-      tableName,
-      ...mapValues(diffs, (v) => v.length),
-    }));
-}
-
-const DEFINITION_DEPENDENCIES: Record<string, DefinitionTableName[]> = {
-  DestinyInventoryItemDefinition: [
-    "DestinyObjectiveDefinition",
-    "DestinyCollectibleDefinition",
-  ],
-
-  DestinyPresentationNodeDefinition: [
-    "DestinyRecordDefinition",
-    "DestinyCollectibleDefinition",
-    "DestinyMetricDefinition",
-  ],
-
-  DestinyRecordDefinition: ["DestinyObjectiveDefinition"],
-
-  DestinyActivityDefinition: [
-    "DestinyDestinationDefinition",
-    "DestinyPlaceDefinition",
-  ],
-
-  DestinyDestinationDefinition: ["DestinyPlaceDefinition"],
-
-  DestinyVendorDefinition: ["DestinyDestinationDefinition"],
-
-  DestinyObjectiveDefinition: [
-    "DestinyInventoryItemDefinition",
-    "DestinyRecordDefinition",
-    "DestinyMetricDefinition",
-    "DestinyActivityDefinition",
-    "DestinyPresentationNodeDefinition",
-  ],
-};
-
-async function getDefinitionDependencies(
-  versionId: string,
-  thisDefinitionName: string
-) {
-  const dependencies = DEFINITION_DEPENDENCIES[thisDefinitionName] || [];
-
-  const datas = await Promise.all(
-    dependencies.map((n) => getDefinitionForVersion(versionId, n))
-  );
-
-  const keyed: Record<string, AnyDefinitionTable> = {};
-
-  for (const index in datas) {
-    keyed[dependencies[index]] = datas[index];
-  }
-
-  return keyed as Partial<AllDestinyManifestComponentsTagged>;
-}
-
 export const getStaticProps: GetStaticProps<
   DefinitionDiffStaticProps,
   Params
 > = async (context) => {
-  const versionId = context.params?.id ?? "";
-  const definitionName = context.params?.table ?? "";
-  const specificDiffType = context.params?.diffType || null;
+  const s3Client = S3Archive.newFromEnvVars();
+  const defsClient = DefinitionsArchive.newFromEnvVars(s3Client);
+
+  invariant(context.params, "params is required");
+  invariant(context.params.id, "versionId param is required");
+  invariant(context.params.table, "table param is required");
+  const { id: versionId, table: definitionName } = context.params;
 
   const [manifestVersion, previousManifestVersion] = await Promise.all([
-    getVersion(versionId),
-    getPreviousVersion(versionId),
+    s3Client.getVersion(versionId),
+    s3Client.getPreviousVersion(versionId),
   ]);
 
-  if (!manifestVersion) {
-    console.warn(`Unable to find manifestVersion for version ${versionId}`);
-    return { notFound: true, revalidate: duration("5 minutes") };
-  }
+  const versionDiff = await s3Client.getVersionDiff(versionId);
+  const tableDiff = versionDiff[definitionName];
 
-  const allDefinitionDiffs = await getDiffForVersion(versionId);
-  if (!allDefinitionDiffs) throw new Error("missing diff data for table page");
-  const diff = allDefinitionDiffs[definitionName];
-
-  if (!diff) {
-    console.warn(`No diff for version: ${versionId}/${definitionName}`);
-    return { notFound: true, revalidate: duration("5 minutes") };
-  }
-
-  const modifiedDeepDiffs =
-    (diff.modified.length > 0
-      ? await getModifiedDeepDiff(versionId, definitionName)
-      : null) ?? {};
-
-  const definitions = await getDefinitionForVersion(versionId, definitionName);
-
-  const otherDefinitions = await getDefinitionDependencies(
-    versionId,
-    definitionName
-  );
-
-  const versionDiffCounts = createDiffCounts(allDefinitionDiffs).filter(
-    (v) => v.tableName !== definitionName
-  );
-
-  const removedHashes = [...diff.removed, ...diff.reclassified];
-
-  const previousDefinitions =
-    removedHashes.length > 0 && previousManifestVersion?.id
-      ? await getDefinitionForVersion(
-          previousManifestVersion.id,
-          definitionName
-        )
-      : null;
-
-  if (removedHashes.length > 0 && !previousDefinitions) {
-    console.warn(
-      "There are removed hashes, but could not find previous definitions"
-    );
-  }
-
-  const breadcrumbs = [
-    {
-      label: format(new Date(manifestVersion.createdAt), "E do MMM, u"),
-      to: `/version/${versionId}`,
-    },
-    {
-      label: friendlyDiffName(definitionName),
-      to: `/version/${versionId}/${definitionName}`,
-    },
+  const currentHashes = [
+    ...tableDiff.added,
+    ...tableDiff.unclassified,
+    ...(tableDiff.modified ?? []),
   ];
+
+  const removedHashes = previousManifestVersion?.id
+    ? [...tableDiff.removed, ...tableDiff.reclassified]
+    : [];
+
+  const definitions = await defsClient.getDefinitions(
+    versionId,
+    definitionName,
+    currentHashes
+  );
+
+  const previousDefinitions = await defsClient.getDefinitions(
+    previousManifestVersion.id,
+    definitionName,
+    removedHashes
+  );
 
   return {
     props: {
-      versionId,
-      manifestVersion,
-      definitionName,
-      specificDiffType,
-      diff,
+      version: manifestVersion,
       definitions,
       previousDefinitions,
-      breadcrumbs,
-      versionDiffCounts,
-      otherDefinitions,
-      allDefinitionDiffs,
-      modifiedDeepDiffs,
+      tableDiff,
+      tableName: definitionName,
     },
-    revalidate: duration("30 days"),
+    revalidate: duration("365 days"),
   };
 };
 
-export const config = {
-  unstable_runtimeJS: false,
-};
+// export const config = {
+//   unstable_runtimeJS: false,
+// };

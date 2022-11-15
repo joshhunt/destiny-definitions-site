@@ -30,6 +30,10 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       <Head>
         <title>Destiny definition versions</title>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1"
+        ></meta>
         {meta.canonical && <link rel="canonical" href={`${meta.canonical}`} />}
       </Head>
 

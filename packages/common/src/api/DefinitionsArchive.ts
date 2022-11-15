@@ -1,28 +1,41 @@
-import { ManifestVersion } from "../types";
 import invariant from "tiny-invariant";
-import { S3Archive } from "./S3Archive";
+import { S3Archive } from "./S3Archive.js";
 import path from "path";
-import lodash from "lodash";
 import sqlite3 from "sqlite3";
 import fs from "fs/promises";
+import { GenericDefinitionTable } from "../types.js";
 
 export class DefinitionsArchive {
   s3ArchiveClient: S3Archive;
   definitionsFolder: string;
 
+  static newFromEnvVars(s3Client?: S3Archive) {
+    const defsDir = path.join(process.env.STORAGE_VOLUME ?? "", "definitions");
+
+    return new DefinitionsArchive(
+      s3Client ?? S3Archive.newFromEnvVars(),
+      defsDir
+    );
+  }
+
   constructor(s3ArchiveClient: S3Archive, definitionsFolder: string) {
+    invariant(!!definitionsFolder, "Must specify definitionsFolder");
+
     this.s3ArchiveClient = s3ArchiveClient;
     this.definitionsFolder = definitionsFolder;
   }
 
-  async getDefinitions<Table = any>(
-    version: ManifestVersion,
+  async getDefinitions(
+    versionId: string,
     tableName: string,
-    hashes: number[],
-    paths: Array<string>
-  ): Promise<Record<string, Table>> {
+    hashes: number[]
+  ): Promise<GenericDefinitionTable> {
+    if (hashes.length === 0) {
+      return {};
+    }
+
     const versionManifest = await this.s3ArchiveClient.getVersionManifest(
-      version.id
+      versionId
     );
 
     const contentPath = versionManifest.mobileWorldContentPaths["en"];
@@ -32,41 +45,26 @@ export class DefinitionsArchive {
     const sqliteExists = await fileExists(sqliteFilePath);
 
     if (!sqliteExists) {
+      console.error("Does not exist", sqliteFilePath);
       throw new MissingDefinitionsSqlite();
     }
 
     const sqliteHashes = hashes.map((v) => v >> 32);
 
-    const jsonSelects = paths.map((prop) => {
-      const key = String(prop);
-
-      return {
-        key,
-        select: `json_extract(json, '$.${key}') as "${key}"`,
-      };
-    });
-
-    const jsonExtractSql = jsonSelects.map((v) => v.select).join(", ");
-
     const db = new (sqlite3.verbose().Database)(sqliteFilePath);
-    const sql = `SELECT ${jsonExtractSql} FROM ${tableName} WHERE id IN ${sqliteList(
+    const sql = `SELECT id, json FROM ${tableName} WHERE id IN ${sqliteList(
       sqliteHashes
     )}`;
-    const queryResult = await sqliteAll<Record<string, string>>(db, sql);
+    const queryResult = await sqliteAll<{ id: number; json: string }>(db, sql);
 
-    const allDefinitions: Record<string, any> = {};
+    const definitions: Record<string, any> = {};
 
-    for (const resultObject of queryResult) {
-      const def: any = {};
-
-      for (const key in resultObject) {
-        lodash.set(def, key, parseJsonExtractValue(resultObject[key]));
-      }
-
-      allDefinitions[def.hash] = def;
+    for (const row of queryResult) {
+      const def = JSON.parse(row.json);
+      definitions[def.hash] = def;
     }
 
-    return allDefinitions;
+    return definitions;
   }
 }
 

@@ -1,8 +1,10 @@
 import { GetStaticProps } from "next";
 
-import { DiffsByVersion } from "../types";
-import { getDiffForVersion } from "../remote";
-import { ManifestVersion, S3Archive } from "@destiny-definitions/common";
+import {
+  ManifestVersion,
+  S3Archive,
+  VersionDiff,
+} from "@destiny-definitions/common";
 
 import s from "./indexStyles.module.scss";
 import Version from "../components/Version";
@@ -10,7 +12,7 @@ import duration from "../lib/duration";
 
 interface HomeStaticProps {
   versions: ManifestVersion[];
-  diffsForVersion: DiffsByVersion;
+  diffsForVersion: Record<string, VersionDiff>;
 }
 
 export default function Home({ versions, diffsForVersion }: HomeStaticProps) {
@@ -37,7 +39,17 @@ export default function Home({ versions, diffsForVersion }: HomeStaticProps) {
   );
 }
 
-export const getStaticProps: GetStaticProps<HomeStaticProps> = async () => {
+const PAGE_SIZE = 10;
+
+export const getStaticProps: GetStaticProps<HomeStaticProps> = async (
+  context
+) => {
+  console.log(context);
+  const pageParam = context.params?.pageNumber ?? "0";
+  const pageNumber = parseInt(
+    typeof pageParam === "string" ? pageParam : pageParam[0]
+  );
+
   const s3Client = new S3Archive({
     accessKeyId: process.env.S3_ACCESS_KEY_ID ?? "",
     secretAccessKey: process.env.S3_SECRET_ACCESS_KEY ?? "",
@@ -48,10 +60,15 @@ export const getStaticProps: GetStaticProps<HomeStaticProps> = async () => {
   const indexData = await s3Client.getVersionHistory();
   indexData.reverse();
 
-  const diffsForVersion: DiffsByVersion = {};
+  const indexStart = pageNumber * PAGE_SIZE;
+  const indexEnd = indexStart + PAGE_SIZE;
 
-  for (const manifestVersion of indexData) {
-    const diffData = await getDiffForVersion(manifestVersion.id);
+  const pageVersions = indexData.slice(indexStart, indexEnd);
+
+  const diffsForVersion: Record<string, VersionDiff> = {};
+
+  for (const manifestVersion of pageVersions) {
+    const diffData = await s3Client.getVersionDiff(manifestVersion.id);
     diffsForVersion[manifestVersion.id] = diffData;
   }
 

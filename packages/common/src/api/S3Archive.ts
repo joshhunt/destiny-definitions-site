@@ -4,11 +4,7 @@ import {
   GetObjectCommandOutput,
   GetObjectCommandInput,
 } from "@aws-sdk/client-s3";
-import type {
-  AllDefinitionDiffs,
-  DefinitionDiffSummary,
-  ManifestVersion,
-} from "../types";
+import type { VersionDiff, ManifestVersion } from "../types";
 import invariant from "tiny-invariant";
 import { Readable } from "stream";
 import type { DestinyManifest } from "bungie-api-ts/destiny2";
@@ -24,12 +20,21 @@ export class S3Archive {
   bucket: string;
   s3Client: S3Client;
 
+  static newFromEnvVars() {
+    return new S3Archive({
+      accessKeyId: process.env.S3_ACCESS_KEY_ID ?? "",
+      secretAccessKey: process.env.S3_SECRET_ACCESS_KEY ?? "",
+      bucket: process.env.S3_BUCKET ?? "",
+      region: process.env.S3_REGION ?? "",
+    });
+  }
+
   constructor(config: S3ArchiveConfig) {
     invariant(config, "Must specify S3ArchiveConfig");
-    invariant(config.bucket, "Must specify config.bucket");
-    invariant(config.region, "Must specify config.region");
-    invariant(config.accessKeyId, "Must specify config.accessKeyId");
-    invariant(config.secretAccessKey, "Must specify config.secretAccessKey");
+    invariant(!!config.bucket, "Must specify config.bucket");
+    invariant(!!config.region, "Must specify config.region");
+    invariant(!!config.accessKeyId, "Must specify config.accessKeyId");
+    invariant(!!config.secretAccessKey, "Must specify config.secretAccessKey");
 
     this.bucket = config.bucket;
 
@@ -99,34 +104,12 @@ export class S3Archive {
   }
 
   async getVersionDiff(id: string) {
-    return await this.getJsonS3Object<AllDefinitionDiffs>(
-      `versions/${id}/diff.json`
-    );
+    return await this.getJsonS3Object<VersionDiff>(`versions/${id}/diff.json`);
   }
 
   async getVersionManifest(id: string) {
     return await this.getJsonS3Object<DestinyManifest>(
       `versions/${id}/manifest.json`
     );
-  }
-
-  async getVersionDiffSummary(id: string): Promise<DefinitionDiffSummary[]> {
-    const diff = await this.getVersionDiff(id);
-
-    const entries = Object.entries(diff);
-
-    return entries
-      .map(([tableName, v]) => ({
-        tableName,
-        removed: v.removed.length,
-        added: v.added.length,
-        unclassified: v.unclassified.length,
-        reclassified: v.reclassified.length,
-        modified: (v.modified ?? []).length,
-      }))
-      .filter(
-        (v) =>
-          v.removed || v.added || v.unclassified || v.reclassified || v.modified
-      );
   }
 }
