@@ -1,4 +1,11 @@
-import { DestinyDefinitionFrom, DestinyManifestComponentName } from "bungie-api-ts/destiny2";
+import {
+  DefinitionTable,
+  GenericDefinition,
+} from "@destiny-definitions/common";
+import {
+  DestinyDefinitionFrom,
+  DestinyManifestComponentName,
+} from "bungie-api-ts/destiny2";
 import _tableNameMappings from "./tableNameMappings.json";
 
 const tableNameMappings = _tableNameMappings as Record<string, string>;
@@ -13,38 +20,40 @@ export function friendlyDiffName(name: string, useMobileName = true) {
   return match ? match[1] : name;
 }
 
-export function isAllInventoryItems(
-  defs: AnyDefinitionTable
-): defs is Record<string, DestinyInventoryItemDefinitionTagged> {
-  return Object.values(defs).every(
-    (d) => d.__type === "DestinyInventoryItemDefinition"
-  );
-}
-
-export function castDefinitions<T extends DestinyManifestComponentName = DestinyManifestComponentName>(
+export function castDefinitionsTable<
+  T extends DestinyManifestComponentName = DestinyManifestComponentName
+>(
   castToTableName: T,
   inputTableName: string,
-  defs: Record<string, unknown>,
-): Record<string, DestinyDefinitionFrom<T>> {
+  defs: DefinitionTable<unknown>
+): DefinitionTable<DestinyDefinitionFrom<T>> {
   const isValid = inputTableName === castToTableName;
 
   if (!isValid) {
-    throw new Error(
-      `Unable to cast ${inputTableName} to ${castToTableName}`
-    );
+    throw new Error(`Unable to cast ${inputTableName} to ${castToTableName}`);
   }
 
-  return defs as Record<string, DestinyDefinitionFrom<T>>
+  return defs as DefinitionTable<DestinyDefinitionFrom<T>>;
 }
 
-export function getDisplayName(def: AnyDefinition & BareDestinyDefinition) {
+export function isTableType<
+  T extends DestinyManifestComponentName = DestinyManifestComponentName
+>(
+  castToTableName: T,
+  inputTableName: string,
+  defs: Record<string, unknown>
+): defs is DefinitionTable<DestinyDefinitionFrom<T>> {
+  return inputTableName === castToTableName;
+}
+
+export function getDisplayName(def: GenericDefinition) {
   return def?.displayProperties?.name;
 }
 
-export function getIconSrc(def: AnyDefinition & BareDestinyDefinition) {
+export function getIconSrc(def: GenericDefinition) {
   return def?.displayProperties?.icon;
 }
 
-export function getDescription(def: AnyDefinition & BareDestinyDefinition) {
+export function getDescription(def: GenericDefinition) {
   return def?.displayProperties?.description;
 }

@@ -52,27 +52,24 @@ export default function Home({
         })}
       </div>
 
-      <br/>
-      <br/>
+      <br />
+      <br />
 
       <div className={s.pagination}>
-        {hasPrevPage && <a href={`/page/${currentPage - 1}`}>
-          <FontAwesomeIcon icon={faChevronLeft} /> Prev
-        </a>}
-
-        {" "}
-
-        <span>Page {currentPage}</span>
-
-        {" "}
-
-        {hasNextPage && <a href={`/page/${currentPage + 1}`}>
-          Next
-          <FontAwesomeIcon icon={faChevronRight} />
-        </a>}
-
-        {" "}
-
+        {hasPrevPage && (
+          <a href={`/page/${currentPage - 1}`}>
+            <FontAwesomeIcon icon={faChevronLeft} /> Prev
+          </a>
+        )}{" "}
+        <span>
+          Page {currentPage} of {lastPage}
+        </span>{" "}
+        {hasNextPage && (
+          <a href={`/page/${currentPage + 1}`}>
+            Next
+            <FontAwesomeIcon icon={faChevronRight} />
+          </a>
+        )}{" "}
         <a href={`/page/${lastPage}`}>
           Last
           <FontAwesomeIcon icon={faChevronRight} />
@@ -88,10 +85,10 @@ const PAGE_SIZE = 10;
 export const getStaticProps: GetStaticProps<HomeStaticProps> = async (
   context
 ) => {
-  console.log(context);
   const pageParam = context.params?.pageNumber ?? "1";
-  const pageNumber =
-    parseInt(typeof pageParam === "string" ? pageParam : pageParam[0]);
+  const pageNumber = parseInt(
+    typeof pageParam === "string" ? pageParam : pageParam[0]
+  );
 
   const s3Client = new S3Archive({
     accessKeyId: process.env.S3_ACCESS_KEY_ID ?? "",

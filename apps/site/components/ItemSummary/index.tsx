@@ -1,32 +1,35 @@
 import s from "./styles.module.scss";
-import {
-  DestinyInventoryItemDefinition,
-  TierType,
-} from "bungie-api-ts/destiny2";
 import BungieImage from "../BungieImage";
-import { DestinyInventoryItemDefinitionTagged } from "../../types";
 import IntrinsicPerk from "../IntrinsicPerk";
 import React from "react";
 import ItemTags from "./ItemTags";
+import {
+  DefinitionTable,
+  DestinyInventoryItemDefinition,
+} from "@destiny-definitions/common";
 
 interface ItemSummaryProps {
   definition: DestinyInventoryItemDefinition;
-  definitions: Record<string, DestinyInventoryItemDefinitionTagged>;
+  definitions: DefinitionTable<DestinyInventoryItemDefinition>;
 }
 
 function findIntrinsicPerk(
   itemDef: DestinyInventoryItemDefinition,
-  definitions: Record<string, DestinyInventoryItemDefinitionTagged>
+  definitions: DefinitionTable<DestinyInventoryItemDefinition>
 ) {
   const socket = itemDef.sockets?.socketEntries?.find((socket) => {
+    if (!socket?.singleInitialItemHash) return false;
+
     const def = definitions[socket.singleInitialItemHash];
     return (
       def?.uiItemDisplayStyle === "ui_display_style_intrinsic_plug" &&
-      def.displayProperties.name
+      def.displayProperties?.name
     );
   });
 
-  return socket && definitions[socket.singleInitialItemHash];
+  return (
+    socket?.singleInitialItemHash && definitions[socket.singleInitialItemHash]
+  );
 }
 
 export default function ItemSummary({
@@ -36,7 +39,7 @@ export default function ItemSummary({
   const isExotic = def.inventory?.tierType === 6 ?? false;
   const intrinsicPerk = isExotic && findIntrinsicPerk(def, definitions);
 
-  let displayName: React.ReactNode = def.displayProperties.name;
+  let displayName: React.ReactNode = def.displayProperties?.name;
 
   if (!displayName && def.setData?.questLineName) {
     displayName = <em>Quest step from '{def.setData.questLineName}'</em>;
@@ -47,7 +50,7 @@ export default function ItemSummary({
       <div className={s.itemSummaryWell}>
         <BungieImage
           className={s.icon}
-          src={def.displayProperties.icon}
+          src={def.displayProperties?.icon}
           alt=""
         />
       </div>
@@ -59,7 +62,7 @@ export default function ItemSummary({
           <ItemTags definition={def} />
         </div>
 
-        {def.displayProperties.description && (
+        {def.displayProperties?.description && (
           <p className={s.description}>{def.displayProperties.description}</p>
         )}
 

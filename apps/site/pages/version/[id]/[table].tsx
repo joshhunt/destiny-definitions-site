@@ -3,21 +3,26 @@ import invariant from "tiny-invariant";
 
 import React from "react";
 import DefinitionDiffPage from "../../../components/DefinitionDiffPage";
-import { DiffDataProvider } from "../../../components/diffDataContext";
 import duration from "../../../lib/duration";
 
 import {
+  AllDestinyManifestComponents,
   DefinitionsArchive,
   DefinitionTableDiff,
-  GenericDefinitionTable,
+  DefinitionTable,
+  JSONExtractQueryObject,
   ManifestVersion,
   S3Archive,
 } from "@destiny-definitions/common";
+import { isTableType } from "../../../lib/utils";
+import { DestinyManifestComponentName } from "bungie-api-ts/destiny2";
+import { RPM_STAT_HASH } from "../../../components/ItemSummary/ItemTags";
 
 interface DefinitionDiffStaticProps {
   version: ManifestVersion;
-  definitions: GenericDefinitionTable;
-  previousDefinitions: GenericDefinitionTable;
+  definitions: DefinitionTable;
+  previousDefinitions: DefinitionTable;
+  otherDefinitions: AllDestinyManifestComponents;
   tableDiff: DefinitionTableDiff;
   tableName: string;
 }
@@ -61,12 +66,8 @@ export const getStaticProps: GetStaticProps<
   /// @ts-ignore
   tableDiff.modified = [];
 
-  const currentHashes = [
-    ...tableDiff.added,
-    ...tableDiff.unclassified,
-    ...(tableDiff.modified ?? []),
-  ];
-
+  const newHashes = [...tableDiff.added, ...tableDiff.unclassified];
+  const currentHashes = [...newHashes, ...(tableDiff.modified ?? [])];
   const removedHashes = previousManifestVersion?.id
     ? [...tableDiff.removed, ...tableDiff.reclassified]
     : [];
@@ -74,7 +75,20 @@ export const getStaticProps: GetStaticProps<
   const definitions = await defsClient.getDefinitions(
     versionId,
     definitionName,
-    currentHashes
+    currentHashes,
+    getFieldsQuery(definitionName)
+  );
+
+  const dependencies = getDependencyHashes(
+    tableDiff,
+    definitionName,
+    definitions
+  );
+
+  const otherDefinitions = await getMultipleDefinitionTables(
+    defsClient,
+    versionId,
+    dependencies
   );
 
   const previousDefinitions = await defsClient.getDefinitions(
@@ -88,12 +102,141 @@ export const getStaticProps: GetStaticProps<
       version: manifestVersion,
       definitions,
       previousDefinitions,
+      otherDefinitions,
       tableDiff,
       tableName: definitionName,
     },
     revalidate: duration("365 days"),
   };
 };
+
+type Deps = Record<
+  string,
+  { hashes: number[]; fields: JSONExtractQueryObject }
+>;
+
+function getDependencyHashes(
+  tableDiff: DefinitionTableDiff,
+  tableName: string,
+  definitions: DefinitionTable
+) {
+  const newHashes = tableDiff.added.concat(tableDiff.unclassified);
+  const deps: Deps = {};
+
+  if (isTableType("DestinyInventoryItemDefinition", tableName, definitions)) {
+    for (const hash of newHashes) {
+      const def = definitions[hash];
+
+      addHashes(
+        deps,
+        "DestinyObjectiveDefinition",
+        def.objectives?.objectiveHashes,
+        { hash: 1, completionValue: 1, progressDescription: 1, valueStyle: 1 }
+      );
+
+      addHashes(deps, "DestinyCollectibleDefinition", def.collectibleHash, {
+        hash: 1,
+        sourceString: 1,
+      });
+
+      // TODO: need intrinsic socket info. see findIntrinsicPerk
+    }
+  }
+
+  return deps;
+}
+
+function addHashes(
+  deps: Deps,
+  tableName: DestinyManifestComponentName,
+  hashInput: number | number[] | null | undefined,
+  fields: JSONExtractQueryObject
+): void {
+  if (!hashInput) {
+    return;
+  }
+
+  const hashes = typeof hashInput === "number" ? [hashInput] : hashInput;
+  if (!deps[tableName]) {
+    deps[tableName] = { hashes: [], fields };
+  }
+
+  deps[tableName].hashes.push(...hashes);
+}
+
+async function getMultipleDefinitionTables(
+  defsClient: DefinitionsArchive,
+  versionId: string,
+  toGet: Deps
+) {
+  const defs: Record<string, DefinitionTable> = {};
+
+  const pairs = Object.entries(toGet);
+
+  for (const [tableName, { hashes, fields }] of pairs) {
+    defs[tableName] = await defsClient.getDefinitions(
+      versionId,
+      tableName,
+      hashes,
+      fields
+    );
+  }
+
+  return defs;
+}
+
+function getFieldsQuery(definitionName: string): JSONExtractQueryObject {
+  switch (definitionName) {
+    case "DestinyInventoryItemDefinition":
+      return {
+        hash: 1,
+        index: 1,
+        displayProperties: {
+          name: 1,
+          description: 1,
+          icon: 1,
+        },
+        screenshot: 1,
+        collectibleHash: 1,
+        objectives: {
+          objectiveHashes: 1,
+        },
+        sockets: {
+          socketEntries: 1,
+        },
+        stats: {
+          stats: {
+            [RPM_STAT_HASH]: {
+              value: 1,
+            },
+          },
+        },
+        inventory: {
+          tierType: 1,
+          bucketTypeHash: 1,
+        },
+        setData: {
+          questLineName: 1,
+        },
+        itemCategoryHashes: 1,
+        damageTypes: 1,
+        redacted: 1,
+        classType: 1,
+        itemTypeDisplayName: 1,
+      };
+
+    default:
+      return {
+        hash: 1,
+        index: 1,
+        displayProperties: {
+          name: 1,
+          description: 1,
+          icon: 1,
+        },
+      };
+  }
+}
 
 // export const config = {
 //   unstable_runtimeJS: false,

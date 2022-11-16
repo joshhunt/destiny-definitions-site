@@ -1,11 +1,7 @@
-import {
-  DestinyInventoryItemDefinition,
-  destinyManifestLanguages,
-} from "bungie-api-ts/destiny2";
+import { DestinyInventoryItemDefinition } from "@destiny-definitions/common";
 import React from "react";
 import BungieImage from "../BungieImage";
 import ItemHeader from "../ItemHeader";
-import ItemTags from "../ItemSummary/ItemTags";
 
 import s from "./styles.module.scss";
 
@@ -35,7 +31,7 @@ const ItemDefinitionPage: React.FC<ItemDefinitionPageProps> = ({
 
           <div className={s.box}>
             <p className={s.desc}>
-              {definition.displayProperties.description ||
+              {definition.displayProperties?.description ||
                 definition.flavorText}
             </p>
           </div>

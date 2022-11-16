@@ -1,8 +1,4 @@
-import { DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
-
-type ItemDefinition = DestinyInventoryItemDefinition & {
-  __type: "DestinyInventoryItemDefinition";
-};
+import { DestinyInventoryItemDefinition } from "@destiny-definitions/common";
 
 const DAMAGE_TYPE_NAMES: { [k: string]: string } = {
   [1]: "Kinetic",

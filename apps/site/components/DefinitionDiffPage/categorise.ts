@@ -1,13 +1,5 @@
-import { mapValues, groupBy, sortBy } from "lodash";
+import { mapValues, sortBy } from "lodash";
 
-import {
-  ItemCategory,
-  DestinyInventoryItemDefinitionTagged,
-  DefinitionDiff,
-  AnyDefinitionTable,
-  AllDestinyManifestComponentsTagged,
-  PossiblyGroupedDiff,
-} from "../../types";
 import sortItems from "./sortItems";
 
 const ifNeedsPrevDefs = (s: string) => s === "removed" || s === "reclassified";

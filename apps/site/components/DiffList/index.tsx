@@ -14,13 +14,8 @@ function DiffListForType(props: Omit<DiffListProps, "title">) {
   return <FallbackDiffList {...props} />;
 }
 
-export default function DiffList({
-  title,
-  tableName,
-  hashes,
-  definitions,
-}: DiffListProps) {
-  if (hashes.length === 0) {
+export default function DiffList({ title, ...props }: DiffListProps) {
+  if (props.hashes.length === 0) {
     return null;
   }
 
@@ -28,11 +23,7 @@ export default function DiffList({
     <div className={s.diffListRoot}>
       <h3>{title}</h3>
 
-      <DiffListForType
-        tableName={tableName}
-        hashes={hashes}
-        definitions={definitions}
-      />
+      <DiffListForType {...props} />
     </div>
   );
 }

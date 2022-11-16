@@ -1,11 +1,5 @@
 import fs from "fs-extra";
 import path from "path";
-import {
-  AllDefinitionDiffs,
-  AnyDefinitionTable,
-  ModifiedDeepDiffEntry,
-  ModifiedDeepDiffs,
-} from "./types";
 import { keyBy, mapValues } from "lodash";
 import { AllDestinyManifestComponents } from "bungie-api-ts/destiny2";
 import { ManifestVersion } from "@destiny-definitions/common";

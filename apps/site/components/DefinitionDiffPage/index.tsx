@@ -1,16 +1,18 @@
 import DiffList from "../DiffList";
 
 import {
+  AllDestinyManifestComponents,
   DefinitionTableDiff,
-  GenericDefinitionTable,
+  DefinitionTable,
   ManifestVersion,
 } from "@destiny-definitions/common";
 import DefinitionDiffFrame from "../DefinitionDiffFrame";
 
 interface DefinitionDiffStaticProps {
   version: ManifestVersion;
-  definitions: GenericDefinitionTable;
-  previousDefinitions: GenericDefinitionTable;
+  definitions: DefinitionTable;
+  previousDefinitions: DefinitionTable;
+  otherDefinitions: AllDestinyManifestComponents;
   tableDiff: DefinitionTableDiff;
   tableName: string;
 }
@@ -19,6 +21,7 @@ export default function DefinitionDiffPage({
   version,
   definitions,
   previousDefinitions,
+  otherDefinitions,
   tableDiff,
   tableName,
 }: DefinitionDiffStaticProps) {
@@ -29,6 +32,7 @@ export default function DefinitionDiffPage({
         tableName={tableName}
         hashes={tableDiff.added}
         definitions={definitions}
+        otherDefinitions={otherDefinitions}
       />
 
       <DiffList
@@ -36,6 +40,7 @@ export default function DefinitionDiffPage({
         tableName={tableName}
         hashes={tableDiff.unclassified}
         definitions={definitions}
+        otherDefinitions={otherDefinitions}
       />
 
       <DiffList
@@ -43,6 +48,7 @@ export default function DefinitionDiffPage({
         tableName={tableName}
         hashes={tableDiff.removed}
         definitions={previousDefinitions}
+        otherDefinitions={otherDefinitions}
       />
 
       <DiffList
@@ -50,6 +56,7 @@ export default function DefinitionDiffPage({
         tableName={tableName}
         hashes={tableDiff.reclassified}
         definitions={previousDefinitions}
+        otherDefinitions={otherDefinitions}
       />
 
       <DiffList
@@ -57,6 +64,7 @@ export default function DefinitionDiffPage({
         tableName={tableName}
         hashes={tableDiff.modified ?? []}
         definitions={definitions}
+        otherDefinitions={otherDefinitions}
       />
     </DefinitionDiffFrame>
   );

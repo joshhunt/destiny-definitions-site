@@ -6,7 +6,17 @@ import s from "./styles.module.scss";
 import React from "react";
 import { QuestMarker } from "../QuestMarkers";
 import { DiffListProps } from "./types";
-import { castDefinitions } from "../../lib/utils";
+import { castDefinitionsTable } from "../../lib/utils";
+import Table, {
+  Cell,
+  NoWrapCell,
+  SmallCell,
+  TableBody,
+  TableHeader,
+} from "../DiffTable";
+import QuestObjectives from "../QuestObjectives";
+import { sortBy } from "lodash";
+import { DestinyInventoryItemDefinition } from "@destiny-definitions/common";
 
 const CLASS_TYPE_NAME: { [k: string]: string } = {
   [1]: "Hunter",
@@ -18,12 +28,22 @@ export default function InventoryItemDiffList({
   tableName,
   hashes,
   definitions: genericDefinitions,
+  otherDefinitions,
 }: Omit<DiffListProps, "title">) {
   if (hashes.length == 0) {
     return null;
   }
 
-  const definitions = castDefinitions("DestinyInventoryItemDefinition", tableName, genericDefinitions);
+  const definitions = castDefinitionsTable(
+    "DestinyInventoryItemDefinition",
+    tableName,
+    genericDefinitions
+  );
+
+  const {
+    DestinyCollectibleDefinition: collectibleDefs = {},
+    DestinyObjectiveDefinition: objectiveDefs = {},
+  } = otherDefinitions;
 
   const hasScreenshot = hashes.some(
     (itemHash) => definitions[itemHash]?.screenshot
@@ -42,82 +62,79 @@ export default function InventoryItemDiffList({
   const isWeapon = false;
   const isArmor = false;
 
+  const sortedHashes = sortBy(
+    hashes,
+    (hash) => definitions[hash]?.index ?? hash
+  );
+
   return (
-    <table className={s.table}>
-      <thead className={s.tableHeader}>
-        <tr>
-          {isQuests && <td>Quest</td>}
+    <Table>
+      <TableHeader>
+        {isQuests && <Cell>Quest</Cell>}
+        <SmallCell>Hash</SmallCell>
+        <Cell>Item</Cell>
+        {hasObjectives && <Cell>Objectives</Cell>}
+        <Cell>Type</Cell>
+        {isWeapon && <Cell>Slot</Cell>}
+        {isArmor && <Cell>Class</Cell>}
+        {hasSource && <Cell>Source</Cell>}
+        {hasScreenshot && <Cell>Screenshot</Cell>}
+      </TableHeader>
 
-          <td>Hash</td>
-          <td>Item</td>
-
-          {hasObjectives && <td>Objectives</td>}
-
-          <td>Type</td>
-
-          {isWeapon && (
-            <>
-              <td>Slot</td>
-            </>
-          )}
-
-          {isArmor && <td>Class</td>}
-
-          {hasSource && <td>Source</td>}
-
-          {hasScreenshot && <td>Screenshot</td>}
-        </tr>
-      </thead>
-
-      <tbody>
-        {hashes.map((hash) => {
+      <TableBody>
+        {sortedHashes.map((hash) => {
           const def = definitions[hash];
           if (!def) {
             return null;
           }
 
+          const sourceString =
+            collectibleDefs[def.collectibleHash ?? 0]?.sourceString;
           const objectives = def?.objectives?.objectiveHashes || [];
 
           return (
             <tr key={hash}>
               {isQuests && (
-                <td className={s.questMarker}>
+                <SmallCell>
                   <QuestMarker
                     definitions={definitions}
                     siblingDiffHashes={hashes}
                     definition={def}
                   />
-                </td>
+                </SmallCell>
               )}
 
-              <td className={s.shrink}>
+              <SmallCell>
                 <HashLink hash={hash} tableName={tableName} />
-              </td>
+              </SmallCell>
 
-              <td>
+              <Cell>
                 <ItemSummary definition={def} definitions={definitions} />
-              </td>
+              </Cell>
 
               {hasObjectives && (
-                <td className={s.objectives}>
-                  objectives
-                </td>
+                <Cell>
+                  {objectiveDefs && (
+                    <QuestObjectives
+                      objectiveHashes={objectives}
+                      objectiveDefinitions={objectiveDefs}
+                    />
+                  )}
+                </Cell>
               )}
 
-              <td className={s.nowrap}>{def.itemTypeDisplayName}</td>
+              <NoWrapCell>{def.itemTypeDisplayName}</NoWrapCell>
 
-              {isWeapon && (
-                <>
-                  <td>weapon slot</td>
-                </>
+              {isWeapon && <Cell>weapon slot</Cell>}
+
+              {isArmor && (
+                <Cell>{def.classType && CLASS_TYPE_NAME[def.classType]}</Cell>
               )}
 
-              {isArmor && <td>{CLASS_TYPE_NAME[def.classType]}</td>}
-
-              {hasSource && <td>source string</td>}
+              {hasSource && <Cell>{sourceString}</Cell>}
 
               {hasScreenshot && (
-                <td>
+                <Cell>
                   {def.screenshot && (
                     <a
                       href={`https://www.bungie.net${def.screenshot}`}
@@ -128,19 +145,19 @@ export default function InventoryItemDiffList({
                         className={s.screenshotPreview}
                         src={def.screenshot}
                         alt={
-                          def.displayProperties.name
+                          def.displayProperties?.name
                             ? `Screenshot of "${def.displayProperties.name}"`
                             : "Screenshot of this item"
                         }
                       />
                     </a>
                   )}
-                </td>
+                </Cell>
               )}
             </tr>
           );
         })}
-      </tbody>
-    </table>
+      </TableBody>
+    </Table>
   );
 }

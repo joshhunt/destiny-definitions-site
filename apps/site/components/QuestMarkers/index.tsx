@@ -1,9 +1,11 @@
-import { DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 import { useDiffData } from "../diffDataContext";
 import cx from "classnames";
 import commonStyles from "../../styles/common.module.scss";
 import s from "./styles.module.scss";
-import { AllDestinyManifestComponentsTagged } from "../../types";
+import {
+  DefinitionTable,
+  DestinyInventoryItemDefinition,
+} from "@destiny-definitions/common";
 
 export const QuestStartMarker = () => {
   return <div className={s.start} />;
@@ -18,7 +20,7 @@ export const QuestEndMarker = () => {
 };
 
 interface QuestMarkerProps {
-  definitions: AllDestinyManifestComponentsTagged["DestinyInventoryItemDefinition"];
+  definitions: DefinitionTable<DestinyInventoryItemDefinition>;
   definition: DestinyInventoryItemDefinition;
   siblingDiffHashes: number[];
 }

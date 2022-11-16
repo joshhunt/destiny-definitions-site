@@ -3,7 +3,9 @@ import { S3Archive } from "./S3Archive.js";
 import path from "path";
 import sqlite3 from "sqlite3";
 import fs from "fs/promises";
-import { GenericDefinitionTable } from "../types.js";
+import { DefinitionTable } from "../types.js";
+import { uniq } from "lodash";
+import { JSONExtractQueryObject, makeJsonExtractQuery } from "./jsonShape.js";
 
 export class DefinitionsArchive {
   s3ArchiveClient: S3Archive;
@@ -28,11 +30,14 @@ export class DefinitionsArchive {
   async getDefinitions(
     versionId: string,
     tableName: string,
-    hashes: number[]
-  ): Promise<GenericDefinitionTable> {
+    hashes: number[],
+    fieldsQuery?: JSONExtractQueryObject
+  ): Promise<DefinitionTable> {
     if (hashes.length === 0) {
       return {};
     }
+
+    const uniqueHashes = uniq(hashes);
 
     const versionManifest = await this.s3ArchiveClient.getVersionManifest(
       versionId
@@ -49,10 +54,21 @@ export class DefinitionsArchive {
       throw new MissingDefinitionsSqlite();
     }
 
-    const sqliteHashes = hashes.map((v) => v >> 32);
+    const sqliteHashes = uniqueHashes.map((v) => v >> 32);
 
     const db = new (sqlite3.verbose().Database)(sqliteFilePath);
-    const sql = `SELECT id, json FROM ${tableName} WHERE id IN ${sqliteList(
+    let jsonColumn = "json";
+
+    if (fieldsQuery) {
+      if (!Object.hasOwn(fieldsQuery, "hash")) {
+        throw new Error("Fields query must contain hash");
+      }
+
+      const jsonExtract = makeJsonExtractQuery("json", fieldsQuery);
+      jsonColumn = `${jsonExtract} as json`;
+    }
+
+    const sql = `SELECT id, ${jsonColumn} FROM ${tableName} WHERE id IN ${sqliteList(
       sqliteHashes
     )}`;
     const queryResult = await sqliteAll<{ id: number; json: string }>(db, sql);

@@ -1,10 +1,12 @@
+import {
+  DefinitionTable,
+  DestinyObjectiveDefinition,
+} from "@destiny-definitions/common";
 import React from "react";
-import { DefsObject } from "../../types";
-import { QuestObjective } from "../QuestPage/types";
 import s from "./styles.module.scss";
 
 interface QuestObjectivesProps {
-  objectiveDefinitions: DefsObject<QuestObjective>;
+  objectiveDefinitions: DefinitionTable<DestinyObjectiveDefinition>;
   objectiveHashes: number[];
 }
 

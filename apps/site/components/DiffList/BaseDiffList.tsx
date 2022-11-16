@@ -3,6 +3,13 @@ import cx from "classnames";
 import { getDescription, getDisplayName, getIconSrc } from "../../lib/utils";
 import { AnyDefinitionTable, BareDestinyDefinition } from "../../types";
 import BungieImage from "../BungieImage";
+import Table, {
+  Cell,
+  SmallCell,
+  TableBody,
+  TableHeader,
+  TableRow,
+} from "../DiffTable";
 import HashLink from "../HashLink";
 
 import s from "./styles.module.scss";
@@ -41,20 +48,18 @@ export default function BaseDiffList<T>({
   const otherHeaders = row(definitions[hashes[0]], hashes[0]).map((v) => v[0]);
 
   return (
-    <table className={s.table}>
-      <thead className={s.tableHeader}>
-        <tr>
-          <td className={s.shrink}>Hash</td>
-          {hasIcon && <td>Icon</td>}
-          {hasName && <td>Name</td>}
-          {hasDescription && <td>Description</td>}
-          {otherHeaders.map((header) => (
-            <td>{header}</td>
-          ))}
-        </tr>
-      </thead>
+    <Table>
+      <TableHeader>
+        <SmallCell>Hash</SmallCell>
+        {hasIcon && <Cell>Icon</Cell>}
+        {hasName && <Cell>Name</Cell>}
+        {hasDescription && <Cell>Description</Cell>}
+        {otherHeaders.map((header) => (
+          <Cell>{header}</Cell>
+        ))}
+      </TableHeader>
 
-      <tbody>
+      <TableBody>
         {hashes.map((hash) => {
           const def = definitions[hash];
 
@@ -63,9 +68,9 @@ export default function BaseDiffList<T>({
           ));
 
           return (
-            <tr key={hash}>
+            <TableRow key={hash}>
               <td className={s.shrink}>
-                <HashLink hash={hash} definitionName={definitionName} />
+                <HashLink hash={hash} tableName={tableName} />
               </td>
               {hasIcon && (
                 <td className={s.shrink}>
@@ -86,10 +91,10 @@ export default function BaseDiffList<T>({
               )}
 
               {otherCells}
-            </tr>
+            </TableRow>
           );
         })}
-      </tbody>
-    </table>
+      </TableBody>
+    </Table>
   );
 }

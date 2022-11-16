@@ -1,8 +1,8 @@
 import {
   DestinyInventoryItemDefinition,
-  DestinyObjectiveDefinition,
   DestinyVendorDefinition,
-} from "bungie-api-ts/destiny2/interfaces";
+  DestinyObjectiveDefinition,
+} from "@destiny-definitions/common";
 import { pick } from "lodash";
 
 export function createQuestItem(item: DestinyInventoryItemDefinition) {

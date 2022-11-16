@@ -1,12 +1,12 @@
-import { GenericDefinitionTable } from "@destiny-definitions/common";
 import {
-  DestinyDefinitionFrom,
-  DestinyManifestComponentName,
-} from "bungie-api-ts/destiny2";
+  AllDestinyManifestComponents,
+  DefinitionTable,
+} from "@destiny-definitions/common";
 
 export interface DiffListProps {
   title: string;
   tableName: string;
   hashes: number[];
-  definitions: GenericDefinitionTable;
+  definitions: DefinitionTable;
+  otherDefinitions: AllDestinyManifestComponents;
 }

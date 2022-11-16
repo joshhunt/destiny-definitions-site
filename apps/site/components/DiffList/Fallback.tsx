@@ -1,8 +1,14 @@
-import { GenericDefinitionTable } from "@destiny-definitions/common";
-import cx from "classnames";
+import { DefinitionTable } from "@destiny-definitions/common";
 
 import { getDescription, getDisplayName, getIconSrc } from "../../lib/utils";
 import BungieImage from "../BungieImage";
+import Table, {
+  Cell,
+  SmallCell,
+  TableBody,
+  TableHeader,
+  TableRow,
+} from "../DiffTable";
 import HashLink from "../HashLink";
 
 import s from "./styles.module.scss";
@@ -10,7 +16,7 @@ import s from "./styles.module.scss";
 interface FallbackDiffListProps {
   tableName: string;
   hashes: number[];
-  definitions: GenericDefinitionTable;
+  definitions: DefinitionTable;
 }
 
 export default function FallbackDiffList({
@@ -38,37 +44,33 @@ export default function FallbackDiffList({
   });
 
   return (
-    <table className={s.table}>
-      <thead className={s.tableHeader}>
-        <tr>
-          <td className={s.shrink}>Index</td>
-          <td className={s.shrink}>Hash</td>
-          {hasIcon && <td>Icon</td>}
-          {hasName && <td>Name</td>}
-          {hasDescription && <td>Description</td>}
-        </tr>
-      </thead>
+    <Table>
+      <TableHeader>
+        <SmallCell>Hash</SmallCell>
+        {hasIcon && <Cell>Icon</Cell>}
+        {hasName && <Cell>Name</Cell>}
+        {hasDescription && <Cell>Description</Cell>}
+      </TableHeader>
 
-      <tbody>
+      <TableBody>
         {hashes.map((hash) => {
           const def = definitions[hash];
           if (!def) {
             return (
-              <tr key={hash}>
-                <td className={s.shrink}>{hash}</td>
-                <td colSpan={3}>Missing data</td>
-              </tr>
+              <TableRow key={hash}>
+                <SmallCell>{hash} Missing data</SmallCell>
+              </TableRow>
             );
           }
 
           return (
-            <tr key={hash}>
-              <td className={s.shrink}>{def.index}</td>
-              <td className={s.shrink}>
+            <TableRow key={hash}>
+              <SmallCell>
                 <HashLink hash={hash} tableName={tableName} />
-              </td>
+              </SmallCell>
+
               {hasIcon && (
-                <td className={s.shrink}>
+                <SmallCell>
                   <BungieImage
                     className={s.icon}
                     src={getIconSrc(def)}
@@ -78,18 +80,16 @@ export default function FallbackDiffList({
                         : "Icon of this entity"
                     }
                   />
-                </td>
+                </SmallCell>
               )}
+
               {hasName && <td className={s.nowrap}>{getDisplayName(def)}</td>}
-              {hasDescription && (
-                <td className={cx(s.mainColumn, s.prewrap)}>
-                  {getDescription(def)}
-                </td>
-              )}
-            </tr>
+
+              {hasDescription && <Cell>{getDescription(def)}</Cell>}
+            </TableRow>
           );
         })}
-      </tbody>
-    </table>
+      </TableBody>
+    </Table>
   );
 }

@@ -1,10 +1,5 @@
 import cx from "classnames";
 import React from "react";
-import {
-  AllDestinyManifestComponentsTagged,
-  AnyDefinitionTable,
-  DestinyPresentationNodeDefinitionTagged,
-} from "../../types";
 import BungieImage from "../BungieImage";
 import HashLink, { DiffHashLink } from "../HashLink";
 import InlineChild from "../InlineEntry";
@@ -16,11 +11,15 @@ import {
   DestinyPresentationNodeMetricChildEntry,
   DestinyPresentationNodeRecordChildEntry,
 } from "bungie-api-ts/destiny2";
+import {
+  DefinitionTable,
+  DestinyPresentationNodeDefinition,
+} from "@destiny-definitions/common";
 
 interface PresentationNodeDiffListProps {
   definitionName: string;
   hashes: number[];
-  definitions: AllDestinyManifestComponentsTagged["DestinyPresentationNodeDefinition"];
+  definitions: DefinitionTable<DestinyPresentationNodeDefinition>;
   otherDefinitions: Partial<AllDestinyManifestComponentsTagged>;
 }
 
