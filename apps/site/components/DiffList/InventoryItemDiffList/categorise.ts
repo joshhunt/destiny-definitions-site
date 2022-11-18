@@ -40,7 +40,6 @@ export function groupHashes(
   definitions: DefinitionTable<DestinyInventoryItemDefinition>
 ): HashGroup {
   const sortedHashes = sortItems(hashes, definitions);
-  console.log(sortedHashes.slice(0, 20));
 
   const groups: HashGroup = [];
 

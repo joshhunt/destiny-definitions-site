@@ -29,7 +29,6 @@ export const getStaticProps: GetStaticProps<
   ModifiedDiffPageProps,
   Params
 > = async (context) => {
-  console.log("Running getStaticProps with context", context);
   const versionId = context.params?.id ?? "";
   const tableName = context.params?.table ?? "";
   const hash = context.params?.hash ?? "";

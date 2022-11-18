@@ -34,7 +34,6 @@ export const getStaticProps: GetStaticProps<
     "DestinyInventoryItemDefinition"
   )) as AllDestinyManifestComponents["DestinyInventoryItemDefinition"];
 
-  console.log("hash:", hash);
   const definition = definitions[hash];
 
   if (!latestVersion) {

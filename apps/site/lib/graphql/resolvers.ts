@@ -63,8 +63,6 @@ export function makeResolver(
     const version = source.$$version || info.variableValues.version;
 
     if (!version) {
-      console.log("info:");
-      console.log(info);
       throw new Error("Version not on source object");
     }
 

@@ -5,7 +5,6 @@ import { AllDestinyManifestComponents } from "bungie-api-ts/destiny2";
 import { ManifestVersion } from "@destiny-definitions/common";
 
 const CACHE_DIR = path.join(process.cwd(), ".custom-api-cache");
-console.log("CACHE_DIR:", CACHE_DIR);
 
 const getPath = async (name: string) => {
   const cachePrefix = "shared";
@@ -28,11 +27,9 @@ async function getCachedData<T>(
 
   try {
     const data = await fs.readJSON(localCachePath);
-    console.log("FS CACHED", remoteUrl);
     return data;
   } catch {}
 
-  console.log("FETCHING", remoteUrl);
   const data = await getData<T>(remoteUrl);
 
   await fs.writeJSON(localCachePath, data);
