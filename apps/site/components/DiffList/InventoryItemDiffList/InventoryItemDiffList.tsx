@@ -1,21 +1,21 @@
-import BungieImage from "../BungieImage";
-import ItemSummary from "../ItemSummary";
-import HashLink from "../HashLink";
+import BungieImage from "../../BungieImage";
+import ItemSummary from "../../ItemSummary";
+import HashLink from "../../HashLink";
 
-import s from "./styles.module.scss";
+import s from "../styles.module.scss";
 import React from "react";
-import { QuestMarker } from "../QuestMarkers";
-import { DiffListProps } from "./types";
-import { castDefinitionsTable } from "../../lib/utils";
+import { QuestMarker } from "../../QuestMarkers";
+import { DiffListProps } from "../types";
+import { castDefinitionsTable } from "../../../lib/utils";
 import Table, {
   Cell,
   NoWrapCell,
   SmallCell,
   TableBody,
   TableHeader,
-} from "../DiffTable";
-import QuestObjectives from "../QuestObjectives";
-import { sortBy } from "lodash";
+} from "../../DiffTable";
+import QuestObjectives from "../../QuestObjectives";
+import { ItemCategory } from "./categorise";
 import { DestinyInventoryItemDefinition } from "@destiny-definitions/common";
 
 const CLASS_TYPE_NAME: { [k: string]: string } = {
@@ -29,7 +29,8 @@ export default function InventoryItemDiffList({
   hashes,
   definitions: genericDefinitions,
   otherDefinitions,
-}: Omit<DiffListProps, "title">) {
+  itemCategory,
+}: Omit<DiffListProps, "title"> & { itemCategory: string }) {
   if (hashes.length == 0) {
     return null;
   }
@@ -58,14 +59,9 @@ export default function InventoryItemDiffList({
       (definitions[itemHash]?.objectives?.objectiveHashes?.length ?? 0) > 0
   );
 
-  const isQuests = false;
-  const isWeapon = false;
-  const isArmor = false;
-
-  const sortedHashes = sortBy(
-    hashes,
-    (hash) => definitions[hash]?.index ?? hash
-  );
+  const isWeapon = itemCategory == ItemCategory.Weapon;
+  const isArmor = itemCategory == ItemCategory.Armor;
+  const isQuests = itemCategory === ItemCategory.Quest;
 
   return (
     <Table>
@@ -82,7 +78,7 @@ export default function InventoryItemDiffList({
       </TableHeader>
 
       <TableBody>
-        {sortedHashes.map((hash) => {
+        {hashes.map((hash) => {
           const def = definitions[hash];
           if (!def) {
             return null;
@@ -109,7 +105,11 @@ export default function InventoryItemDiffList({
               </SmallCell>
 
               <Cell>
-                <ItemSummary definition={def} definitions={definitions} />
+                <ItemSummary
+                  definition={def}
+                  definitions={definitions}
+                  otherDefinitions={otherDefinitions}
+                />
               </Cell>
 
               {hasObjectives && (
@@ -125,10 +125,12 @@ export default function InventoryItemDiffList({
 
               <NoWrapCell>{def.itemTypeDisplayName}</NoWrapCell>
 
-              {isWeapon && <Cell>weapon slot</Cell>}
+              {isWeapon && <Cell>{getWeaponSlot(def)}</Cell>}
 
               {isArmor && (
-                <Cell>{def.classType && CLASS_TYPE_NAME[def.classType]}</Cell>
+                <Cell>
+                  {CLASS_TYPE_NAME[def.classType] ?? <em>Unknown</em>}
+                </Cell>
               )}
 
               {hasSource && <Cell>{sourceString}</Cell>}
@@ -161,3 +163,9 @@ export default function InventoryItemDiffList({
     </Table>
   );
 }
+
+const getWeaponSlot = (itemDef: DestinyInventoryItemDefinition) => {
+  if (itemDef.itemCategoryHashes?.includes(2)) return "Kinetic"; // kinetic
+  if (itemDef.itemCategoryHashes?.includes(3)) return "Energy"; // energy
+  if (itemDef.itemCategoryHashes?.includes(4)) return "Power"; // power
+};

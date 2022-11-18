@@ -115,6 +115,8 @@ type Deps = Record<
   { hashes: number[]; fields: JSONExtractQueryObject }
 >;
 
+const displayProperties = { name: 1, description: 1, icon: 1 };
+
 function getDependencyHashes(
   tableDiff: DefinitionTableDiff,
   tableName: string,
@@ -138,6 +140,20 @@ function getDependencyHashes(
         hash: 1,
         sourceString: 1,
       });
+
+      const socketSingleInitialItemHashes =
+        def.inventory?.tierType === 6 &&
+        def.sockets?.socketEntries?.map((v) => v.singleInitialItemHash);
+      addHashes(
+        deps,
+        "DestinyInventoryItemDefinition",
+        socketSingleInitialItemHashes || undefined,
+        {
+          hash: 1,
+          uiItemDisplayStyle: 1,
+          displayProperties,
+        }
+      );
 
       // TODO: need intrinsic socket info. see findIntrinsicPerk
     }
@@ -191,11 +207,7 @@ function getFieldsQuery(definitionName: string): JSONExtractQueryObject {
       return {
         hash: 1,
         index: 1,
-        displayProperties: {
-          name: 1,
-          description: 1,
-          icon: 1,
-        },
+        displayProperties,
         screenshot: 1,
         collectibleHash: 1,
         objectives: {
@@ -223,6 +235,9 @@ function getFieldsQuery(definitionName: string): JSONExtractQueryObject {
         redacted: 1,
         classType: 1,
         itemTypeDisplayName: 1,
+        traitIds: 1,
+        itemSubType: 1,
+        seasonHash: 1,
       };
 
     default:

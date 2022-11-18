@@ -1,7 +1,7 @@
 import React from "react";
 
 import FallbackDiffList from "./Fallback";
-import InventoryItemDiffList from "./InventoryItemDiffList";
+import InventoryItemDiffList from "./InventoryItemDiffList/GroupedInventoryItemDiffList";
 
 import s from "./styles.module.scss";
 import { DiffListProps } from "./types";

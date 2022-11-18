@@ -24,6 +24,14 @@ export interface DefinitionTableDiff {
   readonly modified?: number[];
 }
 
+export interface GroupedDefinitionTableDiff {
+  readonly removed: HashGroup;
+  readonly added: HashGroup;
+  readonly unclassified: HashGroup;
+  readonly reclassified: HashGroup;
+  readonly modified: HashGroup;
+}
+
 export interface VersionDiff {
   [definitionTableName: string]: DefinitionTableDiff;
 }
@@ -42,8 +50,13 @@ export interface DefinitionTable<T = GenericDefinition> {
   [hash: string]: T;
 }
 
-export type AllDestinyManifestComponents =
-  DeepPartial<OrigAllDestinyManifestComponents>;
+export type AllDestinyManifestComponents = {
+  DestinyInventoryItemDefinition: DefinitionTable<DestinyInventoryItemDefinition>;
+  DestinyObjectiveDefinition: DefinitionTable<DestinyObjectiveDefinition>;
+  DestinyCollectibleDefinition: DefinitionTable<DestinyCollectibleDefinition>;
+  DestinyVendorDefinition: DefinitionTable<DestinyVendorDefinition>;
+  DestinyPresentationNodeDefinition: DefinitionTable<DestinyPresentationNodeDefinition>;
+};
 
 export declare type DestinyDefinitionFrom<
   K extends DestinyManifestComponentName
@@ -74,3 +87,5 @@ type DeepPartial<T> = unknown extends T
         : DeepPartial<T[P]>;
     }
   : T;
+
+export type HashGroup = [string, number[]][];

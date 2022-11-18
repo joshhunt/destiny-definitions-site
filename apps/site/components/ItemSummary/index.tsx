@@ -4,6 +4,7 @@ import IntrinsicPerk from "../IntrinsicPerk";
 import React from "react";
 import ItemTags from "./ItemTags";
 import {
+  AllDestinyManifestComponents,
   DefinitionTable,
   DestinyInventoryItemDefinition,
 } from "@destiny-definitions/common";
@@ -11,16 +12,17 @@ import {
 interface ItemSummaryProps {
   definition: DestinyInventoryItemDefinition;
   definitions: DefinitionTable<DestinyInventoryItemDefinition>;
+  otherDefinitions: AllDestinyManifestComponents;
 }
 
 function findIntrinsicPerk(
   itemDef: DestinyInventoryItemDefinition,
-  definitions: DefinitionTable<DestinyInventoryItemDefinition>
+  otherItemDefinitions: DefinitionTable<DestinyInventoryItemDefinition>
 ) {
   const socket = itemDef.sockets?.socketEntries?.find((socket) => {
     if (!socket?.singleInitialItemHash) return false;
 
-    const def = definitions[socket.singleInitialItemHash];
+    const def = otherItemDefinitions[socket.singleInitialItemHash];
     return (
       def?.uiItemDisplayStyle === "ui_display_style_intrinsic_plug" &&
       def.displayProperties?.name
@@ -28,16 +30,23 @@ function findIntrinsicPerk(
   });
 
   return (
-    socket?.singleInitialItemHash && definitions[socket.singleInitialItemHash]
+    socket?.singleInitialItemHash &&
+    otherItemDefinitions[socket.singleInitialItemHash]
   );
 }
 
 export default function ItemSummary({
   definition: def,
   definitions,
+  otherDefinitions,
 }: ItemSummaryProps) {
+  const { DestinyInventoryItemDefinition: otherItemDefs = {} } =
+    otherDefinitions;
+
   const isExotic = def.inventory?.tierType === 6 ?? false;
-  const intrinsicPerk = isExotic && findIntrinsicPerk(def, definitions);
+  const intrinsicPerk = isExotic && findIntrinsicPerk(def, otherItemDefs);
+
+  console.log(def.hash, { def, isExotic, intrinsicPerk });
 
   let displayName: React.ReactNode = def.displayProperties?.name;
 
