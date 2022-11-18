@@ -2,15 +2,18 @@ import React from "react";
 
 import commonStyles from "../styles/common.module.scss";
 import { friendlyDiffName } from "../lib/utils";
-import { useDiffData } from "./diffDataContext";
-import Link from "next/link";
+import { DefinitionTableDiff } from "@destiny-definitions/common";
 
 interface HashLinkProps {
-  hash: number;
+  hash: number | undefined;
   tableName: string;
 }
 
 export default function HashLink({ hash, tableName }: HashLinkProps) {
+  if (hash === undefined) {
+    return <>hash</>;
+  }
+
   return (
     <a
       className={commonStyles.link}
@@ -27,35 +30,12 @@ export default function HashLink({ hash, tableName }: HashLinkProps) {
   );
 }
 
-function diffContainsHash(diff: DefinitionDiff | undefined, hash: number) {
+function diffContainsHash(diff: DefinitionTableDiff | undefined, hash: number) {
   return Object.values(diff || {}).some((v) => v.includes(hash));
 }
 
 export const DiffHashLink: React.FC<
   HashLinkProps & { children: React.ReactNode }
-> = ({ hash, tableName, children }) => {
-  const { versionId, versionDiff, tableName: currentDefName } = useDiffData();
-  const isInDiff =
-    versionDiff && diffContainsHash(versionDiff[tableName], hash);
-
-  if (!isInDiff) {
-    return <>{children}</>;
-  }
-
-  if (currentDefName === tableName) {
-    return (
-      <a href={`#hash_${hash}`} className={commonStyles.link}>
-        {children}
-      </a>
-    );
-  }
-
-  return (
-    <Link
-      className={commonStyles.link}
-      href={`/version/${versionId}/${tableName}#hash_${hash}`}
-    >
-      {children}
-    </Link>
-  );
+> = ({ children }) => {
+  return <>{children}</>;
 };

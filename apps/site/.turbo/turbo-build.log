@@ -1,0 +1,30 @@
+
+> @destiny-definitions/site@0.2.0 build /home/joshhunt/dev/destiny-definitions-site/apps/site
+> yarn update-api-spec && yarn table-names && next build
+
+yarn run v1.22.19
+$ curl https://raw.githubusercontent.com/Bungie-net/api/master/openapi.json > ./lib/graphql/api-spec-v3.json
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100 1693k  100 1693k    0     0  4730k      0 --:--:-- --:--:-- --:--:-- 4717k
+Done in 0.41s.
+yarn run v1.22.19
+$ ts-node-esm ./scripts/getShortDefinitionNames.ts
+Wrote definitions table name mappings
+Done in 1.86s.
+info  - Loaded env from /home/joshhunt/dev/destiny-definitions-site/apps/site/.env.local
+info  - Linting and checking validity of types...
+error - ESLint: Failed to load config "next/core-web-vitals" to extend from. Referenced from: /home/joshhunt/dev/destiny-definitions-site/.eslintrc.json
+Failed to compile.
+
+./components/DiffList/Activity.tsx:5:8
+Type error: Cannot find module '../../types' or its corresponding type declarations.
+
+[0m [90m 3 | [39m  [33mAllDestinyManifestComponentsTagged[39m[33m,[39m[0m
+[0m [90m 4 | [39m  [33mDestinyActivityDefinitionTagged[39m[33m,[39m[0m
+[0m[31m[1m>[22m[39m[90m 5 | [39m} [36mfrom[39m [32m"../../types"[39m[33m;[39m[0m
+[0m [90m   | [39m       [31m[1m^[22m[39m[0m
+[0m [90m 6 | [39m[36mimport[39m [33mBungieImage[39m [36mfrom[39m [32m"../BungieImage"[39m[33m;[39m[0m
+[0m [90m 7 | [39m[36mimport[39m { [33mDiffHashLink[39m } [36mfrom[39m [32m"../HashLink"[39m[33m;[39m[0m
+[0m [90m 8 | [39m[36mimport[39m [33mInterpose[39m [36mfrom[39m [32m"../Interpose"[39m[33m;[39m[0m
+ ELIFECYCLE  Command failed with exit code 1.

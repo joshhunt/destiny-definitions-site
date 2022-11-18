@@ -1,0 +1,16 @@
+
+> @destiny-definitions/worker@0.0.1 build /home/joshhunt/dev/destiny-definitions-site/apps/worker
+> pnpm clean && pnpm bundle
+
+
+> @destiny-definitions/worker@0.0.1 clean /home/joshhunt/dev/destiny-definitions-site/apps/worker
+> rm -rf dist
+
+
+> @destiny-definitions/worker@0.0.1 bundle /home/joshhunt/dev/destiny-definitions-site/apps/worker
+> esbuild src/index.ts --bundle --outfile=dist/index.cjs --platform=node --target=node18.12 --external:@mapbox/node-pre-gyp --external:aws-sdk --external:dotenv
+
+
+  dist/index.cjs  1.5mb ⚠️
+
+⚡ Done in 95ms

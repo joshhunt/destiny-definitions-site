@@ -46,14 +46,14 @@ export function isTableType<
   return inputTableName === castToTableName;
 }
 
-export function getDisplayName(def: GenericDefinition) {
+export function getDisplayName(def: GenericDefinition | undefined) {
   return def?.displayProperties?.name;
 }
 
-export function getIconSrc(def: GenericDefinition) {
+export function getIconSrc(def: GenericDefinition | undefined) {
   return def?.displayProperties?.icon;
 }
 
-export function getDescription(def: GenericDefinition) {
+export function getDescription(def: GenericDefinition | undefined) {
   return def?.displayProperties?.description;
 }

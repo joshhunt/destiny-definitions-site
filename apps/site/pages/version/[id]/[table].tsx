@@ -154,8 +154,22 @@ function getDependencyHashes(
           displayProperties,
         }
       );
+    }
+  }
 
-      // TODO: need intrinsic socket info. see findIntrinsicPerk
+  if (isTableType("DestinyActivityDefinition", tableName, definitions)) {
+    for (const hash of newHashes) {
+      const def = definitions[hash];
+
+      addHashes(deps, "DestinyDestinationDefinition", def.destinationHash, {
+        hash: 1,
+        displayProperties,
+      });
+
+      addHashes(deps, "DestinyPlaceDefinition", def.placeHash, {
+        hash: 1,
+        displayProperties,
+      });
     }
   }
 
@@ -201,13 +215,17 @@ async function getMultipleDefinitionTables(
   return defs;
 }
 
+const baseFieldsQuery = {
+  hash: 1,
+  index: 1,
+  displayProperties,
+};
+
 function getFieldsQuery(definitionName: string): JSONExtractQueryObject {
   switch (definitionName) {
     case "DestinyInventoryItemDefinition":
       return {
-        hash: 1,
-        index: 1,
-        displayProperties,
+        ...baseFieldsQuery,
         screenshot: 1,
         collectibleHash: 1,
         objectives: {
@@ -240,16 +258,22 @@ function getFieldsQuery(definitionName: string): JSONExtractQueryObject {
         seasonHash: 1,
       };
 
-    default:
+    case "DestinyActivityDefinition":
       return {
-        hash: 1,
-        index: 1,
-        displayProperties: {
-          name: 1,
-          description: 1,
-          icon: 1,
+        ...baseFieldsQuery,
+        pgcrImage: 1,
+        destinationHash: 1,
+        placeHash: 1,
+        matchmaking: {
+          isMatchmade: 1,
+          maxPlayers: 1,
+          minParty: 1,
+          maxParty: 1,
         },
       };
+
+    default:
+      return baseFieldsQuery;
   }
 }
 

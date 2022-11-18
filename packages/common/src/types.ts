@@ -1,11 +1,15 @@
 import {
+  DestinyManifestComponentName,
   AllDestinyManifestComponents as OrigAllDestinyManifestComponents,
+
+  // Definitions
   DestinyInventoryItemDefinition as _DestinyInventoryItemDefinition,
   DestinyObjectiveDefinition as _DestinyObjectiveDefinition,
   DestinyCollectibleDefinition as _DestinyCollectibleDefinition,
   DestinyVendorDefinition as _DestinyVendorDefinition,
   DestinyPresentationNodeDefinition as _DestinyPresentationNodeDefinition,
-  DestinyManifestComponentName,
+  DestinyDestinationDefinition as _DestinyDestinationDefinition,
+  DestinyPlaceDefinition as _DestinyPlaceDefinition,
 } from "bungie-api-ts/destiny2";
 
 export interface ManifestVersion {
@@ -37,8 +41,8 @@ export interface VersionDiff {
 }
 
 export interface GenericDefinition {
-  hash: number;
-  index: number;
+  hash?: number;
+  index?: number;
   displayProperties?: {
     name?: string;
     description?: string;
@@ -51,11 +55,13 @@ export interface DefinitionTable<T = GenericDefinition> {
 }
 
 export type AllDestinyManifestComponents = {
-  DestinyInventoryItemDefinition: DefinitionTable<DestinyInventoryItemDefinition>;
-  DestinyObjectiveDefinition: DefinitionTable<DestinyObjectiveDefinition>;
-  DestinyCollectibleDefinition: DefinitionTable<DestinyCollectibleDefinition>;
-  DestinyVendorDefinition: DefinitionTable<DestinyVendorDefinition>;
-  DestinyPresentationNodeDefinition: DefinitionTable<DestinyPresentationNodeDefinition>;
+  DestinyInventoryItemDefinition?: DefinitionTable<DestinyInventoryItemDefinition>;
+  DestinyObjectiveDefinition?: DefinitionTable<DestinyObjectiveDefinition>;
+  DestinyCollectibleDefinition?: DefinitionTable<DestinyCollectibleDefinition>;
+  DestinyVendorDefinition?: DefinitionTable<DestinyVendorDefinition>;
+  DestinyPresentationNodeDefinition?: DefinitionTable<DestinyPresentationNodeDefinition>;
+  DestinyDestinationDefinition?: DefinitionTable<DestinyDestinationDefinition>;
+  DestinyPlaceDefinition?: DefinitionTable<DestinyPlaceDefinition>;
 };
 
 export declare type DestinyDefinitionFrom<
@@ -75,6 +81,11 @@ export type DestinyVendorDefinition = DeepPartial<_DestinyVendorDefinition>;
 
 export type DestinyPresentationNodeDefinition =
   DeepPartial<_DestinyPresentationNodeDefinition>;
+
+export type DestinyDestinationDefinition =
+  DeepPartial<_DestinyDestinationDefinition>;
+
+export type DestinyPlaceDefinition = DeepPartial<_DestinyPlaceDefinition>;
 
 type DeepPartial<T> = unknown extends T
   ? T

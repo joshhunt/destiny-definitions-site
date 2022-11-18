@@ -2,14 +2,15 @@ import React from "react";
 
 export interface InterposeProps {
   node: React.ReactNode;
+  children: React.ReactNode;
 }
 
 const Interpose: React.FC<InterposeProps> = (props) => {
   const { children, node } = props;
 
-  const filtered: React.ReactNode[] = React.Children.toArray(
-    children
-  ).filter((c) => React.isValidElement(c));
+  const filtered: React.ReactNode[] = React.Children.toArray(children).filter(
+    (c) => React.isValidElement(c)
+  );
 
   return (
     <>

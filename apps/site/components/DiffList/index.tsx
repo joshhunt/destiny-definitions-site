@@ -1,4 +1,5 @@
 import React from "react";
+import ActivityDiffList from "./ActivityDiffList";
 
 import FallbackDiffList from "./Fallback";
 import InventoryItemDiffList from "./InventoryItemDiffList/GroupedInventoryItemDiffList";
@@ -9,6 +10,10 @@ import { DiffListProps } from "./types";
 function DiffListForType(props: Omit<DiffListProps, "title">) {
   if (props.tableName === "DestinyInventoryItemDefinition") {
     return <InventoryItemDiffList {...props} />;
+  }
+
+  if (props.tableName === "DestinyActivityDefinition") {
+    return <ActivityDiffList {...props} />;
   }
 
   return <FallbackDiffList {...props} />;

@@ -1,4 +1,3 @@
-import { useDiffData } from "../diffDataContext";
 import cx from "classnames";
 import commonStyles from "../../styles/common.module.scss";
 import s from "./styles.module.scss";
@@ -30,7 +29,7 @@ export const QuestMarker: React.FC<QuestMarkerProps> = ({
   definitions,
   siblingDiffHashes,
 }) => {
-  const diffData = useDiffData();
+  const diffData = {};
   const questLineItemHash = definition?.objectives?.questlineItemHash ?? 0;
   const questLineItem = definitions[questLineItemHash];
 
