@@ -1,8 +1,8 @@
-import bungieManifestJob from "./jobs/bungieManifest.js";
-import historicalArchives from "./jobs/historicalArchives.js";
+import bungieManifestJob from "./jobs/bungieManifest";
+import historicalArchives from "./jobs/historicalArchives";
 import { setTimeout } from "timers/promises";
 import duration from "parse-duration";
-import { WORKER_INTERVAL } from "./env.js";
+import { WORKER_INTERVAL } from "./env";
 
 async function main() {
   const LOOP_INTERVAL = duration(WORKER_INTERVAL);
@@ -10,6 +10,7 @@ async function main() {
   const jobs = [bungieManifestJob, historicalArchives];
 
   const keepAlive = process.argv.includes("--keep-alive");
+  console.log("keepAlive?", keepAlive);
 
   while (true) {
     const usedBefore = process.memoryUsage() as unknown as Record<

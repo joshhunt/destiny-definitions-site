@@ -1,9 +1,9 @@
 import path from "path";
 import { createWriteStream } from "fs";
 import { Readable } from "stream";
-import { DEFINITIONS_DIRECTORY, getS3Config, TEMP_DIRECTORY } from "../env.js";
-import { extractContentArchive } from "../lib/dotContent.js";
-import { fileExists, mkdirpForFile } from "../lib/lib.js";
+import { DEFINITIONS_DIRECTORY, getS3Config, TEMP_DIRECTORY } from "../env";
+import { extractContentArchive } from "../lib/dotContent";
+import { fileExists, mkdirpForFile } from "../lib/lib";
 import { S3Archive } from "@destiny-definitions/common";
 
 export default async function historicalArchives() {

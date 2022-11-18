@@ -46,8 +46,6 @@ export default function ItemSummary({
   const isExotic = def.inventory?.tierType === 6 ?? false;
   const intrinsicPerk = isExotic && findIntrinsicPerk(def, otherItemDefs);
 
-  console.log(def.hash, { def, isExotic, intrinsicPerk });
-
   let displayName: React.ReactNode = def.displayProperties?.name;
 
   if (!displayName && def.setData?.questLineName) {

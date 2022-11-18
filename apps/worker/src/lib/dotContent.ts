@@ -1,5 +1,5 @@
 import StreamZip from "node-stream-zip";
-import { mkdirpForFile } from "./lib.js";
+import { mkdirpForFile } from "./lib";
 import fs from "fs/promises";
 
 export async function extractContentArchive(

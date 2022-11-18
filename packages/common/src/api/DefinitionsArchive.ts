@@ -1,11 +1,11 @@
 import invariant from "tiny-invariant";
-import { S3Archive } from "./S3Archive.js";
+import { S3Archive } from "./S3Archive";
 import path from "path";
 import sqlite3 from "sqlite3";
 import fs from "fs/promises";
-import { DefinitionTable } from "../types.js";
+import { DefinitionTable } from "../types";
 import { uniq } from "lodash";
-import { JSONExtractQueryObject, makeJsonExtractQuery } from "./jsonShape.js";
+import { JSONExtractQueryObject, makeJsonExtractQuery } from "./jsonShape";
 
 export class DefinitionsArchive {
   s3ArchiveClient: S3Archive;

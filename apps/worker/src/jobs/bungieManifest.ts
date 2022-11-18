@@ -3,10 +3,10 @@ import {
   BUNGIE_API_KEY,
   DEFINITIONS_DIRECTORY,
   TEMP_DIRECTORY,
-} from "../env.js";
+} from "../env";
 import path from "path";
-import { downloadToFile, fileExists } from "../lib/lib.js";
-import { extractContentArchive } from "../lib/dotContent.js";
+import { downloadToFile, fileExists } from "../lib/lib";
+import { extractContentArchive } from "../lib/dotContent";
 import { createHttpClient } from "@destiny-definitions/common";
 
 const $http = createHttpClient(BUNGIE_API_KEY);

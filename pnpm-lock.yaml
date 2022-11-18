@@ -49,6 +49,7 @@ importers:
       lodash: 4.17.21
       micro: ^9.3.4
       next: 13.0.3
+      next-transpile-modules: ^10.0.0
       nprogress: ^0.2.0
       only-allow: 1.1.1
       openapi-types: 12.0.2
@@ -92,6 +93,7 @@ importers:
       lodash: 4.17.21
       micro: 9.4.1
       next: 13.0.3_m5sxuueb27gk6ddc5gums6vtgq
+      next-transpile-modules: 10.0.0
       nprogress: 0.2.0
       only-allow: 1.1.1
       openapi-types: 12.0.2
@@ -122,6 +124,7 @@ importers:
       '@types/node': 18.11.9
       bungie-api-ts: ^4.19.0
       dotenv: ^16.0.2
+      esbuild: ^0.15.14
       mkdirp: ^1.0.4
       node-stream-zip: ^1.15.0
       nodemon: 2.0.20
@@ -138,6 +141,7 @@ importers:
     devDependencies:
       '@types/mkdirp': 1.0.2
       '@types/node': 18.11.9
+      esbuild: 0.15.14
       nodemon: 2.0.20
       npm-run-all: 4.1.5
       typescript: 4.8.4
@@ -4376,6 +4380,14 @@ packages:
     dev: false
     optional: true
 
+  /enhanced-resolve/5.10.0:
+    resolution: {integrity: sha512-T0yTFjdpldGY8PmuXXR0PyQ1ufZpEGiHVrp7zHKB7jdR4qlmZHhONVM5AQOAWXuF/w3dnHbEQVrNptJgt7F+cQ==}
+    engines: {node: '>=10.13.0'}
+    dependencies:
+      graceful-fs: 4.2.10
+      tapable: 2.2.1
+    dev: false
+
   /enquirer/2.3.6:
     resolution: {integrity: sha512-yjNnPr315/FjS4zIsUxYguYUPP2e1NK4d7E7ZOLiyYCcbFBiTMyID+2wvm2w6+pZ/odMA7cRkjhsPbltwBOrLg==}
     engines: {node: '>=8.6'}
@@ -6269,6 +6281,12 @@ packages:
     engines: {node: '>= 0.4.0'}
     dev: false
 
+  /next-transpile-modules/10.0.0:
+    resolution: {integrity: sha512-FyeJ++Lm2Fq31gbThiRCrJlYpIY9QaI7A3TjuhQLzOix8ChQrvn5ny4MhfIthS5cy6+uK1AhDRvxVdW17y3Xdw==}
+    dependencies:
+      enhanced-resolve: 5.10.0
+    dev: false
+
   /next/13.0.3_m5sxuueb27gk6ddc5gums6vtgq:
     resolution: {integrity: sha512-rFQeepcenRxKzeKlh1CsmEnxsJwhIERtbUjmYnKZyDInZsU06lvaGw5DT44rlNp1Rv2MT/e9vffZ8vK+ytwXHA==}
     engines: {node: '>=14.6.0'}
@@ -7705,6 +7723,11 @@ packages:
     hasBin: true
     dev: false
     optional: true
+
+  /tapable/2.2.1:
+    resolution: {integrity: sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==}
+    engines: {node: '>=6'}
+    dev: false
 
   /tar/6.1.12:
     resolution: {integrity: sha512-jU4TdemS31uABHd+Lt5WEYJuzn+TJTCBLljvIAHZOz6M9Os5pJ4dD+vRFLxPa/n3T0iEFzpi+0x1UfuDZYbRMw==}
