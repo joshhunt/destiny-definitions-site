@@ -1,20 +1,20 @@
-import BungieImage from "../../BungieImage";
-import ItemSummary from "../../ItemSummary";
-import HashLink from "../../HashLink";
+import BungieImage from "../../../BungieImage";
+import ItemSummary from "../../../ItemSummary";
+import HashLink from "../../../HashLink";
 
-import s from "../styles.module.scss";
+import s from "../../styles.module.scss";
 import React from "react";
-import { QuestMarker } from "../../QuestMarkers";
-import { DiffListProps } from "../types";
-import { castDefinitionsTable } from "../../../lib/utils";
+import { QuestMarker } from "../../../QuestMarkers";
+import { DiffListProps } from "../../types";
+import { castDefinitionsTable } from "../../../../lib/utils";
 import Table, {
   Cell,
   NoWrapCell,
   SmallCell,
   TableBody,
   TableHeader,
-} from "../../DiffTable";
-import QuestObjectives from "../../QuestObjectives";
+} from "../../../DiffTable";
+import QuestObjectives from "../../../QuestObjectives";
 import { ItemCategory } from "./categorise";
 import { DestinyInventoryItemDefinition } from "@destiny-definitions/common";
 

@@ -10,6 +10,8 @@ import {
   DestinyPresentationNodeDefinition as _DestinyPresentationNodeDefinition,
   DestinyDestinationDefinition as _DestinyDestinationDefinition,
   DestinyPlaceDefinition as _DestinyPlaceDefinition,
+  DestinyRecordDefinition as _DestinyRecordDefinition,
+  DestinyMetricDefinition as _DestinyMetricDefinition,
 } from "bungie-api-ts/destiny2";
 
 export interface ManifestVersion {
@@ -62,6 +64,8 @@ export type AllDestinyManifestComponents = {
   DestinyPresentationNodeDefinition?: DefinitionTable<DestinyPresentationNodeDefinition>;
   DestinyDestinationDefinition?: DefinitionTable<DestinyDestinationDefinition>;
   DestinyPlaceDefinition?: DefinitionTable<DestinyPlaceDefinition>;
+  DestinyRecordDefinition?: DefinitionTable<DestinyRecordDefinition>;
+  DestinyMetricDefinition?: DefinitionTable<DestinyMetricDefinition>;
 };
 
 export declare type DestinyDefinitionFrom<
@@ -85,9 +89,13 @@ export type DestinyPresentationNodeDefinition =
 export type DestinyDestinationDefinition =
   DeepPartial<_DestinyDestinationDefinition>;
 
+export type DestinyRecordDefinition = DeepPartial<_DestinyRecordDefinition>;
+
+export type DestinyMetricDefinition = DeepPartial<_DestinyMetricDefinition>;
+
 export type DestinyPlaceDefinition = DeepPartial<_DestinyPlaceDefinition>;
 
-type DeepPartial<T> = unknown extends T
+export type DeepPartial<T> = unknown extends T
   ? T
   : T extends object
   ? {

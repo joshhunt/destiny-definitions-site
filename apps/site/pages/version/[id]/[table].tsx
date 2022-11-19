@@ -173,6 +173,19 @@ function getDependencyHashes(
     }
   }
 
+  if (isTableType("DestinyDestinationDefinition", tableName, definitions)) {
+    for (const hash of newHashes) {
+      const def = definitions[hash];
+
+      addHashes(deps, "DestinyPlaceDefinition", def.placeHash, {
+        hash: 1,
+        displayProperties: {
+          name: 1,
+        },
+      });
+    }
+  }
+
   return deps;
 }
 
@@ -270,6 +283,26 @@ function getFieldsQuery(definitionName: string): JSONExtractQueryObject {
           minParty: 1,
           maxParty: 1,
         },
+      };
+
+    case "DestinyCollectibleDefinition":
+      return {
+        ...baseFieldsQuery,
+        sourceString: 1,
+      };
+
+    case "DestinyDestinationDefinition":
+      return {
+        ...baseFieldsQuery,
+        placeHash: 1,
+        bubbleSettings: 1,
+      };
+
+    case "DestinyObjectiveDefinition":
+      return {
+        ...baseFieldsQuery,
+        progressDescription: 1,
+        completionValue: 1,
       };
 
     default:

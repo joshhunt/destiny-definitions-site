@@ -1,6 +1,6 @@
 import React from "react";
-import { DiffListProps } from "../types";
-import { castDefinitionsTable } from "../../../lib/utils";
+import { DiffListProps } from "../../types";
+import { castDefinitionsTable } from "../../../../lib/utils";
 import { groupHashes } from "./categorise";
 import InventoryItemDiffList from "./InventoryItemDiffList";
 
