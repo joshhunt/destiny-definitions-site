@@ -186,13 +186,68 @@ function getDependencyHashes(
     }
   }
 
+  if (
+    isTableType("DestinyPresentationNodeDefinition", tableName, definitions)
+  ) {
+    for (const hash of newHashes) {
+      const def = definitions[hash];
+
+      addHashes(
+        deps,
+        "DestinyPresentationNodeDefinition",
+        def.children?.presentationNodes?.map((v) => v.presentationNodeHash),
+        { hash: 1, displayProperties: { name: 1, icon: 1 } }
+      );
+
+      addHashes(
+        deps,
+        "DestinyCollectibleDefinition",
+        def.children?.collectibles?.map((v) => v.collectibleHash),
+        { hash: 1, displayProperties: { name: 1, icon: 1 } }
+      );
+
+      addHashes(
+        deps,
+        "DestinyRecordDefinition",
+        def.children?.records?.map((v) => v.recordHash),
+        { hash: 1, displayProperties: { name: 1, icon: 1 } }
+      );
+
+      addHashes(
+        deps,
+        "DestinyMetricDefinition",
+        def.children?.metrics?.map((v) => v.metricHash),
+        { hash: 1, displayProperties: { name: 1, icon: 1 } }
+      );
+
+      addHashes(
+        deps,
+        "DestinyInventoryItemDefinition",
+        def.children?.craftables?.map((v) => v.craftableItemHash),
+        { hash: 1, displayProperties: { name: 1, icon: 1 } }
+      );
+
+      addHashes(
+        deps,
+        "DestinyPresentationNodeDefinition",
+        def.parentNodeHashes,
+        {
+          hash: 1,
+          displayProperties: {
+            name: 1,
+            icon: 1,
+          },
+        }
+      );
+    }
+  }
   return deps;
 }
 
 function addHashes(
   deps: Deps,
   tableName: DestinyManifestComponentName,
-  hashInput: number | number[] | null | undefined,
+  hashInput: number | (number | null | undefined)[] | null | undefined,
   fields: JSONExtractQueryObject
 ): void {
   if (!hashInput) {
@@ -204,7 +259,11 @@ function addHashes(
     deps[tableName] = { hashes: [], fields };
   }
 
-  deps[tableName].hashes.push(...hashes);
+  const cleanedHashes = hashes
+    .filter((v) => v !== null || v !== undefined)
+    .map((v) => v ?? 0);
+
+  deps[tableName].hashes.push(...cleanedHashes);
 }
 
 async function getMultipleDefinitionTables(
@@ -235,7 +294,9 @@ const baseFieldsQuery = {
 };
 
 function getFieldsQuery(definitionName: string): JSONExtractQueryObject {
-  switch (definitionName) {
+  const tableName = definitionName as DestinyManifestComponentName;
+
+  switch (tableName) {
     case "DestinyInventoryItemDefinition":
       return {
         ...baseFieldsQuery,
@@ -303,6 +364,13 @@ function getFieldsQuery(definitionName: string): JSONExtractQueryObject {
         ...baseFieldsQuery,
         progressDescription: 1,
         completionValue: 1,
+      };
+
+    case "DestinyPresentationNodeDefinition":
+      return {
+        ...baseFieldsQuery,
+        children: 1,
+        parentNodeHashes: 1,
       };
 
     default:

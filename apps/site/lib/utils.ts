@@ -1,4 +1,5 @@
 import {
+  DeepPartial,
   DefinitionTable,
   GenericDefinition,
 } from "@destiny-definitions/common";
@@ -42,7 +43,7 @@ export function isTableType<
   castToTableName: T,
   inputTableName: string,
   defs: Record<string, unknown>
-): defs is DefinitionTable<DestinyDefinitionFrom<T>> {
+): defs is DefinitionTable<DeepPartial<DestinyDefinitionFrom<T>>> {
   return inputTableName === castToTableName;
 }
 

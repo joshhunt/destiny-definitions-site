@@ -1,5 +1,5 @@
 import {
-  DestinyManifestComponentName,
+  // DestinyManifestComponentName,
   AllDestinyManifestComponents as OrigAllDestinyManifestComponents,
 
   // Definitions
@@ -94,6 +94,8 @@ export type DestinyRecordDefinition = DeepPartial<_DestinyRecordDefinition>;
 export type DestinyMetricDefinition = DeepPartial<_DestinyMetricDefinition>;
 
 export type DestinyPlaceDefinition = DeepPartial<_DestinyPlaceDefinition>;
+
+export type DestinyManifestComponentName = keyof AllDestinyManifestComponents;
 
 export type DeepPartial<T> = unknown extends T
   ? T

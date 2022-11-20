@@ -8,12 +8,14 @@ import Table, {
 } from "../../../DiffTable";
 
 import { TypedDiffListProps } from "../../types";
+import s from "../../styles.module.scss";
 import BaseCells, {
   BaseHeaderCells,
   getHasDisplayProperties,
 } from "../../BaseCells";
-import { castDefinitionsTable } from "../../../../lib/utils";
+import { castDefinitionsTable, getDisplayName } from "../../../../lib/utils";
 import { ChildrenList } from "./ChildrenList";
+import InlineEntry from "../../../InlineEntry";
 
 export default function PresentationNodeDiffList({
   tableName,
@@ -28,10 +30,18 @@ export default function PresentationNodeDiffList({
     tableName,
     genericDefinitions
   );
+  const { DestinyPresentationNodeDefinition: presentationNodeDefs = {} } =
+    otherDefinitions;
+
   const hasDisplayProperties = getHasDisplayProperties(hashes, definitions);
   const hasChildren = hashes.some((hash) =>
     Object.values(definitions[hash].children ?? {}).some(
       (childHashes) => childHashes.length
+    )
+  );
+  const hasParents = hashes.some((hash) =>
+    definitions[hash]?.parentNodeHashes?.some(
+      (parentHash) => presentationNodeDefs[parentHash]
     )
   );
 
@@ -40,6 +50,7 @@ export default function PresentationNodeDiffList({
       <TableHeader>
         <BaseHeaderCells hasDisplayProperties={hasDisplayProperties} />
         {hasChildren && <Cell>Children</Cell>}
+        {hasParents && <Cell>Parents</Cell>}
       </TableHeader>
 
       <TableBody>
@@ -59,10 +70,24 @@ export default function PresentationNodeDiffList({
                 <ProseCell>
                   <ChildrenList
                     otherDefinitions={otherDefinitions}
-                    presentationNodeDefinitions={definitions}
                     definition={definition}
                   />
                 </ProseCell>
+              )}
+
+              {hasParents && (
+                <Cell>
+                  <ul className={s.childList}>
+                    {definition.parentNodeHashes?.map((parentHash) => {
+                      const parentDef = presentationNodeDefs[parentHash];
+                      return (
+                        <li className={s.childItem} key={parentHash}>
+                          <InlineEntry definition={parentDef} />
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </Cell>
               )}
             </TableRow>
           );

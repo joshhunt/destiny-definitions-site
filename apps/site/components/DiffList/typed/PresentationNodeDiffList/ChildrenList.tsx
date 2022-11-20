@@ -3,7 +3,6 @@ import {
   DeepPartial,
   DefinitionTable,
   DestinyPresentationNodeDefinition,
-  GenericDefinition,
 } from "@destiny-definitions/common";
 import {
   DestinyPresentationNodeChildEntry,
@@ -17,22 +16,22 @@ import s from "../../styles.module.scss";
 
 interface ChildrenListProps {
   otherDefinitions: AllDestinyManifestComponents;
-  presentationNodeDefinitions: DefinitionTable<DestinyPresentationNodeDefinition>;
   definition: DestinyPresentationNodeDefinition;
 }
 
 export const ChildrenList: React.FC<ChildrenListProps> = ({
   definition,
-  presentationNodeDefinitions,
   otherDefinitions,
 }) => {
-  const { presentationNodes, records, collectibles, metrics } =
+  const { presentationNodes, records, collectibles, metrics, craftables } =
     definition.children || {};
 
   const {
     DestinyRecordDefinition: recordDefs,
     DestinyCollectibleDefinition: collectibleDefs,
     DestinyMetricDefinition: metricDefs,
+    DestinyPresentationNodeDefinition: presentationNodeDefs,
+    DestinyInventoryItemDefinition: itemDefs,
   } = otherDefinitions;
 
   return (
@@ -40,7 +39,7 @@ export const ChildrenList: React.FC<ChildrenListProps> = ({
       <List
         title="Presentation nodes"
         childrenList={presentationNodes ?? []}
-        definitions={presentationNodeDefinitions}
+        definitions={presentationNodeDefs}
         definitionName="DestinyPresentationNodeDefinition"
         selectHash={(child) => child.presentationNodeHash}
       />
@@ -67,6 +66,14 @@ export const ChildrenList: React.FC<ChildrenListProps> = ({
         definitions={metricDefs}
         definitionName="DestinyMetricDefinition"
         selectHash={(child) => child.metricHash}
+      />
+
+      <List
+        title="Craftables"
+        childrenList={craftables ?? []}
+        definitions={itemDefs}
+        definitionName="DestinyInventoryItemDefinition"
+        selectHash={(child) => child.craftableItemHash}
       />
     </>
   );
