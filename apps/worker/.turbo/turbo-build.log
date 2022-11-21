@@ -1,4 +1,0 @@
-
-> @destiny-definitions/worker@0.0.1 build /home/joshhunt/dev/destiny-definitions-site/apps/worker
-> pnpm clean && pnpm bundle
-

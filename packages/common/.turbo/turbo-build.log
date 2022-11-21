@@ -1,4 +1,0 @@
-
-> @destiny-definitions/common@0.0.1 build /Users/joshhunt/dev/destiny-definitions-site/packages/common
-> rm -fr dist/* && tsc
-
