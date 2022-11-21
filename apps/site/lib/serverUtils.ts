@@ -1,0 +1,39 @@
+import {
+  ManifestVersion,
+  ManifestVersionSummary,
+  VersionDiff,
+  VersionDiffSummary,
+} from "@destiny-definitions/common";
+import { mapValues } from "lodash";
+import { ParsedUrlQuery } from "querystring";
+
+export function getVersionSummary(
+  version: ManifestVersion,
+  versionDiff: VersionDiff
+): ManifestVersionSummary {
+  const diffSummary = getDiffSummary(versionDiff);
+  return {
+    ...version,
+    diffCounts: diffSummary,
+  };
+}
+
+export function getDiffSummary(versionDiff: VersionDiff): VersionDiffSummary {
+  return mapValues(versionDiff, (tableDiff) => {
+    const _tableDiff = { ...tableDiff, modified: tableDiff.modified ?? [] };
+
+    return mapValues(_tableDiff, (hashes) => hashes.length);
+  });
+}
+
+export function getParamString(
+  value: ParsedUrlQuery[string] | undefined
+): string | undefined {
+  if (!value) return undefined;
+
+  if (Array.isArray(value)) {
+    return value[0];
+  }
+
+  return value;
+}

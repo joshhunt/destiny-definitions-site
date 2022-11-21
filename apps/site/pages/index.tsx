@@ -1,11 +1,6 @@
 import { GetStaticProps } from "next";
 
-import {
-  ManifestVersionSummary,
-  S3Archive,
-  VersionDiff,
-  VersionDiffSummary,
-} from "@destiny-definitions/common";
+import { ManifestVersionSummary, S3Archive } from "@destiny-definitions/common";
 
 import s from "./indexStyles.module.scss";
 import Version from "../components/Version";
@@ -15,7 +10,7 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { mapValues } from "lodash";
+import { getDiffSummary, getVersionSummary } from "../lib/serverUtils";
 
 interface HomeStaticProps {
   versions: ManifestVersionSummary[];
@@ -77,12 +72,7 @@ export const getStaticProps: GetStaticProps<HomeStaticProps> = async (
     typeof pageParam === "string" ? pageParam : pageParam[0]
   );
 
-  const s3Client = new S3Archive({
-    accessKeyId: process.env.S3_ACCESS_KEY_ID ?? "",
-    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY ?? "",
-    bucket: process.env.S3_BUCKET ?? "",
-    region: process.env.S3_REGION ?? "",
-  });
+  const s3Client = S3Archive.newFromEnvVars();
 
   const indexData = await s3Client.getVersionHistory();
   indexData.reverse();
@@ -105,10 +95,8 @@ export const getStaticProps: GetStaticProps<HomeStaticProps> = async (
 
   for (const manifestVersion of pageVersions) {
     const diffData = await s3Client.getVersionDiff(manifestVersion.id);
-    versionSummaries.push({
-      ...manifestVersion,
-      diffCounts: getDiffSummary(diffData),
-    });
+    const summary = getVersionSummary(manifestVersion, diffData);
+    versionSummaries.push(summary);
   }
 
   return {
@@ -116,11 +104,3 @@ export const getStaticProps: GetStaticProps<HomeStaticProps> = async (
     revalidate: duration("5 minutes"),
   };
 };
-
-function getDiffSummary(versionDiff: VersionDiff): VersionDiffSummary {
-  return mapValues(versionDiff, (tableDiff) => {
-    const _tableDiff = { ...tableDiff, modified: tableDiff.modified ?? [] };
-
-    return mapValues(_tableDiff, (hashes) => hashes.length);
-  });
-}

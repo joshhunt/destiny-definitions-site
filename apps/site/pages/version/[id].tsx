@@ -1,4 +1,3 @@
-import { ManifestVersion, AllDefinitionDiffs } from "../../types";
 import { GetStaticProps, GetStaticPaths } from "next";
 
 import s from "./styles.module.scss";
@@ -6,27 +5,17 @@ import { getVersionsIndex, getDiffForVersion, getVersion } from "../../remote";
 import Version from "../../components/Version";
 import { format } from "date-fns";
 import duration from "../../lib/duration";
+import { ManifestVersionSummary, S3Archive } from "@destiny-definitions/common";
+import { getParamString, getVersionSummary } from "../../lib/serverUtils";
 
 interface VersionIndexStaticProps {
-  version: ManifestVersion;
-  allDefinitionDiffs: undefined | AllDefinitionDiffs;
+  version: ManifestVersionSummary;
 }
 
-export default function VersionIndex({
-  version,
-  allDefinitionDiffs,
-}: VersionIndexStaticProps) {
-  if (!allDefinitionDiffs) {
-    return null;
-  }
-
+export default function VersionIndex({ version }: VersionIndexStaticProps) {
   return (
     <div className={s.root}>
-      <Version
-        manifestVersion={version}
-        diff={allDefinitionDiffs}
-        headingPrefix="Released "
-      />
+      <Version versionSummary={version} headingPrefix="Released " />
     </div>
   );
 }
@@ -45,11 +34,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps<VersionIndexStaticProps> = async (
   context
 ) => {
-  const versionIdParam = Array.isArray(context?.params?.id)
-    ? context?.params?.id[0]
-    : context?.params?.id;
-
-  const version = await getVersion(versionIdParam ?? "");
+  const s3Client = S3Archive.newFromEnvVars();
+  const versionId = getParamString(context?.params?.id);
+  const version = await s3Client.getVersion(versionId ?? "");
 
   if (!version) {
     console.warn(
@@ -58,7 +45,8 @@ export const getStaticProps: GetStaticProps<VersionIndexStaticProps> = async (
     return { notFound: true, revalidate: duration("5 minutes") };
   }
 
-  const allDefinitionDiffs = await getDiffForVersion(version.id);
+  const versionDiff = await s3Client.getVersionDiff(version.id);
+  const versionSummary = getVersionSummary(version, versionDiff);
 
   const breadcrumbs = [
     {
@@ -72,8 +60,7 @@ export const getStaticProps: GetStaticProps<VersionIndexStaticProps> = async (
   return {
     props: {
       breadcrumbs,
-      version,
-      allDefinitionDiffs,
+      version: versionSummary,
       meta: {
         canonical: canonical,
       },
