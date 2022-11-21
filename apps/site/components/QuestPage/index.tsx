@@ -1,5 +1,4 @@
 import React from "react";
-import { DefsObject } from "../../types";
 import {
   InteractionRewardSet,
   QuestItem,
@@ -11,12 +10,18 @@ import s from "./styles.module.scss";
 import QuestObjectives from "../QuestObjectives";
 import RewardItem from "../RewardItem";
 import ItemHeader from "../ItemHeader";
+import {
+  DefinitionTable,
+  DestinyInventoryItemDefinition,
+  DestinyObjectiveDefinition,
+} from "@destiny-definitions/common";
+import { getDescription, getDisplayName } from "../../lib/utils";
 
 export interface QuestPageProps {
   questHash: number;
   rewardItemHashes: number[];
-  itemDefinitions: DefsObject<QuestItem>;
-  objectiveDefinitions: DefsObject<QuestObjective>;
+  itemDefinitions: DefinitionTable<DestinyInventoryItemDefinition>;
+  objectiveDefinitions: DefinitionTable<DestinyObjectiveDefinition>;
   relatedVendors: QuestVendor[];
   interactionRewards: InteractionRewardSet;
 }
@@ -35,14 +40,15 @@ const QuestPage: React.FC<QuestPageProps> = ({
     thisQuest?.displayProperties?.name ??
     "";
 
-  const allQuestDefs =
-    thisQuest.setData?.itemList.map((v) => itemDefinitions[v.itemHash]) ?? [];
+  const allQuestDefs = (thisQuest.setData?.itemList ?? [])
+    .map((v) => itemDefinitions[v.itemHash ?? 0])
+    .filter(Boolean);
 
   const relatedInteractions = relatedVendors.map((vendor) => ({
     vendor: vendor,
-    interactions: vendor.interactions.filter(
+    interactions: vendor.interactions?.filter(
       (interaction) =>
-        questName && interaction.headerDisplayProperties.name === questName
+        questName && interaction.headerDisplayProperties?.name === questName
     ),
   }));
 
@@ -62,11 +68,11 @@ const QuestPage: React.FC<QuestPageProps> = ({
                 <div className={s.stepHeader}>
                   <span className={s.stepHeaderText}>
                     <span className={s.stepNumber}>{index + 1}.</span>{" "}
-                    {item.displayProperties.name}
+                    {getDisplayName(item)}
                   </span>
                 </div>
 
-                <p>{item.displayProperties.description}</p>
+                <p>{getDescription(item)}</p>
 
                 {item.displaySource && (
                   <p className={s.displaySource}>{item.displaySource}</p>
@@ -87,14 +93,12 @@ const QuestPage: React.FC<QuestPageProps> = ({
 
             {relatedInteractions.map(({ interactions, vendor }) => (
               <div className={s.interaction}>
-                <div className={s.stepHeader}>
-                  {vendor.displayProperties.name}
-                </div>
+                <div className={s.stepHeader}>{getDisplayName(vendor)}</div>
 
-                {interactions.map((interaction) => {
+                {interactions?.map((interaction) => {
                   const itemHashes =
-                    interactionRewards[vendor.hash]?.[
-                      interaction.interactionIndex
+                    interactionRewards[vendor.hash ?? 0]?.[
+                      interaction.interactionIndex ?? -1
                     ] ?? [];
 
                   const items = itemHashes

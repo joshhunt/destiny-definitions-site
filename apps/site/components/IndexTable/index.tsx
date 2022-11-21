@@ -1,10 +1,10 @@
 import s from "./styles.module.scss";
 import { Fragment } from "react";
-import { VersionDiffCounts } from "../../types";
 import { friendlyDiffName } from "../../lib/utils";
+import { VersionDiffSummary } from "@destiny-definitions/common";
 
 interface IndexTableProps {
-  versionDiffCounts: VersionDiffCounts;
+  versionDiffSummary: VersionDiffSummary;
   versionId: string;
   data: {
     name: string;
@@ -21,8 +21,11 @@ interface IndexTableProps {
 export default function IndexTable({
   data,
   versionId,
-  versionDiffCounts,
+  versionDiffSummary,
 }: IndexTableProps) {
+  const versionDiffCounts = Object.entries(versionDiffSummary).map(
+    ([tableName, counts]) => ({ tableName, ...counts })
+  );
   return (
     <div className={s.root}>
       {data.map((topLevel) => {

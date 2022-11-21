@@ -1,6 +1,8 @@
-import nextTranspileModules from "next-transpile-modules";
+// import nextTranspileModules from "next-transpile-modules";
+const nextTranspileModules = require("next-transpile-modules");
 
 // next.config.js
-const withTM = nextTranspileModules(['@destiny-definitions/common']);
+const withTM = nextTranspileModules(["@destiny-definitions/common"]);
 
-export default withTM({});
+// export default withTM({});
+module.exports = withTM({});

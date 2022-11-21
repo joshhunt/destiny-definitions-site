@@ -30,6 +30,7 @@ export default function DefinitionDiffPage({
   return (
     <DefinitionDiffFrame tableName={tableName}>
       <DiffList
+        version={version}
         title="Added"
         tableName={tableName}
         hashes={tableDiff.added}
@@ -38,6 +39,7 @@ export default function DefinitionDiffPage({
       />
 
       <DiffList
+        version={version}
         title="Unclassified"
         tableName={tableName}
         hashes={tableDiff.unclassified}
@@ -46,6 +48,7 @@ export default function DefinitionDiffPage({
       />
 
       <RemovedDiffList
+        version={version}
         title="Removed"
         tableName={tableName}
         hashes={tableDiff.removed}
@@ -54,6 +57,7 @@ export default function DefinitionDiffPage({
       />
 
       <RemovedDiffList
+        version={version}
         title="Reclassified"
         tableName={tableName}
         hashes={tableDiff.reclassified}

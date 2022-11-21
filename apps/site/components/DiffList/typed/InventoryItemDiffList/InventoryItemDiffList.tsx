@@ -5,7 +5,7 @@ import HashLink from "../../../HashLink";
 import s from "../../styles.module.scss";
 import React from "react";
 import { QuestMarker } from "../../../QuestMarkers";
-import { DiffListProps } from "../../types";
+import { TypedDiffListProps } from "../../types";
 import { castDefinitionsTable } from "../../../../lib/utils";
 import Table, {
   Cell,
@@ -25,12 +25,13 @@ const CLASS_TYPE_NAME: { [k: string]: string } = {
 };
 
 export default function InventoryItemDiffList({
+  version,
   tableName,
   hashes,
   definitions: genericDefinitions,
   otherDefinitions,
   itemCategory,
-}: Omit<DiffListProps, "title"> & { itemCategory: string }) {
+}: TypedDiffListProps & { itemCategory: string }) {
   if (hashes.length == 0) {
     return null;
   }
@@ -93,6 +94,7 @@ export default function InventoryItemDiffList({
               {isQuests && (
                 <SmallCell>
                   <QuestMarker
+                    version={version}
                     definitions={definitions}
                     siblingDiffHashes={hashes}
                     definition={def}

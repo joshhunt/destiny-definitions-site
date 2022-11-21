@@ -5,10 +5,14 @@ import Link from "next/link";
 import commonStyles from "../../styles/common.module.scss";
 
 import s from "./styles.module.scss";
-import { Breadcrumb } from "../../types";
 import Interpose from "../Interpose";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+
+export interface Breadcrumb {
+  label: string;
+  to: string;
+}
 
 interface SiteHeaderProps {
   breadcrumbs?: Breadcrumb[];

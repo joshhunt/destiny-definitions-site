@@ -1,15 +1,16 @@
 import React from "react";
-import { DiffListProps } from "../../types";
+import { TypedDiffListProps } from "../../types";
 import { castDefinitionsTable } from "../../../../lib/utils";
 import { groupHashes } from "./categorise";
 import InventoryItemDiffList from "./InventoryItemDiffList";
 
 export default function GroupedInventoryItemDiffList({
+  version,
   tableName,
   hashes,
   definitions: genericDefinitions,
   otherDefinitions,
-}: Omit<DiffListProps, "title">) {
+}: TypedDiffListProps) {
   if (hashes.length == 0) {
     return null;
   }
@@ -29,6 +30,7 @@ export default function GroupedInventoryItemDiffList({
           <div key={groupName}>
             <h4>{groupName}</h4>
             <InventoryItemDiffList
+              version={version}
               hashes={hashes}
               tableName={tableName}
               definitions={definitions}

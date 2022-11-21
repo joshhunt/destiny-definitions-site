@@ -4,14 +4,13 @@ import { AppProps as NextAppProps } from "next/app";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 
-import SiteHeader from "../components/SiteHeader";
+import SiteHeader, { Breadcrumb } from "../components/SiteHeader";
 
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 
 import "./common.scss";
 
-import { PageProps } from "../types";
 import React from "react";
 
 config.autoAddCss = false;
@@ -19,6 +18,15 @@ config.autoAddCss = false;
 Router.events.on("routeChangeStart", () => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
+
+export interface Meta {
+  canonical?: string;
+}
+
+export interface PageProps {
+  breadcrumbs?: Breadcrumb[];
+  meta?: Meta;
+}
 
 interface AppProps extends NextAppProps {
   pageProps: PageProps;
@@ -39,7 +47,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
       <SiteHeader breadcrumbs={pageProps.breadcrumbs} />
 
-      <Component {...(pageProps as any)} />
+      <Component {...pageProps} />
     </>
   );
 }
