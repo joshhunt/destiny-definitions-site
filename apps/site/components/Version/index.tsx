@@ -5,50 +5,34 @@ import cx from "classnames";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLink } from "@fortawesome/free-solid-svg-icons";
 
-import VersionDiffSummary from "../VersionDiffSummary";
+import VersionTable from "../VersionDiffSummary";
 import commonStyles from "../../styles/common.module.scss";
-import { ManifestVersion, AllDefinitionDiffs } from "../../types";
 import Link from "next/link";
 import _additionalData from "./additionalData.json";
 
 import s from "./styles.module.scss";
+import { ManifestVersionSummary } from "@destiny-definitions/common";
 
 interface AdditionalData {
   subtitle: string;
 }
 
 interface VersionProps {
-  manifestVersion: ManifestVersion;
-  diff: AllDefinitionDiffs;
+  versionSummary: ManifestVersionSummary;
   headingPrefix?: string;
 }
 
 const additionalData = _additionalData as Record<string, AdditionalData>;
 
-const RE = /(\d+)/g;
-function dateFromVersion(version: string) {
-  const matches = version.match(RE);
-
-  if (!matches) {
-    return new Date(777, 7, 7, 7, 7, 7);
-  }
-
-  const [, year, month, day, time] = matches;
-  const dateString = `${year}-${month}-${day}-${time}`;
-  const result = parse(dateString, "yy-MM-dd-HHmm", new Date());
-  return result;
-}
-
 export default function Version({
-  manifestVersion,
-  diff,
+  versionSummary,
   headingPrefix,
 }: VersionProps) {
-  const { subtitle } = additionalData[manifestVersion.id] || {};
+  const { subtitle } = additionalData[versionSummary.id] || {};
 
-  const hasChanges = Object.values(diff).some((item) => {
+  const hasChanges = Object.values(versionSummary.diffCounts).some((item) => {
     const thisCount = Object.values(item).reduce(
-      (acc2, item2) => item2.length + acc2,
+      (acc2, item2) => item2 + acc2,
       0
     );
 
@@ -62,10 +46,10 @@ export default function Version({
       <h2 className={s.versionTitle}>
         <Link
           className={commonStyles.invisibleLink}
-          href={`/version/${manifestVersion.id}`}
+          href={`/version/${versionSummary.id}`}
         >
           {headingPrefix}
-          {format(new Date(manifestVersion.createdAt), "PPPP")}{" "}
+          {format(new Date(versionSummary.createdAt), "PPPP")}{" "}
           <sup>
             <FontAwesomeIcon icon={faLink} />
           </sup>
@@ -76,25 +60,28 @@ export default function Version({
         <tbody>
           <tr>
             <td>Time</td>
-            <td>{format(new Date(manifestVersion.createdAt), "pppp")}</td>
+            <td>{format(new Date(versionSummary.createdAt), "pppp")}</td>
           </tr>
           <tr>
             <td>ID</td>
             <td>
-              <code>{manifestVersion.id}</code>
+              <code>{versionSummary.id}</code>
             </td>
           </tr>
           <tr>
             <td>Bungie version</td>
             <td>
-              <code>{manifestVersion.version}</code>
+              <code>{versionSummary.version}</code>
             </td>
           </tr>
         </tbody>
       </table>
 
       {hasChanges ? (
-        <VersionDiffSummary id={manifestVersion.id} allDefinitionDiffs={diff} />
+        <VersionTable
+          id={versionSummary.id}
+          diffSummary={versionSummary.diffCounts}
+        />
       ) : (
         <p>
           <em>Nothing changed in this version</em>

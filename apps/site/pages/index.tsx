@@ -1,9 +1,10 @@
 import { GetStaticProps } from "next";
 
 import {
-  ManifestVersion,
+  ManifestVersionSummary,
   S3Archive,
   VersionDiff,
+  VersionDiffSummary,
 } from "@destiny-definitions/common";
 
 import s from "./indexStyles.module.scss";
@@ -14,10 +15,10 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { mapValues } from "lodash";
 
 interface HomeStaticProps {
-  versions: ManifestVersion[];
-  diffsForVersion: Record<string, VersionDiff>;
+  versions: ManifestVersionSummary[];
   pagination: {
     hasPrevPage: boolean;
     currentPage: number;
@@ -26,28 +27,14 @@ interface HomeStaticProps {
   };
 }
 
-export default function Home({
-  versions,
-  diffsForVersion,
-  pagination,
-}: HomeStaticProps) {
+export default function Home({ versions, pagination }: HomeStaticProps) {
   const { hasPrevPage, currentPage, hasNextPage, lastPage } = pagination;
   return (
     <div className={s.root}>
       <div className={s.versionList}>
-        {versions.map((manifestVersion) => {
-          const diff = diffsForVersion[manifestVersion.id];
-
-          if (!diff) {
-            return null;
-          }
-
+        {versions.map((versionSummary) => {
           return (
-            <Version
-              key={manifestVersion.id}
-              manifestVersion={manifestVersion}
-              diff={diff}
-            />
+            <Version key={versionSummary.id} versionSummary={versionSummary} />
           );
         })}
       </div>
@@ -114,15 +101,26 @@ export const getStaticProps: GetStaticProps<HomeStaticProps> = async (
 
   const pageVersions = indexData.slice(indexStart, indexEnd);
 
-  const diffsForVersion: Record<string, VersionDiff> = {};
+  const versionSummaries: ManifestVersionSummary[] = [];
 
   for (const manifestVersion of pageVersions) {
     const diffData = await s3Client.getVersionDiff(manifestVersion.id);
-    diffsForVersion[manifestVersion.id] = diffData;
+    versionSummaries.push({
+      ...manifestVersion,
+      diffCounts: getDiffSummary(diffData),
+    });
   }
 
   return {
-    props: { versions: indexData, diffsForVersion, pagination },
+    props: { versions: versionSummaries, pagination },
     revalidate: duration("5 minutes"),
   };
 };
+
+function getDiffSummary(versionDiff: VersionDiff): VersionDiffSummary {
+  return mapValues(versionDiff, (tableDiff) => {
+    const _tableDiff = { ...tableDiff, modified: tableDiff.modified ?? [] };
+
+    return mapValues(_tableDiff, (hashes) => hashes.length);
+  });
+}

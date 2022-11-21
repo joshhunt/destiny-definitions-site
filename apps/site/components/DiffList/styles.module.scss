@@ -43,11 +43,15 @@
 }
 
 .childList {
-  padding-left: 16px;
+  // padding-left: 16px;
+  padding: 0;
+  margin: 0;
 }
 
 .childItem {
   list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .bold {

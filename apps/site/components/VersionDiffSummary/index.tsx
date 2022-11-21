@@ -1,18 +1,17 @@
-import { AllDefinitionDiffs } from "../../types";
-
 import s from "./styles.module.scss";
 import commonStyles from "../../styles/common.module.scss";
 import { friendlyDiffName } from "../../lib/utils";
 import definitionsMetadata from "../definitionsMetadata";
+import { VersionDiffSummary } from "@destiny-definitions/common";
 
 interface VersionDiffSummaryProps {
   id: string;
-  allDefinitionDiffs: AllDefinitionDiffs;
+  diffSummary: VersionDiffSummary;
 }
 
-export default function VersionDiffSummary({
+export default function VersionTable({
   id,
-  allDefinitionDiffs,
+  diffSummary,
 }: VersionDiffSummaryProps) {
   return (
     <table className={s.table}>
@@ -27,16 +26,14 @@ export default function VersionDiffSummary({
       </thead>
 
       <tbody>
-        {Object.entries(allDefinitionDiffs)
+        {Object.entries(diffSummary)
           .sort(([tableNameA], [tableNameB]) => {
             const aIndex = definitionsMetadata[tableNameA]?.index ?? 9999;
             const bIndex = definitionsMetadata[tableNameB]?.index ?? 9999;
 
             return aIndex - bIndex;
           })
-          .filter(([tableName, diffs]) =>
-            Object.values(diffs).some((vv) => vv.length)
-          )
+          .filter(([tableName, diffs]) => Object.values(diffs).some((vv) => vv))
           .map(([tableName, diffs]) => {
             const meta = definitionsMetadata[tableName];
 
@@ -52,27 +49,27 @@ export default function VersionDiffSummary({
                 </td>
                 <td>
                   <DiffNumber
-                    value={diffs.added.length}
+                    value={diffs.added}
                     prefix="+"
                     className={s.numberAdded}
                   />
                 </td>
                 <td>
                   <DiffNumber
-                    value={diffs.unclassified.length}
+                    value={diffs.unclassified}
                     className={s.numberUnclassified}
                   />
                 </td>
                 <td>
                   <DiffNumber
-                    value={diffs.removed.length}
+                    value={diffs.removed}
                     prefix="-"
                     className={s.numberRemoved}
                   />
                 </td>
                 <td>
                   <DiffNumber
-                    value={diffs.modified.length}
+                    value={diffs.modified ?? 0}
                     className={s.numberModified}
                   />
                 </td>

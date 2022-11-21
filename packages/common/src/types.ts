@@ -15,31 +15,47 @@ import {
 } from "bungie-api-ts/destiny2";
 
 export interface ManifestVersion {
-  readonly id: string;
-  readonly version: string;
-  readonly s3Key: string;
-  readonly createdAt: string;
-  readonly updatedAt: string;
+  id: string;
+  version: string;
+  s3Key: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ManifestVersionSummary extends ManifestVersion {
+  diffCounts: VersionDiffSummary;
 }
 
 export interface DefinitionTableDiff {
-  readonly removed: number[];
-  readonly added: number[];
-  readonly unclassified: number[];
-  readonly reclassified: number[];
-  readonly modified?: number[];
+  removed: number[];
+  added: number[];
+  unclassified: number[];
+  reclassified: number[];
+  modified?: number[];
+}
+
+export interface DefinitionTableDiffSummary {
+  removed: number;
+  added: number;
+  unclassified: number;
+  reclassified: number;
+  modified: number;
 }
 
 export interface GroupedDefinitionTableDiff {
-  readonly removed: HashGroup;
-  readonly added: HashGroup;
-  readonly unclassified: HashGroup;
-  readonly reclassified: HashGroup;
-  readonly modified: HashGroup;
+  removed: HashGroup;
+  added: HashGroup;
+  unclassified: HashGroup;
+  reclassified: HashGroup;
+  modified: HashGroup;
 }
 
 export interface VersionDiff {
   [definitionTableName: string]: DefinitionTableDiff;
+}
+
+export interface VersionDiffSummary {
+  [definitionTableName: string]: DefinitionTableDiffSummary;
 }
 
 export interface GenericDefinition {
