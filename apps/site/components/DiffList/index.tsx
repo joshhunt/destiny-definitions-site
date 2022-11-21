@@ -6,6 +6,7 @@ import CollectibleDiffList from "./typed/CollectibleDiffList";
 import DestinationDiffList from "./typed/DestinationDiffList";
 import PresentationNodeDiffList from "./typed/PresentationNodeDiffList";
 import ObjectiveDiffList from "./typed/ObjectiveDiffList";
+import RecordDiffList from "./typed/RecordDiffList";
 import InventoryItemDiffList from "./typed/InventoryItemDiffList/GroupedInventoryItemDiffList";
 
 import s from "./styles.module.scss";
@@ -34,6 +35,10 @@ function DiffListForType(props: Omit<DiffListProps, "title">) {
 
   if (props.tableName === "DestinyPresentationNodeDefinition") {
     return <PresentationNodeDiffList {...props} />;
+  }
+
+  if (props.tableName === "DestinyRecordDefinition") {
+    return <RecordDiffList {...props} />;
   }
 
   return <FallbackDiffList {...props} />;

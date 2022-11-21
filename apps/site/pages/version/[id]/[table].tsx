@@ -241,6 +241,34 @@ function getDependencyHashes(
       );
     }
   }
+
+  if (isTableType("DestinyRecordDefinition", tableName, definitions)) {
+    for (const hash of newHashes) {
+      const def = definitions[hash];
+
+      addHashes(deps, "DestinyObjectiveDefinition", def.objectiveHashes, {
+        hash: 1,
+        completionValue: 1,
+        progressDescription: 1,
+        valueStyle: 1,
+      });
+
+      addHashes(
+        deps,
+        "DestinyObjectiveDefinition",
+        def.intervalInfo?.intervalObjectives?.map(
+          (v) => v.intervalObjectiveHash
+        ),
+        {
+          hash: 1,
+          completionValue: 1,
+          progressDescription: 1,
+          valueStyle: 1,
+        }
+      );
+    }
+  }
+
   return deps;
 }
 
@@ -371,6 +399,18 @@ function getFieldsQuery(definitionName: string): JSONExtractQueryObject {
         ...baseFieldsQuery,
         children: 1,
         parentNodeHashes: 1,
+      };
+
+    case "DestinyRecordDefinition":
+      return {
+        ...baseFieldsQuery,
+        objectiveHashes: 1,
+        completionInfo: {
+          ScoreValue: 1,
+        },
+        intervalInfo: {
+          intervalObjectives: 1,
+        },
       };
 
     default:
