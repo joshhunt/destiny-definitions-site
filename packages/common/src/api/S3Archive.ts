@@ -82,7 +82,17 @@ export class S3Archive {
   }
 
   async getVersionHistory(): Promise<ManifestVersion[]> {
-    return await this.getJsonS3Object<ManifestVersion[]>("index.json");
+    const versions = await this.getJsonS3Object<ManifestVersion[]>(
+      "index.json"
+    );
+
+    versions.sort((versionA, versionB) => {
+      const dateA = new Date(versionA.createdAt);
+      const dateB = new Date(versionB.createdAt);
+      return dateA.getTime() - dateB.getTime();
+    });
+
+    return versions;
   }
 
   async getVersion(id: string): Promise<ManifestVersion> {

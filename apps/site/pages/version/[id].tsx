@@ -1,7 +1,6 @@
 import { GetStaticProps, GetStaticPaths } from "next";
 
 import s from "./styles.module.scss";
-import { getVersionsIndex, getDiffForVersion, getVersion } from "../../remote";
 import Version from "../../components/Version";
 import { format } from "date-fns";
 import duration from "../../lib/duration";
@@ -21,14 +20,7 @@ export default function VersionIndex({ version }: VersionIndexStaticProps) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const data = await getVersionsIndex();
-
-  const paths =
-    data?.map((version) => ({
-      params: { id: version.id },
-    })) ?? [];
-
-  return { paths, fallback: "blocking" };
+  return { paths: [], fallback: "blocking" };
 };
 
 export const getStaticProps: GetStaticProps<VersionIndexStaticProps> = async (

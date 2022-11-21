@@ -44,6 +44,8 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
   return { paths: [], fallback: "blocking" };
 };
 
+const TRUNCATION_LIMIT = 100;
+
 export const getStaticProps: GetStaticProps<
   DefinitionDiffStaticProps,
   Params
@@ -54,7 +56,7 @@ export const getStaticProps: GetStaticProps<
   invariant(context.params, "params is required");
   invariant(context.params.id, "versionId param is required");
   invariant(context.params.table, "table param is required");
-  const { id: versionId, table: definitionName } = context.params;
+  const { id: versionId, table: definitionName, diffType } = context.params;
 
   const [manifestVersion, previousManifestVersion] = await Promise.all([
     s3Client.getVersion(versionId),
@@ -62,7 +64,39 @@ export const getStaticProps: GetStaticProps<
   ]);
 
   const versionDiff = await s3Client.getVersionDiff(versionId);
-  const tableDiff = versionDiff[definitionName];
+  const fullTableDiff = versionDiff[definitionName];
+  let tableDiff: DefinitionTableDiff;
+
+  if (diffType) {
+    if (
+      diffType !== "added" &&
+      diffType !== "removed" &&
+      diffType !== "unclassified" &&
+      diffType !== "reclassified" &&
+      diffType !== "modified"
+    ) {
+      throw new Error("Invalid diffType " + diffType);
+    }
+
+    const diffForType = fullTableDiff[diffType] ?? [];
+    tableDiff = {
+      added: [],
+      removed: [],
+      unclassified: [],
+      reclassified: [],
+      modified: [],
+    };
+
+    tableDiff[diffType] = diffForType;
+  } else {
+    tableDiff = {
+      added: fullTableDiff.added.slice(0, TRUNCATION_LIMIT),
+      removed: fullTableDiff.removed.slice(0, TRUNCATION_LIMIT),
+      unclassified: fullTableDiff.unclassified.slice(0, TRUNCATION_LIMIT),
+      reclassified: fullTableDiff.reclassified.slice(0, TRUNCATION_LIMIT),
+      modified: fullTableDiff.modified?.slice(0, TRUNCATION_LIMIT),
+    };
+  }
 
   const newHashes = [...tableDiff.added, ...tableDiff.unclassified];
   const currentHashes = [...newHashes, ...(tableDiff.modified ?? [])];

@@ -1,19 +1,19 @@
+import {
+  DefinitionsArchive,
+  DefinitionTable,
+  S3Archive,
+} from "@destiny-definitions/common";
 import { format } from "date-fns";
-import { keyBy, mapValues, pick, uniq } from "lodash";
+import { uniq } from "lodash";
 import { GetStaticPaths } from "next";
 import React from "react";
 import QuestPage, { QuestPageProps } from "../../components/QuestPage";
-import {
-  createQuestItem,
-  createQuestObjective,
-  createQuestVendor,
-  InteractionRewardSet,
-} from "../../components/QuestPage/types";
+import { InteractionRewardSet } from "../../components/QuestPage/types";
 import duration from "../../lib/duration";
 import notFound from "../../lib/next";
 import { getHashAndVersion } from "../../lib/pageUtils";
-import { getLatestVersion, getTypedDefinition, getVersion } from "../../remote";
-import { ManifestVersion } from "../../types";
+import { castDefinition, castDefinitionsTable } from "../../lib/utils";
+import { DestinyVendorDefinition } from "bungie-api-ts/destiny2";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return { paths: [], fallback: "blocking" };
@@ -26,7 +26,9 @@ interface Context {
 }
 
 export const getStaticProps = async ({ params }: Context) => {
+  const s3Client = S3Archive.newFromEnvVars();
   const { hash: rawQuestHash, version } = await getHashAndVersion(
+    s3Client,
     params.hashAndVersion
   );
 
@@ -36,25 +38,62 @@ export const getStaticProps = async ({ params }: Context) => {
     return { notFound: true, revalidate: duration("1 day") };
   }
 
-  const [itemDefinitions, vendorDefinitions, objectiveDefinitions] =
-    await Promise.all([
-      getTypedDefinition(version.id, "DestinyInventoryItemDefinition"),
-      getTypedDefinition(version.id, "DestinyVendorDefinition"),
-      getTypedDefinition(version.id, "DestinyObjectiveDefinition"),
-    ]);
+  const defsClient = DefinitionsArchive.newFromEnvVars(s3Client);
 
-  const thisQuest = itemDefinitions[questHash];
+  const itemTableName = "DestinyInventoryItemDefinition";
+  const thisQuestDefinitionRaw = await defsClient.getDefinition(
+    version.id,
+    itemTableName,
+    questHash
+  );
+  const thisQuestDefinition = castDefinition(
+    "DestinyInventoryItemDefinition",
+    itemTableName,
+    thisQuestDefinitionRaw
+  );
+
+  const allQuestItemHashes =
+    thisQuestDefinition.setData?.itemList?.map((v) => v.itemHash) ?? [];
+
+  const questDefinitionsRaw = await defsClient.getDefinitions(
+    version.id,
+    itemTableName,
+    allQuestItemHashes
+  );
+  const questDefinitions = castDefinitionsTable(
+    "DestinyInventoryItemDefinition",
+    itemTableName,
+    questDefinitionsRaw
+  );
+
+  const allObjectiveHashes = Object.values(questDefinitions)
+    .flatMap((v) => v.objectives?.objectiveHashes)
+    .filter(nonNullable);
+
+  const objectiveDefinitions = await defsClient.getDefinitions(
+    version.id,
+    "DestinyObjectiveDefinition",
+    allObjectiveHashes
+  );
+
+  // TODO: make a way to query definitions using custom SQL to get related vendors
+  // TODO: use field queries to lessen definitions
+
+  const vendorDefinitions: DefinitionTable<DestinyVendorDefinition> = {};
+
   const questName =
-    thisQuest?.setData?.questLineName ??
-    thisQuest?.displayProperties?.name ??
+    thisQuestDefinition?.setData?.questLineName ??
+    thisQuestDefinition?.displayProperties?.name ??
     "";
 
-  if (!thisQuest) {
+  if (!thisQuestDefinition) {
     return notFound(duration("1 hour"));
   }
 
   const allQuestDefs =
-    thisQuest.setData?.itemList.map((v) => itemDefinitions[v.itemHash]) ?? [];
+    thisQuestDefinition.setData?.itemList.map(
+      (v) => questDefinitions[v.itemHash]
+    ) ?? [];
 
   const rewardItemHashes = uniq(
     allQuestDefs
@@ -62,17 +101,19 @@ export const getStaticProps = async ({ params }: Context) => {
       .filter((v) => v) ?? []
   );
 
+  const rewardItemDefinitions = await defsClient.getDefinitions(
+    version.id,
+    itemTableName,
+    rewardItemHashes
+  );
+
+  console.log("rewardItemDefinitions", rewardItemDefinitions);
+
   const limitedItemHashes = uniq([
     questHash,
     ...rewardItemHashes,
     ...allQuestDefs.map((v) => v.hash),
   ]);
-
-  const objectiveHashes = allQuestDefs
-    .flatMap((v) => v.objectives?.objectiveHashes)
-    .filter(nonNullable);
-
-  const limitedObjectiveDefs = pick(objectiveDefinitions, objectiveHashes);
 
   const relatedVendors = Object.values(vendorDefinitions).filter((v) =>
     v.interactions?.some(
@@ -82,6 +123,8 @@ export const getStaticProps = async ({ params }: Context) => {
   );
 
   const interactionRewards: InteractionRewardSet = {};
+
+  // TODO: need to get rewards from vendors?
 
   for (const vendor of relatedVendors) {
     interactionRewards[vendor.hash] = interactionRewards[vendor.hash] ?? {};
@@ -112,7 +155,7 @@ export const getStaticProps = async ({ params }: Context) => {
     }
   }
 
-  const limitedItemDefs = pick(itemDefinitions, limitedItemHashes);
+  // const limitedItemDefs = pick(itemDefinitions, limitedItemHashes);
 
   const breadcrumbs = [
     {
@@ -130,18 +173,24 @@ export const getStaticProps = async ({ params }: Context) => {
 
   const canonical = `/quest/${version.id}/${questHash}`;
 
+  const itemDefs = {
+    ...questDefinitions,
+    ...castDefinitionsTable(
+      "DestinyInventoryItemDefinition",
+      itemTableName,
+      rewardItemDefinitions
+    ),
+  };
+
   return {
     props: {
       breadcrumbs,
       questHash,
       rewardItemHashes: rewardItemHashes,
-      itemDefinitions: mapValues(limitedItemDefs, createQuestItem),
-      relatedVendors: relatedVendors.map(createQuestVendor),
+      itemDefinitions: itemDefs,
+      relatedVendors: relatedVendors,
       interactionRewards,
-      objectiveDefinitions: mapValues(
-        limitedObjectiveDefs,
-        createQuestObjective
-      ),
+      objectiveDefinitions: objectiveDefinitions,
       meta: { canonical },
     },
   };

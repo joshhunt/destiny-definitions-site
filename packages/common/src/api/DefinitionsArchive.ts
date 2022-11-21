@@ -3,7 +3,11 @@ import { S3Archive } from "./S3Archive";
 import path from "path";
 import sqlite3 from "sqlite3";
 import fs from "fs/promises";
-import { DefinitionTable } from "../types";
+import {
+  DefinitionTable,
+  DestinyManifestComponentName,
+  GenericDefinition,
+} from "../types";
 import { uniq } from "lodash";
 import { JSONExtractQueryObject, makeJsonExtractQuery } from "./jsonShape";
 
@@ -25,6 +29,29 @@ export class DefinitionsArchive {
 
     this.s3ArchiveClient = s3ArchiveClient;
     this.definitionsFolder = definitionsFolder;
+  }
+
+  async getDefinition<TableName extends string | DestinyManifestComponentName>(
+    versionId: string,
+    tableName: TableName,
+    hash: number,
+    fieldsQuery?: JSONExtractQueryObject
+  ): Promise<GenericDefinition> {
+    const defsTable = await this.getDefinitions(
+      versionId,
+      tableName,
+      [hash],
+      fieldsQuery
+    );
+    const def = defsTable[hash];
+
+    if (!def) {
+      throw new Error(
+        "Unable to get definition " + [versionId, tableName, hash].join(":")
+      );
+    }
+
+    return def;
   }
 
   async getDefinitions(

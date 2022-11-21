@@ -37,6 +37,22 @@ export function castDefinitionsTable<
   return defs as DefinitionTable<DestinyDefinitionFrom<T>>;
 }
 
+export function castDefinition<
+  T extends DestinyManifestComponentName = DestinyManifestComponentName
+>(
+  castToTableName: T,
+  inputTableName: string,
+  definition: unknown
+): DestinyDefinitionFrom<T> {
+  const isValid = inputTableName === castToTableName;
+
+  if (!isValid) {
+    throw new Error(`Unable to cast ${inputTableName} to ${castToTableName}`);
+  }
+
+  return definition as DestinyDefinitionFrom<T>;
+}
+
 export function isTableType<
   T extends DestinyManifestComponentName = DestinyManifestComponentName
 >(

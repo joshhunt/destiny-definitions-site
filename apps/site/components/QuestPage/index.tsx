@@ -9,7 +9,6 @@ import {
 
 import s from "./styles.module.scss";
 import QuestObjectives from "../QuestObjectives";
-import BungieImage from "../BungieImage";
 import RewardItem from "../RewardItem";
 import ItemHeader from "../ItemHeader";
 
@@ -91,6 +90,7 @@ const QuestPage: React.FC<QuestPageProps> = ({
                 <div className={s.stepHeader}>
                   {vendor.displayProperties.name}
                 </div>
+
                 {interactions.map((interaction) => {
                   const itemHashes =
                     interactionRewards[vendor.hash]?.[
