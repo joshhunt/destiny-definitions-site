@@ -7,6 +7,8 @@ import {
   ManifestVersion,
 } from "@destiny-definitions/common";
 import DefinitionDiffFrame from "../DefinitionDiffFrame";
+import ModifiedDiffList from "../DiffList/Modified";
+import RemovedDiffList from "../DiffList/Removed";
 
 interface DefinitionDiffStaticProps {
   version: ManifestVersion;
@@ -43,28 +45,29 @@ export default function DefinitionDiffPage({
         otherDefinitions={otherDefinitions}
       />
 
-      <DiffList
+      <RemovedDiffList
         title="Removed"
         tableName={tableName}
         hashes={tableDiff.removed}
         definitions={previousDefinitions}
-        otherDefinitions={otherDefinitions}
+        otherDefinitions={{}}
       />
 
-      <DiffList
+      <RemovedDiffList
         title="Reclassified"
         tableName={tableName}
         hashes={tableDiff.reclassified}
         definitions={previousDefinitions}
-        otherDefinitions={otherDefinitions}
+        otherDefinitions={{}}
       />
 
-      <DiffList
+      <ModifiedDiffList
+        version={version}
         title="Modified"
         tableName={tableName}
         hashes={tableDiff.modified ?? []}
         definitions={definitions}
-        otherDefinitions={otherDefinitions}
+        otherDefinitions={{}}
       />
     </DefinitionDiffFrame>
   );

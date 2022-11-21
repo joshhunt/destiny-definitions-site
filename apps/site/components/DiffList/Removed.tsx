@@ -17,17 +17,12 @@ import Table, {
   TableRow,
 } from "../DiffTable";
 
-interface ModifiedDiffListProps extends DiffListProps {
-  version: ManifestVersion;
-}
-
-export default function ModifiedDiffList({
+export default function RemovedDiffList({
   title,
-  version,
   hashes,
   definitions,
   tableName,
-}: ModifiedDiffListProps) {
+}: DiffListProps) {
   if (hashes.length == 0) {
     return null;
   }
@@ -44,7 +39,6 @@ export default function ModifiedDiffList({
           <SmallCell>Hash</SmallCell>
           {hasIcon && <SmallCell>Icon</SmallCell>}
           {hasName && <Cell>Name</Cell>}
-          <Cell>Link</Cell>
         </TableHeader>
 
         <TableBody>
@@ -81,15 +75,6 @@ export default function ModifiedDiffList({
                 )}
 
                 {hasName && <Cell>{getDisplayName(def)}</Cell>}
-
-                <Cell>
-                  <Link
-                    className={commonStyles.link}
-                    href={`/version/${version.id}/${tableName}/modified/${hash}`}
-                  >
-                    View diff
-                  </Link>
-                </Cell>
               </TableRow>
             );
           })}
