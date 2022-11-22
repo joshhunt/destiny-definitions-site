@@ -1,4 +1,4 @@
-import invariant from "tiny-invariant";
+import invariant from "@destiny-definitions/invariant";
 import { S3Archive } from "./S3Archive";
 import path from "path";
 import sqlite3 from "sqlite3";

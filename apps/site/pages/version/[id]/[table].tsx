@@ -1,5 +1,5 @@
 import { GetStaticProps, GetStaticPaths } from "next";
-import invariant from "tiny-invariant";
+import invariant from "@destiny-definitions/invariant";
 
 import React from "react";
 import DefinitionDiffPage from "../../../components/DefinitionDiffPage";

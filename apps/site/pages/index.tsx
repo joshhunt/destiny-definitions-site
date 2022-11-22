@@ -1,4 +1,4 @@
-import { GetStaticProps } from "next";
+import { GetServerSideProps, GetStaticProps } from "next";
 
 import { ManifestVersionSummary, S3Archive } from "@destiny-definitions/common";
 
@@ -64,7 +64,7 @@ export default function Home({ versions, pagination }: HomeStaticProps) {
 
 const PAGE_SIZE = 10;
 
-export const getStaticProps: GetStaticProps<HomeStaticProps> = async (
+export const getServerSideProps: GetServerSideProps<HomeStaticProps> = async (
   context
 ) => {
   const pageParam = context.params?.pageNumber ?? "1";
@@ -101,6 +101,6 @@ export const getStaticProps: GetStaticProps<HomeStaticProps> = async (
 
   return {
     props: { versions: versionSummaries, pagination },
-    revalidate: duration("5 minutes"),
+    // revalidate: duration("5 minutes"),
   };
 };

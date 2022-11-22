@@ -7,39 +7,12 @@ import { WORKER_INTERVAL } from "./env";
 async function main() {
   const LOOP_INTERVAL = duration(WORKER_INTERVAL);
 
-  const jobs = [bungieManifestJob, historicalArchives];
+  await historicalArchives();
 
   const keepAlive = process.argv.includes("--keep-alive");
-  console.log("keepAlive?", keepAlive);
 
   while (true) {
-    const usedBefore = process.memoryUsage() as unknown as Record<
-      string,
-      number
-    >;
-    for (let key in usedBefore) {
-      console.log(
-        `Before: ${key} ${
-          Math.round(((usedBefore[key] ?? 0) / 1024 / 1024) * 100) / 100
-        } MB`
-      );
-    }
-
-    for (const job of jobs) {
-      await job();
-    }
-
-    const usedAfter = process.memoryUsage() as unknown as Record<
-      string,
-      number
-    >;
-    for (let key in usedAfter) {
-      console.log(
-        `After: ${key} ${
-          Math.round(((usedAfter[key] ?? 0) / 1024 / 1024) * 100) / 100
-        } MB`
-      );
-    }
+    await bungieManifestJob();
 
     if (keepAlive) {
       await setTimeout(LOOP_INTERVAL);

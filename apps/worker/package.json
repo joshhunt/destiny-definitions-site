@@ -5,11 +5,12 @@
   "license": "AGPL",
   "scripts": {
     "dev": "nodemon --watch src -e ts --exec \"pnpm dev:build-run\"",
-    "dev:build-run": "pnpm bundle && pnpm start",
+    "dev:build-run": "pnpm bundle && pnpm dev:start",
     "bundle": "esbuild src/index.ts --bundle --outfile=dist/index.cjs --platform=node --target=node18.12 --external:@mapbox/node-pre-gyp --external:aws-sdk --external:dotenv",
     "clean": "rm -rf dist",
     "build": "pnpm clean && pnpm bundle",
-    "start": "node ./dist/index.cjs"
+    "dev:start": "node ./dist/index.cjs",
+    "start": "node ./dist/index.cjs --keep-alive"
   },
   "files": [
     "dist"

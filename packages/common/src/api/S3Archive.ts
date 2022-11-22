@@ -5,7 +5,7 @@ import {
   GetObjectCommandInput,
 } from "@aws-sdk/client-s3";
 import type { VersionDiff, ManifestVersion } from "../types";
-import invariant from "tiny-invariant";
+import invariant from "@destiny-definitions/invariant";
 import { Readable } from "stream";
 import type { DestinyManifest } from "bungie-api-ts/destiny2";
 

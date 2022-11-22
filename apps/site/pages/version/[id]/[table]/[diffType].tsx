@@ -20,6 +20,6 @@ export const getStaticProps: typeof origGetStaticProps = async (context) => {
   return origGetStaticProps(context);
 };
 
-export const config = {
-  unstable_runtimeJS: false,
-};
+// export const config = {
+//   unstable_runtimeJS: false,
+// };

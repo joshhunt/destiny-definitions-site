@@ -11,6 +11,7 @@ export default async function historicalArchives() {
   const archiveClient = new S3Archive(s3Config);
 
   const history = await archiveClient.getVersionHistory();
+  history.reverse();
   console.log("\n\nChecking history for", history.length, "versions");
 
   for (const version of history) {

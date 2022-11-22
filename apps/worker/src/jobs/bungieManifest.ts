@@ -1,9 +1,5 @@
 import { getDestinyManifest } from "bungie-api-ts/destiny2";
-import {
-  BUNGIE_API_KEY,
-  DEFINITIONS_DIRECTORY,
-  TEMP_DIRECTORY,
-} from "../env";
+import { BUNGIE_API_KEY, DEFINITIONS_DIRECTORY, TEMP_DIRECTORY } from "../env";
 import path from "path";
 import { downloadToFile, fileExists } from "../lib/lib";
 import { extractContentArchive } from "../lib/dotContent";
@@ -12,7 +8,7 @@ import { createHttpClient } from "@destiny-definitions/common";
 const $http = createHttpClient(BUNGIE_API_KEY);
 
 export default async function () {
-  console.log("\n\nBungie manifest");
+  console.log("job: bungieManifest");
   const { Response: manifest } = await getDestinyManifest($http);
 
   const contentPath = manifest.mobileWorldContentPaths["en"];
