@@ -71,6 +71,13 @@ const PAGE_SIZE = 10;
 export const getServerSideProps: GetServerSideProps<HomeStaticProps> = async (
   context
 ) => {
+  context.res.setHeader(
+    "Cache-Control",
+    `public, s-maxage=${duration("1 day")}, stale-while-revalidate=${duration(
+      "1 week"
+    )}`
+  );
+
   const pageParam = context.params?.pageNumber ?? "1";
   const pageNumber = parseInt(
     typeof pageParam === "string" ? pageParam : pageParam[0]

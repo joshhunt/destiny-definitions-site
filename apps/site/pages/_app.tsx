@@ -56,7 +56,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
       <Component {...pageProps} />
 
-      {buildDate && (
+      {meta.buildDate && (
         <p style={{ margin: 32, fontSize: 14, opacity: 0.75 }}>
           Page built {longFormatDate(buildDate)}
           {isClient &&
