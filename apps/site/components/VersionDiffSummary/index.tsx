@@ -3,6 +3,7 @@ import commonStyles from "../../styles/common.module.scss";
 import { friendlyDiffName } from "../../lib/utils";
 import definitionsMetadata from "../definitionsMetadata";
 import { VersionDiffSummary } from "@destiny-definitions/common";
+import Link from "next/link";
 
 interface VersionDiffSummaryProps {
   id: string;
@@ -40,12 +41,12 @@ export default function VersionTable({
             return (
               <tr key={tableName} className={meta?.junk ? s.junkRow : ""}>
                 <td>
-                  <a
+                  <Link
                     href={`/version/${id}/${tableName}`}
                     className={commonStyles.link}
                   >
                     {friendlyDiffName(tableName)}
-                  </a>
+                  </Link>
                 </td>
                 <td>
                   <DiffNumber
