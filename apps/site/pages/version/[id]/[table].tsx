@@ -17,6 +17,7 @@ import {
 import { isTableType } from "../../../lib/utils";
 import { DestinyManifestComponentName } from "bungie-api-ts/destiny2";
 import { RPM_STAT_HASH } from "../../../components/ItemSummary/ItemTags";
+import { makeMetaProps } from "../../../lib/serverUtils";
 
 interface DefinitionDiffStaticProps {
   version: ManifestVersion;
@@ -137,6 +138,7 @@ export const getStaticProps: GetStaticProps<
       otherDefinitions,
       tableDiff,
       tableName: definitionName,
+      meta: makeMetaProps(),
     },
     revalidate: duration("365 days"),
   };

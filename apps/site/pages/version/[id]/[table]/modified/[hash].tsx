@@ -7,6 +7,7 @@ import { format } from "date-fns";
 import { friendlyDiffName, getDisplayName } from "../../../../../lib/utils";
 import duration from "../../../../../lib/duration";
 import { DefinitionsArchive, S3Archive } from "@destiny-definitions/common";
+import { makeMetaProps } from "../../../../../lib/serverUtils";
 
 interface Params {
   [key: string]: any;
@@ -71,6 +72,7 @@ export const getStaticProps: GetStaticProps<
       definition,
       previousDefinition,
       breadcrumbs,
+      meta: makeMetaProps(),
     },
     revalidate: duration("30 days"),
   };

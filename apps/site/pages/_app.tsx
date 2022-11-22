@@ -11,7 +11,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 
 import "./common.scss";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 config.autoAddCss = false;
 
@@ -21,6 +21,7 @@ Router.events.on("routeChangeError", () => NProgress.done());
 
 export interface Meta {
   canonical?: string;
+  buildDate?: string;
 }
 
 export interface PageProps {
@@ -33,6 +34,10 @@ interface AppProps extends NextAppProps {
 }
 
 export default function App({ Component, pageProps }: AppProps) {
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   const meta = pageProps.meta ?? {};
   return (
     <>
@@ -48,6 +53,20 @@ export default function App({ Component, pageProps }: AppProps) {
       <SiteHeader breadcrumbs={pageProps.breadcrumbs} />
 
       <Component {...pageProps} />
+
+      {meta.buildDate && (
+        <p style={{ margin: 32, fontSize: 14, opacity: 0.75 }}>
+          Page built {longFormatDate(meta.buildDate)}.{" "}
+          {isClient && "Client JS running."}
+        </p>
+      )}
     </>
   );
+}
+
+function longFormatDate(date: string) {
+  return new Intl.DateTimeFormat("en-GB", {
+    dateStyle: "full",
+    timeStyle: "long",
+  }).format(new Date(date));
 }

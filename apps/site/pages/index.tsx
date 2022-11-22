@@ -10,7 +10,11 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getDiffSummary, getVersionSummary } from "../lib/serverUtils";
+import {
+  getDiffSummary,
+  getVersionSummary,
+  makeMetaProps,
+} from "../lib/serverUtils";
 
 interface HomeStaticProps {
   versions: ManifestVersionSummary[];
@@ -100,7 +104,11 @@ export const getServerSideProps: GetServerSideProps<HomeStaticProps> = async (
   }
 
   return {
-    props: { versions: versionSummaries, pagination },
+    props: {
+      versions: versionSummaries,
+      pagination,
+      meta: makeMetaProps(),
+    },
     // revalidate: duration("5 minutes"),
   };
 };

@@ -5,7 +5,11 @@ import Version from "../../components/Version";
 import { format } from "date-fns";
 import duration from "../../lib/duration";
 import { ManifestVersionSummary, S3Archive } from "@destiny-definitions/common";
-import { getParamString, getVersionSummary } from "../../lib/serverUtils";
+import {
+  getParamString,
+  getVersionSummary,
+  makeMetaProps,
+} from "../../lib/serverUtils";
 
 interface VersionIndexStaticProps {
   version: ManifestVersionSummary;
@@ -53,9 +57,10 @@ export const getStaticProps: GetStaticProps<VersionIndexStaticProps> = async (
     props: {
       breadcrumbs,
       version: versionSummary,
-      meta: {
+
+      meta: makeMetaProps({
         canonical: canonical,
-      },
+      }),
     },
     revalidate: duration("1 day"),
   };

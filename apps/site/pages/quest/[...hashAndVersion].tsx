@@ -191,7 +191,7 @@ export const getStaticProps = async ({ params }: Context) => {
       relatedVendors: relatedVendors,
       interactionRewards,
       objectiveDefinitions: objectiveDefinitions,
-      meta: { canonical },
+      meta: { canonical, buildDate: new Date() },
     },
   };
 };

@@ -37,3 +37,10 @@ export function getParamString(
 
   return value;
 }
+
+export function makeMetaProps(baseMeta: Record<string, string | number> = {}) {
+  return {
+    ...baseMeta,
+    buildDate: new Date().toJSON(),
+  };
+}
