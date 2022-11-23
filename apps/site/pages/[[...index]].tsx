@@ -51,12 +51,12 @@ export default function Home({ versions, pagination }: HomeStaticProps) {
           Page {currentPage} of {lastPage}
         </span>{" "}
         {hasNextPage && (
-          <a href={`/page/${currentPage + 1}`}>
+          <a href={`/${currentPage + 1}`}>
             Next
             <FontAwesomeIcon icon={faChevronRight} />
           </a>
         )}{" "}
-        <a href={`/page/${lastPage}`}>
+        <a href={`/${lastPage}`}>
           Last
           <FontAwesomeIcon icon={faChevronRight} />
           <FontAwesomeIcon icon={faChevronRight} />
