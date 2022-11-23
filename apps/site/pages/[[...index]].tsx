@@ -15,6 +15,7 @@ import {
   getVersionSummary,
   makeMetaProps,
 } from "../lib/serverUtils";
+import Link from "next/link";
 
 interface HomeStaticProps {
   versions: ManifestVersionSummary[];
@@ -43,24 +44,24 @@ export default function Home({ versions, pagination }: HomeStaticProps) {
 
       <div className={s.pagination}>
         {hasPrevPage && (
-          <a href={`/page/${currentPage - 1}`}>
+          <Link href={`/page/${currentPage - 1}`}>
             <FontAwesomeIcon icon={faChevronLeft} /> Prev
-          </a>
+          </Link>
         )}{" "}
         <span>
           Page {currentPage} of {lastPage}
         </span>{" "}
         {hasNextPage && (
-          <a href={`/${currentPage + 1}`}>
+          <Link href={`/${currentPage + 1}`}>
             Next
             <FontAwesomeIcon icon={faChevronRight} />
-          </a>
+          </Link>
         )}{" "}
-        <a href={`/${lastPage}`}>
+        <Link href={`/${lastPage}`}>
           Last
           <FontAwesomeIcon icon={faChevronRight} />
           <FontAwesomeIcon icon={faChevronRight} />
-        </a>
+        </Link>
       </div>
     </div>
   );
