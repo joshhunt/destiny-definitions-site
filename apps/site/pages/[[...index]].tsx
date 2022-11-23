@@ -44,7 +44,7 @@ export default function Home({ versions, pagination }: HomeStaticProps) {
 
       <div className={s.pagination}>
         {hasPrevPage && (
-          <Link href={`/page/${currentPage - 1}`}>
+          <Link href={`/${currentPage - 1}`}>
             <FontAwesomeIcon icon={faChevronLeft} /> Prev
           </Link>
         )}{" "}
