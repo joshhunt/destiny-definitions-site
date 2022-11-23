@@ -1,4 +1,4 @@
-import { GetServerSideProps, GetStaticProps } from "next";
+import { GetServerSideProps, GetStaticPaths, GetStaticProps } from "next";
 
 import { ManifestVersionSummary, S3Archive } from "@destiny-definitions/common";
 
@@ -66,22 +66,25 @@ export default function Home({ versions, pagination }: HomeStaticProps) {
   );
 }
 
+export const getStaticPaths: GetStaticPaths = async () => {
+  return { paths: [], fallback: "blocking" };
+};
 const PAGE_SIZE = 10;
 
-export const getServerSideProps: GetServerSideProps<HomeStaticProps> = async (
+export const getStaticProps: GetStaticProps<HomeStaticProps> = async (
   context
 ) => {
-  context.res.setHeader(
-    "Cache-Control",
-    `public, s-maxage=${duration("1 day")}, stale-while-revalidate=${duration(
-      "1 week"
-    )}`
-  );
+  const indexParam =
+    (Array.isArray(context.params?.index)
+      ? context.params?.index
+      : [context.params?.index]) ?? [];
 
-  const pageParam = context.params?.pageNumber ?? "1";
-  const pageNumber = parseInt(
-    typeof pageParam === "string" ? pageParam : pageParam[0]
-  );
+  const pageParam = indexParam.at(0) ?? "1";
+  const pageNumber = parseInt(pageParam);
+
+  if (indexParam.length > 1 || isNaN(pageNumber)) {
+    return { notFound: true, revalidate: duration("1 week") };
+  }
 
   const s3Client = S3Archive.newFromEnvVars();
 
@@ -116,6 +119,6 @@ export const getServerSideProps: GetServerSideProps<HomeStaticProps> = async (
       pagination,
       meta: makeMetaProps(),
     },
-    // revalidate: duration("5 minutes"),
+    revalidate: duration("10 minutes"),
   };
 };
