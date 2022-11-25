@@ -28,7 +28,6 @@
     "@types/node": "18.11.9",
     "esbuild": "^0.15.14",
     "nodemon": "2.0.20",
-    "npm-run-all": "4.1.5",
     "typescript": "4.8.4"
   }
 }
