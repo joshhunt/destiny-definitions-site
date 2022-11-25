@@ -6,4 +6,6 @@ const withTM = nextTranspileModules([
   "@destiny-definitions/invariant",
 ]);
 
-module.exports = withTM({});
+module.exports = withTM({
+  output: "standalone",
+});
