@@ -9,8 +9,7 @@
     "bundle": "esbuild src/index.ts --bundle --outfile=dist/index.cjs --platform=node --target=node18.12 --external:@mapbox/node-pre-gyp --external:aws-sdk --external:dotenv",
     "clean": "rm -rf dist",
     "build": "pnpm clean && pnpm bundle",
-    "dev:start": "node ./dist/index.cjs",
-    "start": "node ./dist/index.cjs --keep-alive"
+    "dev:start": "node ./dist/index.cjs"
   },
   "files": [
     "dist"

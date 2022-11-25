@@ -8,9 +8,7 @@
     "dev": "turbo run dev",
     "start": "turbo run start",
     "lint": "turbo run lint",
-    "clean": "turbo run clean",
-    "start:worker": "pnpm --filter @destiny-definitions/worker start",
-    "start:site": "pnpm --filter @destiny-definitions/site start"
+    "clean": "turbo run clean"
   },
   "devDependencies": {
     "turbo": "1.6.3",
