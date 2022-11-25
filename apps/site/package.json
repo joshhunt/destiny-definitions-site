@@ -16,15 +16,9 @@
   "dependencies": {
     "@destiny-definitions/common": "workspace:*",
     "@destiny-definitions/invariant": "workspace:*",
-    "@fortawesome/fontawesome-svg-core": "^1.2.32",
-    "@fortawesome/free-brands-svg-icons": "^5.15.1",
-    "@fortawesome/free-regular-svg-icons": "^5.15.1",
-    "@fortawesome/free-solid-svg-icons": "^5.15.1",
-    "@fortawesome/pro-duotone-svg-icons": "^5.15.1",
-    "@fortawesome/pro-light-svg-icons": "^5.15.1",
-    "@fortawesome/pro-regular-svg-icons": "^5.15.1",
-    "@fortawesome/pro-solid-svg-icons": "^5.15.1",
-    "@fortawesome/react-fontawesome": "^0.1.12",
+    "@fortawesome/fontawesome-svg-core": "^6.2.1",
+    "@fortawesome/pro-solid-svg-icons": "^6.2.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@standards/duration": "^1.1.3",
     "axios": "1.1.3",
     "bungie-api-ts": "^4.19.0",
@@ -45,8 +39,8 @@
     "@types/node": "18.11.9",
     "@types/nprogress": "^0.2.0",
     "@types/react": "18.0.25",
-    "sass": "^1.56.1",
     "prettier": "^2.2.1",
+    "sass": "^1.56.1",
     "typescript": "4.8.4"
   }
 }

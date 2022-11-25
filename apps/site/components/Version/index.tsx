@@ -3,7 +3,7 @@ import { format, parse } from "date-fns";
 import cx from "classnames";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLink } from "@fortawesome/free-solid-svg-icons";
+import { faLink } from "@fortawesome/pro-solid-svg-icons";
 
 import VersionTable from "../VersionDiffSummary";
 import commonStyles from "../../styles/common.module.scss";

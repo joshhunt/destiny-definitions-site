@@ -5,16 +5,12 @@ import { ManifestVersionSummary, S3Archive } from "@destiny-definitions/common";
 import s from "./indexStyles.module.scss";
 import Version from "../components/Version";
 import duration from "../lib/duration";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
   faChevronRight,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  getDiffSummary,
-  getVersionSummary,
-  makeMetaProps,
-} from "../lib/serverUtils";
+} from "@fortawesome/pro-solid-svg-icons";
+import { getVersionSummary, makeMetaProps } from "../lib/serverUtils";
 import Link from "next/link";
 
 interface HomeStaticProps {

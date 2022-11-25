@@ -7,7 +7,7 @@ import commonStyles from "../../styles/common.module.scss";
 import s from "./styles.module.scss";
 import Interpose from "../Interpose";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { faChevronRight } from "@fortawesome/pro-solid-svg-icons";
 
 export interface Breadcrumb {
   label: string;

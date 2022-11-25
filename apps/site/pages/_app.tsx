@@ -6,15 +6,15 @@ import "nprogress/nprogress.css";
 
 import SiteHeader, { Breadcrumb } from "../components/SiteHeader";
 
-import { config } from "@fortawesome/fontawesome-svg-core";
-import "@fortawesome/fontawesome-svg-core/styles.css";
+// import { config } from "@fortawesome/fontawesome-svg-core";
+// import "@fortawesome/fontawesome-svg-core/styles.css";
 
 import "./common.scss";
 
 import React, { useEffect, useMemo, useState } from "react";
 import formatDistanceToNowStrict from "date-fns/formatDistanceToNowStrict";
 
-config.autoAddCss = false;
+// config.autoAddCss = false;
 
 Router.events.on("routeChangeStart", () => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());
