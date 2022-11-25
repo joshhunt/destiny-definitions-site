@@ -1,5 +1,5 @@
 import axios from "axios";
-import fs from "fs/promises";
+import fs from "fs-extra";
 
 const CUSTOM_MAPPINGS = {
   DestinyRecordDefinition: "Triumphs",
@@ -32,10 +32,7 @@ async function main() {
     CUSTOM_MAPPINGS
   );
 
-  await fs.writeFile(
-    "./lib/tableNameMappings.json",
-    JSON.stringify(mapping, null, 2)
-  );
+  await fs.writeJson("./lib/tableNameMappings.json", mapping, { spaces: 2 });
   console.log("Wrote definitions table name mappings");
 }
 

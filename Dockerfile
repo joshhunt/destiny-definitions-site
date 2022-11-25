@@ -1,5 +1,5 @@
 # base node image
-FROM node:18-alpine as base
+FROM node:18 as base
 
 EXPOSE 8080
 
@@ -24,13 +24,13 @@ ADD .npmrc pnpm-lock.yaml ./
 RUN pnpm fetch 
 
 # Copy over root project files
-ADD package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
+ADD package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json Procfile ./
 
 # Copy common lib
 ADD packages/common/package.json packages/common/tsconfig.json ./packages/common/
 ADD packages/common/src ./packages/common/src
 
-# Copy invariant lib
+# Copy invariant lib lib
 ADD packages/invariant/package.json packages/invariant/tsconfig.json ./packages/invariant/
 ADD packages/invariant/src ./packages/invariant/src
 
@@ -55,9 +55,6 @@ RUN pnpm install -r --offline
 
 # Build everything!
 RUN pnpm build
-
-# Copy Procfile for running
-COPY Procfile ./
 
 WORKDIR /app
 CMD ["./overmind", "start", "-N", "-r", "site,worker"]
