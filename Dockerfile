@@ -1,5 +1,5 @@
 # base node image
-FROM node:18 as base
+FROM node:18-alpine as base
 
 EXPOSE 8080
 
@@ -8,7 +8,8 @@ RUN corepack enable
 RUN corepack prepare pnpm@latest --activate
 
 # Install openssl for Prisma
-RUN apt-get update && apt-get install -y openssl tmux wget
+RUN apk update && apk add openssl tmux wget
+RUN apk add --no-cache libc6-compat
 
 RUN mkdir /app
 WORKDIR /app

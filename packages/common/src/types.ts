@@ -58,6 +58,23 @@ export interface VersionDiffSummary {
   [definitionTableName: string]: DefinitionTableDiffSummary;
 }
 
+export type DeepPartial<T> = unknown extends T
+  ? T
+  : T extends object
+  ? {
+      [P in keyof T]?: T[P] extends Array<infer U>
+        ? Array<DeepPartial<U>>
+        : T[P] extends ReadonlyArray<infer U>
+        ? ReadonlyArray<DeepPartial<U>>
+        : DeepPartial<T[P]>;
+    }
+  : T;
+
+export type HashGroup = [string, number[]][];
+
+//
+// Definition types
+//
 export interface GenericDefinition {
   hash?: number;
   index?: number;
@@ -112,17 +129,3 @@ export type DestinyMetricDefinition = DeepPartial<_DestinyMetricDefinition>;
 export type DestinyPlaceDefinition = DeepPartial<_DestinyPlaceDefinition>;
 
 export type DestinyManifestComponentName = keyof AllDestinyManifestComponents;
-
-export type DeepPartial<T> = unknown extends T
-  ? T
-  : T extends object
-  ? {
-      [P in keyof T]?: T[P] extends Array<infer U>
-        ? Array<DeepPartial<U>>
-        : T[P] extends ReadonlyArray<infer U>
-        ? ReadonlyArray<DeepPartial<U>>
-        : DeepPartial<T[P]>;
-    }
-  : T;
-
-export type HashGroup = [string, number[]][];

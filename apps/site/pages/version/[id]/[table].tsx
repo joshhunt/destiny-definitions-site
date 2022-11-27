@@ -17,7 +17,8 @@ import {
 import { isTableType } from "../../../lib/utils";
 import { DestinyManifestComponentName } from "bungie-api-ts/destiny2";
 import { RPM_STAT_HASH } from "../../../components/ItemSummary/ItemTags";
-import { makeMetaProps } from "../../../lib/serverUtils";
+import { invalidParamsNotFound, makeMetaProps } from "../../../lib/serverUtils";
+import { MissingDefinitionTable } from "@destiny-definitions/common/src/api/errors";
 
 interface DefinitionDiffStaticProps {
   version: ManifestVersion;
@@ -26,6 +27,7 @@ interface DefinitionDiffStaticProps {
   otherDefinitions: AllDestinyManifestComponents;
   tableDiff: DefinitionTableDiff;
   tableName: string;
+  missingTable: boolean;
 }
 
 export default function DefinitionDiffPageWrapper(
@@ -57,15 +59,27 @@ export const getStaticProps: GetStaticProps<
   invariant(context.params, "params is required");
   invariant(context.params.id, "versionId param is required");
   invariant(context.params.table, "table param is required");
-  const { id: versionId, table: definitionName, diffType } = context.params;
+  const { id: versionId, table: tableName, diffType } = context.params;
 
   const [manifestVersion, previousManifestVersion] = await Promise.all([
     s3Client.getVersion(versionId),
     s3Client.getPreviousVersion(versionId),
   ]);
 
+  if (!manifestVersion) {
+    return invalidParamsNotFound();
+  }
+
   const versionDiff = await s3Client.getVersionDiff(versionId);
-  const fullTableDiff = versionDiff[definitionName];
+  const fullTableDiff = versionDiff[tableName];
+
+  if (!fullTableDiff) {
+    console.warn(
+      `Table ${tableName} not found in diff for version ${versionId}`
+    );
+    return invalidParamsNotFound();
+  }
+
   let tableDiff: DefinitionTableDiff;
 
   if (diffType) {
@@ -105,18 +119,22 @@ export const getStaticProps: GetStaticProps<
     ? [...tableDiff.removed, ...tableDiff.reclassified]
     : [];
 
-  const definitions = await defsClient.getDefinitions(
+  let missingTable = false;
+  let [defsErr, definitions] = await defsClient.getDefinitions(
     versionId,
-    definitionName,
+    tableName,
     currentHashes,
-    getFieldsQuery(definitionName)
+    getFieldsQuery(tableName)
   );
 
-  const dependencies = getDependencyHashes(
-    tableDiff,
-    definitionName,
-    definitions
-  );
+  if (defsErr instanceof MissingDefinitionTable) {
+    definitions = {};
+    missingTable = true;
+  } else if (defsErr instanceof Error || !definitions) {
+    throw defsErr;
+  }
+
+  const dependencies = getDependencyHashes(tableDiff, tableName, definitions);
 
   const otherDefinitions = await getMultipleDefinitionTables(
     defsClient,
@@ -124,11 +142,23 @@ export const getStaticProps: GetStaticProps<
     dependencies
   );
 
-  const previousDefinitions = await defsClient.getDefinitions(
+  let [prevDefsErr, previousDefinitions] = await defsClient.getDefinitions(
     previousManifestVersion.id,
-    definitionName,
+    tableName,
     removedHashes
   );
+
+  if (prevDefsErr instanceof MissingDefinitionTable) {
+    previousDefinitions = {};
+    missingTable = true;
+  } else if (prevDefsErr instanceof Error || !previousDefinitions) {
+    throw prevDefsErr;
+  }
+
+  // TODO: handle the specific errors (missing db vs missing table) appropriately
+  if (previousDefinitions instanceof Error) {
+    throw previousDefinitions;
+  }
 
   return {
     props: {
@@ -137,7 +167,8 @@ export const getStaticProps: GetStaticProps<
       previousDefinitions,
       otherDefinitions,
       tableDiff,
-      tableName: definitionName,
+      tableName: tableName,
+      missingTable,
       meta: makeMetaProps(),
     },
     revalidate: duration("365 days"),
@@ -338,12 +369,19 @@ async function getMultipleDefinitionTables(
   const pairs = Object.entries(toGet);
 
   for (const [tableName, { hashes, fields }] of pairs) {
-    defs[tableName] = await defsClient.getDefinitions(
+    const [err, otherTable] = await defsClient.getDefinitions(
       versionId,
       tableName,
       hashes,
       fields
     );
+
+    if (err) {
+      console.warn(err);
+      defs[tableName] = {};
+    } else {
+      defs[tableName] = otherTable;
+    }
   }
 
   return defs;

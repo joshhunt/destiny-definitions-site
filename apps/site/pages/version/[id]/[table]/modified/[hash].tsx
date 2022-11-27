@@ -38,17 +38,25 @@ export const getStaticProps: GetStaticProps<
 
   const manifestVersion = await s3Client.getVersion(versionId);
 
-  const definition = await defsClient.getDefinition(
+  const [defErr, definition] = await defsClient.getDefinition(
     versionId,
     tableName,
     parseInt(hash)
   );
 
-  const previousDefinition = await defsClient.getDefinition(
+  const [prevDefErr, previousDefinition] = await defsClient.getDefinition(
     previousVersion.id,
     tableName,
     parseInt(hash)
   );
+
+  if (defErr) {
+    throw defErr;
+  }
+
+  if (prevDefErr) {
+    throw prevDefErr;
+  }
 
   const breadcrumbs = [
     manifestVersion && {

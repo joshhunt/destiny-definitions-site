@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  InteractionRewardSet,
-  QuestItem,
-  QuestObjective,
-  QuestVendor,
-} from "./types";
+import { InteractionRewardSet, QuestVendor } from "./types";
 
 import s from "./styles.module.scss";
 import QuestObjectives from "../QuestObjectives";
@@ -40,7 +35,7 @@ const QuestPage: React.FC<QuestPageProps> = ({
     thisQuest?.displayProperties?.name ??
     "";
 
-  const allQuestDefs = (thisQuest.setData?.itemList ?? [])
+  const allQuestDefs = (thisQuest?.setData?.itemList ?? [])
     .map((v) => itemDefinitions[v.itemHash ?? 0])
     .filter(Boolean);
 

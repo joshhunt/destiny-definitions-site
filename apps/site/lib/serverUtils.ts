@@ -6,6 +6,7 @@ import {
 } from "@destiny-definitions/common";
 import { mapValues } from "lodash";
 import { ParsedUrlQuery } from "querystring";
+import duration from "./duration";
 
 export function getVersionSummary(
   version: ManifestVersion,
@@ -43,4 +44,8 @@ export function makeMetaProps(baseMeta: Record<string, string | number> = {}) {
     ...baseMeta,
     buildDate: new Date().toJSON(),
   };
+}
+
+export function invalidParamsNotFound() {
+  return { notFound: true as const, revalidate: duration("1 week") };
 }

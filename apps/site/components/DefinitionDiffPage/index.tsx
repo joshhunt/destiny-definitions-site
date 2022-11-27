@@ -17,6 +17,7 @@ interface DefinitionDiffStaticProps {
   otherDefinitions: AllDestinyManifestComponents;
   tableDiff: DefinitionTableDiff;
   tableName: string;
+  missingTable: boolean;
 }
 
 export default function DefinitionDiffPage({
@@ -26,9 +27,19 @@ export default function DefinitionDiffPage({
   otherDefinitions,
   tableDiff,
   tableName,
+  missingTable,
 }: DefinitionDiffStaticProps) {
   return (
     <DefinitionDiffFrame tableName={tableName}>
+      {missingTable && (
+        <p>
+          <em>
+            This table is not available in the SQLite definitions database, so
+            detailed diff is not available. the SQLite database.
+          </em>
+        </p>
+      )}
+
       <DiffList
         version={version}
         title="Added"

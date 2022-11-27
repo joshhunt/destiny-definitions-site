@@ -55,11 +55,13 @@ export const getStaticProps = async ({ params }: Context) => {
   const allQuestItemHashes =
     thisQuestDefinition.setData?.itemList?.map((v) => v.itemHash) ?? [];
 
-  const questDefinitionsRaw = await defsClient.getDefinitions(
+  const [questDefsErr, questDefinitionsRaw] = await defsClient.getDefinitions(
     version.id,
     itemTableName,
     allQuestItemHashes
   );
+  if (questDefsErr) throw questDefsErr;
+
   const questDefinitions = castDefinitionsTable(
     "DestinyInventoryItemDefinition",
     itemTableName,
@@ -101,13 +103,16 @@ export const getStaticProps = async ({ params }: Context) => {
       .filter((v) => v) ?? []
   );
 
-  const rewardItemDefinitions = await defsClient.getDefinitions(
-    version.id,
-    itemTableName,
-    rewardItemHashes
-  );
+  const [rewardDefsErr, rewardItemDefinitions] =
+    await defsClient.getDefinitions(
+      version.id,
+      itemTableName,
+      rewardItemHashes
+    );
 
-  console.log("rewardItemDefinitions", rewardItemDefinitions);
+  if (rewardDefsErr) {
+    throw rewardDefsErr;
+  }
 
   const limitedItemHashes = uniq([
     questHash,

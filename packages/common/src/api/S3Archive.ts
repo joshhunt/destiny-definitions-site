@@ -8,6 +8,7 @@ import type { VersionDiff, ManifestVersion } from "../types";
 import invariant from "@destiny-definitions/invariant";
 import { Readable } from "stream";
 import type { DestinyManifest } from "bungie-api-ts/destiny2";
+import { MaybeAppError, VersionNotFoundInHistory } from "./errors";
 
 interface S3ArchiveConfig {
   accessKeyId: string;
@@ -95,14 +96,9 @@ export class S3Archive {
     return versions;
   }
 
-  async getVersion(id: string): Promise<ManifestVersion> {
+  async getVersion(id: string): Promise<ManifestVersion | undefined> {
     const history = await this.getVersionHistory();
     const version = history.find((v) => v.id === id);
-    invariant(version, "could not find version for id " + id);
-    invariant(
-      version.id === id,
-      "version id does not match. this should never happen (famous last words)"
-    );
     return version;
   }
 

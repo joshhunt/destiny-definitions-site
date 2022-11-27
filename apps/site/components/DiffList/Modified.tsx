@@ -84,6 +84,7 @@ export default function ModifiedDiffList({
 
                 <Cell>
                   <Link
+                    prefetch={false}
                     className={commonStyles.link}
                     href={`/version/${version.id}/${tableName}/modified/${hash}`}
                   >

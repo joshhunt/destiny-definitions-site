@@ -8,4 +8,7 @@ const withTM = nextTranspileModules([
 
 module.exports = withTM({
   output: "standalone",
+  experimental: {
+    isrMemoryCacheSize: 0,
+  },
 });

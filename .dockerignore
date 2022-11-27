@@ -1,5 +1,9 @@
-node_modules
-apps/site/node_modules
-apps/worker/node_modules
-packages/common/node_modules
+.git
+
+**/.next
+**/build
+**/dist
+**/node_modules
+**/.DS_Store
+
 __volume

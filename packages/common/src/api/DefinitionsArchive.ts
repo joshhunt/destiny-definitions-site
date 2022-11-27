@@ -10,6 +10,14 @@ import {
 } from "../types";
 import { uniq } from "lodash";
 import { JSONExtractQueryObject, makeJsonExtractQuery } from "./jsonShape";
+import {
+  InvalidDefinitionTableName,
+  MaybeAppError,
+  MissingDefinitionsDatabase,
+  MissingDefinitionTable,
+} from "./errors";
+
+const TABLE_NAME_RE = /Destiny\w+Definition/;
 
 export class DefinitionsArchive {
   s3ArchiveClient: S3Archive;
@@ -36,13 +44,17 @@ export class DefinitionsArchive {
     tableName: TableName,
     hash: number,
     fieldsQuery?: JSONExtractQueryObject
-  ): Promise<GenericDefinition> {
-    const defsTable = await this.getDefinitions(
+  ): Promise<MaybeAppError<GenericDefinition>> {
+    const [err, defsTable] = await this.getDefinitions(
       versionId,
       tableName,
       [hash],
       fieldsQuery
     );
+    if (err) {
+      return [err, null];
+    }
+
     const def = defsTable[hash];
 
     if (!def) {
@@ -51,7 +63,7 @@ export class DefinitionsArchive {
       );
     }
 
-    return def;
+    return [null, def];
   }
 
   async getDefinitions(
@@ -59,9 +71,14 @@ export class DefinitionsArchive {
     tableName: string,
     hashes: number[],
     fieldsQuery?: JSONExtractQueryObject
-  ): Promise<DefinitionTable> {
+  ): Promise<MaybeAppError<DefinitionTable>> {
+    const tableNameIsValid = TABLE_NAME_RE.test(tableName);
+    if (!tableNameIsValid) {
+      return [new InvalidDefinitionTableName(tableName), null];
+    }
+
     if (hashes.length === 0) {
-      return {};
+      return [null, {}];
     }
 
     const uniqueHashes = uniq(hashes);
@@ -78,12 +95,21 @@ export class DefinitionsArchive {
 
     if (!sqliteExists) {
       console.error("Does not exist", sqliteFilePath);
-      throw new MissingDefinitionsSqlite();
+      return [new MissingDefinitionsDatabase(versionId), null];
     }
 
-    const sqliteHashes = uniqueHashes.map((v) => v >> 32);
-
     const db = new (sqlite3.verbose().Database)(sqliteFilePath);
+
+    const tableCheckSql = db.prepare(
+      "SELECT name FROM sqlite_master WHERE type='table' AND name=?;",
+      tableName
+    );
+    const tableCheckResult = await sqliteGet<{ name: string }>(tableCheckSql);
+
+    if (!tableCheckResult || tableCheckResult.name !== tableName) {
+      return [new MissingDefinitionTable(versionId, tableName), null];
+    }
+
     let jsonColumn = "json";
 
     if (fieldsQuery) {
@@ -95,10 +121,16 @@ export class DefinitionsArchive {
       jsonColumn = `${jsonExtract} as json`;
     }
 
-    const sql = `SELECT id, ${jsonColumn} FROM ${tableName} WHERE id IN ${sqliteList(
-      sqliteHashes
-    )}`;
-    const queryResult = await sqliteAll<{ id: number; json: string }>(db, sql);
+    const sqliteHashes = uniqueHashes.map((v) => v >> 32);
+    const hashParams = new Array(sqliteHashes.length).fill("?").join(", ");
+    const statement = db.prepare(
+      `SELECT id, ${jsonColumn} FROM ${tableName} WHERE id IN (${hashParams})`,
+      ...sqliteHashes
+    );
+
+    const queryResult = await sqliteAll<{ id: number; json: string }>(
+      statement
+    );
 
     const definitions: Record<string, any> = {};
 
@@ -107,7 +139,7 @@ export class DefinitionsArchive {
       definitions[def.hash] = def;
     }
 
-    return definitions;
+    return [null, definitions];
   }
 }
 
@@ -120,53 +152,28 @@ async function fileExists(path: string) {
   }
 }
 
-function parseJsonExtractValue(v: string | undefined) {
-  if (!v) {
-    return undefined;
-  }
-
-  try {
-    return JSON.parse(v);
-  } catch (err) {
-    if (err instanceof SyntaxError) {
-      return v;
-    }
-
-    throw new Error(v);
-  }
-}
-
-function sqliteList(list: Array<string | number>) {
-  return "(" + list.join(", ") + ")";
-}
-
-// function sqliteGet<T>(db: sqlite3.Database, sql: string): Promise<T> {
-//   return new Promise((resolve, reject) => {
-//     db.get(sql, (err: unknown, row: any) => {
-//       if (err) {
-//         reject(err);
-//       } else {
-//         resolve(row as T);
-//       }
-//     });
-//   });
-// }
-
-function sqliteAll<T>(db: sqlite3.Database, sql: string): Promise<T[]> {
-  return new Promise((resolve, reject) => {
-    db.all(sql, (err: unknown, row: any) => {
+function sqliteGet<T>(statement: sqlite3.Statement): Promise<T | undefined> {
+  return new Promise<T>((resolve, reject) => {
+    statement.get((err, result) => {
       if (err) {
         reject(err);
       } else {
-        resolve(row as T[]);
+        resolve(result);
       }
     });
   });
 }
 
-export class MissingDefinitionsSqlite extends Error {
-  constructor() {
-    super("MissingDefinitionsSqlite");
-    this.name = "MissingDefinitionsSqlite";
-  }
+function sqliteAll<T>(statement: sqlite3.Statement): Promise<T[]> {
+  return new Promise((resolve, reject) => {
+    const callback = (err: unknown, row: any) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(row as T[]);
+      }
+    };
+
+    statement.all(callback);
+  });
 }
