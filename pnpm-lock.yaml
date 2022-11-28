@@ -35,6 +35,7 @@ importers:
       '@next/eslint-plugin-next': ^13.0.4
       '@standards/duration': ^1.1.3
       '@types/diff': ^5.0.2
+      '@types/diff-match-patch': ^1.0.32
       '@types/lodash': 4.14.188
       '@types/node': 18.11.9
       '@types/nprogress': ^0.2.0
@@ -44,6 +45,7 @@ importers:
       classnames: 2.3.2
       date-fns: 2.29.3
       diff: ^5.1.0
+      diff-match-patch: ^1.0.5
       lodash: 4.17.21
       next: 13.0.3
       next-transpile-modules: ^10.0.0
@@ -52,6 +54,7 @@ importers:
       prettier: ^2.2.1
       react: 18.2.0
       react-diff-view: ^2.5.0
+      react-diff-viewer: ^3.1.1
       react-diff-viewer-continued: 3.2.3
       react-dom: 18.2.0
       sass: ^1.56.1
@@ -70,6 +73,7 @@ importers:
       classnames: 2.3.2
       date-fns: 2.29.3
       diff: 5.1.0
+      diff-match-patch: 1.0.5
       lodash: 4.17.21
       next: 13.0.3_m5sxuueb27gk6ddc5gums6vtgq
       next-transpile-modules: 10.0.0
@@ -77,6 +81,7 @@ importers:
       only-allow: 1.1.1
       react: 18.2.0
       react-diff-view: 2.5.0_react@18.2.0
+      react-diff-viewer: 3.1.1_biqbaboplfbrettd7655fr4n2y
       react-diff-viewer-continued: 3.2.3_biqbaboplfbrettd7655fr4n2y
       react-dom: 18.2.0_react@18.2.0
       sqlite3: 5.1.2
@@ -84,6 +89,7 @@ importers:
     devDependencies:
       '@next/eslint-plugin-next': 13.0.4
       '@types/diff': 5.0.2
+      '@types/diff-match-patch': 1.0.32
       '@types/lodash': 4.14.188
       '@types/node': 18.11.9
       '@types/nprogress': 0.2.0
@@ -1293,6 +1299,10 @@ packages:
     resolution: {integrity: sha512-KnRanxnpfpjUTqTCXslZSEdLfXExwgNxYPdiO2WGUj8+HDjFi8R3k5RVKPeSCzLjCcshCAtVO2QBbVuAV4kTnw==}
     dev: true
 
+  /@types/diff-match-patch/1.0.32:
+    resolution: {integrity: sha512-bPYT5ECFiblzsVzyURaNhljBH2Gh1t9LowgUwciMrNAhFewLkHT2H0Mto07Y4/3KCOGZHRQll3CTtQZ0X11D/A==}
+    dev: true
+
   /@types/diff/5.0.2:
     resolution: {integrity: sha512-uw8eYMIReOwstQ0QKF0sICefSy8cNO/v7gOTiIy9SbwuHyEecJUm7qlgueOO5S1udZ5I/irVydHVwMchgzbKTg==}
     dev: true
@@ -1808,6 +1818,11 @@ packages:
 
   /diff/2.2.3:
     resolution: {integrity: sha512-9wfm3RLzMp/PyTFWuw9liEzdlxsdGixCW0ZTU1XDmtlAkvpVXTPGF8KnfSs0hm3BPbg19OrUPPsRkHXoREpP1g==}
+    engines: {node: '>=0.3.1'}
+    dev: false
+
+  /diff/4.0.2:
+    resolution: {integrity: sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==}
     engines: {node: '>=0.3.1'}
     dev: false
 
@@ -2616,6 +2631,10 @@ packages:
     dev: false
     optional: true
 
+  /memoize-one/5.2.1:
+    resolution: {integrity: sha512-zYiwtZUcYyXKo/np96AGZAckk+FWWsUdJ3cHGGmld7+AhvcWmQyGCYUh1hc4Q/pkOhb65dQR/pqCyK0cOaHz4Q==}
+    dev: false
+
   /memoize-one/6.0.0:
     resolution: {integrity: sha512-rkpe71W0N0c0Xz6QD0eJETuWAJGnJ9afsl1srmwPrI+yBCkge5EycXXbYRyvL29zZVUWQCY7InPRCv3GDXuZNw==}
     dev: false
@@ -3057,6 +3076,23 @@ packages:
       diff: 5.1.0
       emotion: 10.0.27
       memoize-one: 6.0.0
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /react-diff-viewer/3.1.1_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-rmvwNdcClp6ZWdS11m1m01UnBA4OwYaLG/li0dB781e/bQEzsGyj+qewVd6W5ztBwseQ72pO7nwaCcq5jnlzcw==}
+    engines: {node: '>= 8'}
+    peerDependencies:
+      react: ^15.3.0 || ^16.0.0
+      react-dom: ^15.3.0 || ^16.0.0
+    dependencies:
+      classnames: 2.3.2
+      create-emotion: 10.0.27
+      diff: 4.0.2
+      emotion: 10.0.27
+      memoize-one: 5.2.1
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
