@@ -20,8 +20,11 @@ import Table, {
 export default function RemovedDiffList({
   title,
   hashes,
+  fullHashCount,
+  diffTypeSlug,
   definitions,
   tableName,
+  version: { id },
 }: DiffListProps) {
   if (hashes.length == 0) {
     return null;
@@ -80,6 +83,20 @@ export default function RemovedDiffList({
           })}
         </TableBody>
       </Table>
+
+      {hashes.length < fullHashCount && (
+        <p>
+          <em>
+            Showing first {hashes.length} definitions.{" "}
+            <Link
+              className={commonStyles.link}
+              href={`/version/${id}/${tableName}/${diffTypeSlug}`}
+            >
+              View all {fullHashCount}.
+            </Link>
+          </em>
+        </p>
+      )}
     </div>
   );
 }

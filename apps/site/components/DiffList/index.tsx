@@ -8,9 +8,11 @@ import PresentationNodeDiffList from "./typed/PresentationNodeDiffList";
 import ObjectiveDiffList from "./typed/ObjectiveDiffList";
 import RecordDiffList from "./typed/RecordDiffList";
 import InventoryItemDiffList from "./typed/InventoryItemDiffList/GroupedInventoryItemDiffList";
+import commonStyles from "../../styles/common.module.scss";
 
 import s from "./styles.module.scss";
 import { DiffListProps } from "./types";
+import Link from "next/link";
 
 function DiffListForType(props: Omit<DiffListProps, "title">) {
   if (props.tableName === "DestinyInventoryItemDefinition") {
@@ -45,6 +47,14 @@ function DiffListForType(props: Omit<DiffListProps, "title">) {
 }
 
 export default function DiffList({ title, ...props }: DiffListProps) {
+  const {
+    hashes,
+    fullHashCount,
+    tableName,
+    version: { id },
+    diffTypeSlug,
+  } = props;
+
   if (props.hashes.length === 0) {
     return null;
   }
@@ -54,6 +64,20 @@ export default function DiffList({ title, ...props }: DiffListProps) {
       <h3>{title}</h3>
 
       <DiffListForType {...props} />
+
+      {hashes.length < fullHashCount && (
+        <p>
+          <em>
+            Showing first {hashes.length} definitions.{" "}
+            <Link
+              className={commonStyles.link}
+              href={`/version/${id}/${tableName}/${diffTypeSlug}`}
+            >
+              View all {fullHashCount}.
+            </Link>
+          </em>
+        </p>
+      )}
     </div>
   );
 }

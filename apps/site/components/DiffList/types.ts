@@ -8,7 +8,9 @@ export interface DiffListProps {
   version: ManifestVersion;
   title: string;
   tableName: string;
+  diffTypeSlug: string;
   hashes: number[];
+  fullHashCount: number;
   definitions: DefinitionTable;
   otherDefinitions: AllDestinyManifestComponents;
 }

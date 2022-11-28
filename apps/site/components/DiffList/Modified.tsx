@@ -27,6 +27,9 @@ export default function ModifiedDiffList({
   hashes,
   definitions,
   tableName,
+  fullHashCount,
+  diffTypeSlug,
+  version: { id },
 }: ModifiedDiffListProps) {
   if (hashes.length == 0) {
     return null;
@@ -96,6 +99,20 @@ export default function ModifiedDiffList({
           })}
         </TableBody>
       </Table>
+
+      {hashes.length < fullHashCount && (
+        <p>
+          <em>
+            Showing first {hashes.length} definitions.{" "}
+            <Link
+              className={commonStyles.link}
+              href={`/version/${id}/${tableName}/${diffTypeSlug}`}
+            >
+              View all {fullHashCount}.
+            </Link>
+          </em>
+        </p>
+      )}
     </div>
   );
 }

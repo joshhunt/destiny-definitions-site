@@ -39,7 +39,7 @@ const QuestObjectives: React.FC<QuestObjectivesProps> = ({
           );
 
         return (
-          <div className={s.objective}>
+          <div key={hash} className={s.objective}>
             <div className={s.box} />
 
             <div className={s.track}>

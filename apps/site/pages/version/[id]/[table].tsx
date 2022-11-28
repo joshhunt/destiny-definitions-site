@@ -1,40 +1,33 @@
 import { GetStaticProps, GetStaticPaths } from "next";
 import invariant from "@destiny-definitions/invariant";
 
-import React from "react";
-import DefinitionDiffPage from "../../../components/DefinitionDiffPage";
+import DefinitionDiffPage, {
+  DefinitionDiffPageProps,
+} from "../../../components/DefinitionDiffPage";
 import duration from "../../../lib/duration";
 
 import {
-  AllDestinyManifestComponents,
   DefinitionsArchive,
   DefinitionTableDiff,
   DefinitionTable,
   JSONExtractQueryObject,
-  ManifestVersion,
   S3Archive,
 } from "@destiny-definitions/common";
 import { isTableType } from "../../../lib/utils";
 import { DestinyManifestComponentName } from "bungie-api-ts/destiny2";
 import { RPM_STAT_HASH } from "../../../components/ItemSummary/ItemTags";
-import { invalidParamsNotFound, makeMetaProps } from "../../../lib/serverUtils";
+import {
+  permanentlyNotFound,
+  makeMetaProps,
+  getTableDiffSummary,
+  temporaryNotFound,
+  isValidDiffType,
+} from "../../../lib/serverUtils";
 import { MissingDefinitionTable } from "@destiny-definitions/common/src/api/errors";
+import { format } from "date-fns";
+import { createTableDiffForPage } from "../../../lib/tablePageUtils";
 
-interface DefinitionDiffStaticProps {
-  version: ManifestVersion;
-  definitions: DefinitionTable;
-  previousDefinitions: DefinitionTable;
-  otherDefinitions: AllDestinyManifestComponents;
-  tableDiff: DefinitionTableDiff;
-  tableName: string;
-  missingTable: boolean;
-}
-
-export default function DefinitionDiffPageWrapper(
-  props: DefinitionDiffStaticProps
-) {
-  return <DefinitionDiffPage {...props} />;
-}
+export default DefinitionDiffPage;
 
 interface Params {
   id: string;
@@ -47,10 +40,8 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
   return { paths: [], fallback: "blocking" };
 };
 
-const TRUNCATION_LIMIT = 100;
-
 export const getStaticProps: GetStaticProps<
-  DefinitionDiffStaticProps,
+  DefinitionDiffPageProps,
   Params
 > = async (context) => {
   const s3Client = S3Archive.newFromEnvVars();
@@ -61,62 +52,33 @@ export const getStaticProps: GetStaticProps<
   invariant(context.params.table, "table param is required");
   const { id: versionId, table: tableName, diffType } = context.params;
 
+  if (diffType && !isValidDiffType(diffType)) {
+    return permanentlyNotFound();
+  }
+
   const [manifestVersion, previousManifestVersion] = await Promise.all([
     s3Client.getVersion(versionId),
     s3Client.getPreviousVersion(versionId),
   ]);
 
   if (!manifestVersion) {
-    return invalidParamsNotFound();
+    return temporaryNotFound();
   }
 
   const versionDiff = await s3Client.getVersionDiff(versionId);
   const fullTableDiff = versionDiff[tableName];
 
   if (!fullTableDiff) {
-    console.warn(
-      `Table ${tableName} not found in diff for version ${versionId}`
-    );
-    return invalidParamsNotFound();
+    return permanentlyNotFound();
   }
 
-  let tableDiff: DefinitionTableDiff;
+  const tableDiff = createTableDiffForPage(diffType, fullTableDiff);
+  const tableDiffSummary = getTableDiffSummary(fullTableDiff);
 
-  if (diffType) {
-    if (
-      diffType !== "added" &&
-      diffType !== "removed" &&
-      diffType !== "unclassified" &&
-      diffType !== "reclassified" &&
-      diffType !== "modified"
-    ) {
-      throw new Error("Invalid diffType " + diffType);
-    }
-
-    const diffForType = fullTableDiff[diffType] ?? [];
-    tableDiff = {
-      added: [],
-      removed: [],
-      unclassified: [],
-      reclassified: [],
-      modified: [],
-    };
-
-    tableDiff[diffType] = diffForType;
-  } else {
-    tableDiff = {
-      added: fullTableDiff.added.slice(0, TRUNCATION_LIMIT),
-      removed: fullTableDiff.removed.slice(0, TRUNCATION_LIMIT),
-      unclassified: fullTableDiff.unclassified.slice(0, TRUNCATION_LIMIT),
-      reclassified: fullTableDiff.reclassified.slice(0, TRUNCATION_LIMIT),
-      modified: fullTableDiff.modified?.slice(0, TRUNCATION_LIMIT),
-    };
-  }
-
-  const newHashes = [...tableDiff.added, ...tableDiff.unclassified];
-  const currentHashes = [...newHashes, ...(tableDiff.modified ?? [])];
+  const newHashes = tableDiff.added.concat(tableDiff.unclassified);
+  const currentHashes = newHashes.concat(tableDiff.modified ?? []);
   const removedHashes = previousManifestVersion?.id
-    ? [...tableDiff.removed, ...tableDiff.reclassified]
+    ? tableDiff.removed.concat(tableDiff.reclassified)
     : [];
 
   let missingTable = false;
@@ -160,13 +122,34 @@ export const getStaticProps: GetStaticProps<
     throw previousDefinitions;
   }
 
+  const tableDiffUrl = `/version/${versionId}/${tableName}`;
+  const breadcrumbs = [
+    {
+      label: format(new Date(manifestVersion.createdAt), "E do MMM, u"),
+      to: `/version/${versionId}`,
+    },
+    {
+      label: tableName,
+      to: tableDiffUrl,
+    },
+  ];
+
+  if (diffType) {
+    breadcrumbs.push({
+      label: capitalizeFirstLetter(diffType),
+      to: `${tableDiffUrl}/${diffType}`,
+    });
+  }
+
   return {
     props: {
+      breadcrumbs,
       version: manifestVersion,
       definitions,
       previousDefinitions,
       otherDefinitions,
       tableDiff,
+      tableDiffSummary,
       tableName: tableName,
       missingTable,
       meta: makeMetaProps(),
@@ -174,6 +157,10 @@ export const getStaticProps: GetStaticProps<
     revalidate: duration("365 days"),
   };
 };
+
+function capitalizeFirstLetter(string: string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 type Deps = Record<
   string,

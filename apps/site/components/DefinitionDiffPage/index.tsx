@@ -5,17 +5,19 @@ import {
   DefinitionTableDiff,
   DefinitionTable,
   ManifestVersion,
+  DefinitionTableDiffSummary,
 } from "@destiny-definitions/common";
 import DefinitionDiffFrame from "../DefinitionDiffFrame";
 import ModifiedDiffList from "../DiffList/Modified";
 import RemovedDiffList from "../DiffList/Removed";
 
-interface DefinitionDiffStaticProps {
+export interface DefinitionDiffPageProps {
   version: ManifestVersion;
   definitions: DefinitionTable;
   previousDefinitions: DefinitionTable;
   otherDefinitions: AllDestinyManifestComponents;
   tableDiff: DefinitionTableDiff;
+  tableDiffSummary: DefinitionTableDiffSummary;
   tableName: string;
   missingTable: boolean;
 }
@@ -26,9 +28,10 @@ export default function DefinitionDiffPage({
   previousDefinitions,
   otherDefinitions,
   tableDiff,
+  tableDiffSummary,
   tableName,
   missingTable,
-}: DefinitionDiffStaticProps) {
+}: DefinitionDiffPageProps) {
   return (
     <DefinitionDiffFrame tableName={tableName}>
       {missingTable && (
@@ -43,7 +46,9 @@ export default function DefinitionDiffPage({
       <DiffList
         version={version}
         title="Added"
+        diffTypeSlug="added"
         tableName={tableName}
+        fullHashCount={tableDiffSummary.added}
         hashes={tableDiff.added}
         definitions={definitions}
         otherDefinitions={otherDefinitions}
@@ -52,7 +57,9 @@ export default function DefinitionDiffPage({
       <DiffList
         version={version}
         title="Unclassified"
+        diffTypeSlug="unclassified"
         tableName={tableName}
+        fullHashCount={tableDiffSummary.unclassified}
         hashes={tableDiff.unclassified}
         definitions={definitions}
         otherDefinitions={otherDefinitions}
@@ -61,7 +68,9 @@ export default function DefinitionDiffPage({
       <RemovedDiffList
         version={version}
         title="Removed"
+        diffTypeSlug="removed"
         tableName={tableName}
+        fullHashCount={tableDiffSummary.removed}
         hashes={tableDiff.removed}
         definitions={previousDefinitions}
         otherDefinitions={{}}
@@ -70,7 +79,9 @@ export default function DefinitionDiffPage({
       <RemovedDiffList
         version={version}
         title="Reclassified"
+        diffTypeSlug="reclassified"
         tableName={tableName}
+        fullHashCount={tableDiffSummary.reclassified}
         hashes={tableDiff.reclassified}
         definitions={previousDefinitions}
         otherDefinitions={{}}
@@ -79,7 +90,9 @@ export default function DefinitionDiffPage({
       <ModifiedDiffList
         version={version}
         title="Modified"
+        diffTypeSlug="modified"
         tableName={tableName}
+        fullHashCount={tableDiffSummary.modified}
         hashes={tableDiff.modified ?? []}
         definitions={definitions}
         otherDefinitions={{}}
