@@ -10,7 +10,7 @@ export default function WrappedReactDiffViewer({
   newJSON,
 }: WrappedJSONDiffViewer) {
   return (
-    <>
+    <div>
       <ReactDiffViewer
         leftTitle="Before"
         rightTitle="Now"
@@ -37,6 +37,6 @@ export default function WrappedReactDiffViewer({
           } as unknown as any
         }
       />
-    </>
+    </div>
   );
 }

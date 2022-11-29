@@ -1,6 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getDisplayName, getIconSrc } from "../../lib/utils";
-import "react-diff-view/style/index.css";
 
 import s from "./styles.module.scss";
 import BungieImage from "../BungieImage";
