@@ -10,31 +10,33 @@ export default function WrappedReactDiffViewer({
   newJSON,
 }: WrappedJSONDiffViewer) {
   return (
-    <ReactDiffViewer
-      leftTitle="Before"
-      rightTitle="Now"
-      oldValue={oldJSON}
-      newValue={newJSON}
-      splitView={true}
-      compareMethod={DiffMethod.WORDS}
-      useDarkTheme={true}
-      styles={
-        {
-          variables: {
-            dark: {
-              diffViewerTitleColor: "white",
-            },
-          },
-          codeFold: {
-            a: {
-              textDecoration: "none !important",
-              "&:hover": {
-                textDecoration: "underline !important",
+    <>
+      <ReactDiffViewer
+        leftTitle="Before"
+        rightTitle="Now"
+        oldValue={oldJSON}
+        newValue={newJSON}
+        splitView={true}
+        compareMethod={DiffMethod.WORDS}
+        useDarkTheme={true}
+        styles={
+          {
+            variables: {
+              dark: {
+                diffViewerTitleColor: "white",
               },
             },
-          },
-        } as unknown as any
-      }
-    />
+            codeFold: {
+              a: {
+                textDecoration: "none !important",
+                "&:hover": {
+                  textDecoration: "underline !important",
+                },
+              },
+            },
+          } as unknown as any
+        }
+      />
+    </>
   );
 }

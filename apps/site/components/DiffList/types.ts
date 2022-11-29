@@ -15,4 +15,7 @@ export interface DiffListProps {
   otherDefinitions: AllDestinyManifestComponents;
 }
 
-export type TypedDiffListProps = Omit<DiffListProps, "title">;
+export type TypedDiffListProps = Omit<
+  DiffListProps,
+  "title" | "fullHashCount" | "diffTypeSlug"
+>;
