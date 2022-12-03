@@ -39,9 +39,14 @@ export default function VersionTable({
             const meta = definitionsMetadata[tableName];
 
             return (
-              <tr key={tableName} className={meta?.junk ? s.junkRow : ""}>
+              <tr
+                key={tableName}
+                data-testid={meta?.junk ? "junk-table-row" : "table-row"}
+                className={meta?.junk ? s.junkRow : ""}
+              >
                 <td>
                   <Link
+                    data-testid="version-table-link"
                     href={`/version/${id}/${tableName}`}
                     className={commonStyles.link}
                   >

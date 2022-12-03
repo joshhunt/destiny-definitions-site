@@ -40,7 +40,7 @@ export default function Version({
   });
 
   return (
-    <div className={s.version}>
+    <div data-testid="version" className={s.version}>
       {subtitle && <h3 className={cx("h5", s.subtitle)}>{subtitle}</h3>}
 
       <h2 className={s.versionTitle}>
@@ -64,7 +64,7 @@ export default function Version({
           </tr>
           <tr>
             <td>ID</td>
-            <td>
+            <td data-testid="version-id-cell">
               <code>{versionSummary.id}</code>
             </td>
           </tr>

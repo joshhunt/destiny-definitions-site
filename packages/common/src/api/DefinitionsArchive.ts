@@ -98,13 +98,22 @@ export class DefinitionsArchive {
       return [new MissingDefinitionsDatabase(versionId), null];
     }
 
+    console.log("opening db", sqliteFilePath);
     const db = new (sqlite3.verbose().Database)(sqliteFilePath);
+    console.log("opened db", sqliteFilePath);
 
     const tableCheckSql = db.prepare(
       "SELECT name FROM sqlite_master WHERE type='table' AND name=?;",
       tableName
     );
-    const tableCheckResult = await sqliteGet<{ name: string }>(tableCheckSql);
+    let tableCheckResult: { name: string } | undefined;
+
+    try {
+      tableCheckResult = await sqliteGet<{ name: string }>(tableCheckSql);
+    } catch (err) {
+      console.log("failed to sql on", sqliteFilePath);
+      throw err;
+    }
 
     if (!tableCheckResult || tableCheckResult.name !== tableName) {
       return [new MissingDefinitionTable(versionId, tableName), null];

@@ -70,6 +70,7 @@ export default function DiffList({ title, ...props }: DiffListProps) {
           <em>
             Showing first {hashes.length} definitions.{" "}
             <Link
+              data-testid="truncation-link"
               className={commonStyles.link}
               href={`/version/${id}/${tableName}/${diffTypeSlug}`}
             >

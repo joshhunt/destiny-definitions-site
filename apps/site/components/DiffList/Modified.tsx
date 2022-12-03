@@ -87,6 +87,7 @@ export default function ModifiedDiffList({
 
                 <Cell>
                   <Link
+                    data-testid="definition-diff-link"
                     prefetch={false}
                     className={commonStyles.link}
                     href={`/version/${version.id}/${tableName}/modified/${hash}`}
@@ -105,6 +106,7 @@ export default function ModifiedDiffList({
           <em>
             Showing first {hashes.length} definitions.{" "}
             <Link
+              data-testid="truncation-link"
               className={commonStyles.link}
               href={`/version/${id}/${tableName}/${diffTypeSlug}`}
             >

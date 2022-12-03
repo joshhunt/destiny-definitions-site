@@ -89,6 +89,7 @@ export default function RemovedDiffList({
           <em>
             Showing first {hashes.length} definitions.{" "}
             <Link
+              data-testid="truncation-link"
               className={commonStyles.link}
               href={`/version/${id}/${tableName}/${diffTypeSlug}`}
             >
