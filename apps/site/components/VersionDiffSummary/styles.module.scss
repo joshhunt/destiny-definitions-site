@@ -22,19 +22,7 @@
   opacity: 0.25;
 }
 
-.numberAdded {
-  color: #66bb6a; // todo: variable, also in IndexTable
-}
-
-.numberRemoved {
-  color: #ef5350; // todo: variable, also in IndexTable
-}
-
-.numberModified,
-.numberUnclassified {
-  color: #2196f3; // todo: variable, also in IndexTable
-}
-
-.numberReclassified {
-  color: #ef5350; // todo: variable, also in IndexTable
+.numberCell {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }

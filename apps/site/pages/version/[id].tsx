@@ -10,6 +10,7 @@ import {
   getVersionSummary,
   makeMetaProps,
 } from "../../lib/serverUtils";
+import log from "../../lib/log";
 
 interface VersionIndexStaticProps {
   version: ManifestVersionSummary;
@@ -30,8 +31,16 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps<VersionIndexStaticProps> = async (
   context
 ) => {
-  const s3Client = S3Archive.newFromEnvVars();
   const versionId = getParamString(context?.params?.id);
+  log.info(
+    {
+      route: "version/[id]",
+      versionId,
+    },
+    "getStaticProps called"
+  );
+
+  const s3Client = S3Archive.newFromEnvVars();
   const version = await s3Client.getVersion(versionId ?? "");
 
   if (!version) {

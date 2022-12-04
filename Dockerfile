@@ -48,9 +48,6 @@ ADD apps/site/styles ./apps/site/styles
 ADD apps/worker/package.json apps/worker/tsconfig.json ./apps/worker/
 ADD apps/worker/src ./apps/worker/src
 
-RUN echo "./apps/worker/src:"
-RUN ls -lah ./apps/worker/src
-
 # Install dependencies
 RUN pnpm install -r --offline
 

@@ -6,10 +6,12 @@ import {
   DefinitionTable,
   ManifestVersion,
   DefinitionTableDiffSummary,
+  VersionDiffSummary,
 } from "@destiny-definitions/common";
-import DefinitionDiffFrame from "../DefinitionDiffFrame";
-import ModifiedDiffList from "../DiffList/Modified";
-import RemovedDiffList from "../DiffList/Removed";
+import s from "./styles.module.scss";
+import Aside from "../Aside";
+import { friendlyDiffName } from "../../lib/utils";
+import IndexTable from "../IndexTable";
 
 export interface DefinitionDiffPageProps {
   version: ManifestVersion;
@@ -18,6 +20,7 @@ export interface DefinitionDiffPageProps {
   otherDefinitions: AllDestinyManifestComponents;
   tableDiff: DefinitionTableDiff;
   tableDiffSummary: DefinitionTableDiffSummary;
+  versionDiffSummary: VersionDiffSummary;
   tableName: string;
   missingTable: boolean;
 }
@@ -28,75 +31,87 @@ export default function DefinitionDiffPage({
   previousDefinitions,
   otherDefinitions,
   tableDiff,
-  tableDiffSummary,
+  versionDiffSummary,
   tableName,
   missingTable,
 }: DefinitionDiffPageProps) {
+  const tableDiffSummary = versionDiffSummary[tableName];
+
   return (
-    <DefinitionDiffFrame tableName={tableName}>
-      {missingTable && (
-        <p>
-          <em>
+    <div className={s.root}>
+      <div className={s.main}>
+        <h2 className={s.pageTitle}>{friendlyDiffName(tableName)}</h2>
+        {missingTable && (
+          <Aside>
             This table is not available in the SQLite definitions database, so
-            detailed diff is not available. the SQLite database.
-          </em>
-        </p>
-      )}
+            detailed diff is not available.
+          </Aside>
+        )}
 
-      <DiffList
-        version={version}
-        title="Added"
-        diffTypeSlug="added"
-        tableName={tableName}
-        fullHashCount={tableDiffSummary.added}
-        hashes={tableDiff.added}
-        definitions={definitions}
-        otherDefinitions={otherDefinitions}
-      />
+        <DiffList
+          version={version}
+          title="Added"
+          diffTypeSlug="added"
+          tableName={tableName}
+          fullHashCount={tableDiffSummary.added}
+          hashes={tableDiff.added}
+          definitions={definitions}
+          otherDefinitions={otherDefinitions}
+        />
 
-      <DiffList
-        version={version}
-        title="Unclassified"
-        diffTypeSlug="unclassified"
-        tableName={tableName}
-        fullHashCount={tableDiffSummary.unclassified}
-        hashes={tableDiff.unclassified}
-        definitions={definitions}
-        otherDefinitions={otherDefinitions}
-      />
+        <DiffList
+          version={version}
+          title="Unclassified"
+          diffTypeSlug="unclassified"
+          tableName={tableName}
+          fullHashCount={tableDiffSummary.unclassified}
+          hashes={tableDiff.unclassified}
+          definitions={definitions}
+          otherDefinitions={otherDefinitions}
+        />
 
-      <RemovedDiffList
-        version={version}
-        title="Removed"
-        diffTypeSlug="removed"
-        tableName={tableName}
-        fullHashCount={tableDiffSummary.removed}
-        hashes={tableDiff.removed}
-        definitions={previousDefinitions}
-        otherDefinitions={{}}
-      />
+        <DiffList
+          version={version}
+          title="Removed"
+          diffTypeSlug="removed"
+          tableName={tableName}
+          fullHashCount={tableDiffSummary.removed}
+          hashes={tableDiff.removed}
+          definitions={previousDefinitions}
+          otherDefinitions={{}}
+        />
 
-      <RemovedDiffList
-        version={version}
-        title="Reclassified"
-        diffTypeSlug="reclassified"
-        tableName={tableName}
-        fullHashCount={tableDiffSummary.reclassified}
-        hashes={tableDiff.reclassified}
-        definitions={previousDefinitions}
-        otherDefinitions={{}}
-      />
+        <DiffList
+          version={version}
+          title="Reclassified"
+          diffTypeSlug="reclassified"
+          tableName={tableName}
+          fullHashCount={tableDiffSummary.reclassified}
+          hashes={tableDiff.reclassified}
+          definitions={previousDefinitions}
+          otherDefinitions={{}}
+        />
 
-      <ModifiedDiffList
-        version={version}
-        title="Modified"
-        diffTypeSlug="modified"
-        tableName={tableName}
-        fullHashCount={tableDiffSummary.modified}
-        hashes={tableDiff.modified ?? []}
-        definitions={definitions}
-        otherDefinitions={{}}
-      />
-    </DefinitionDiffFrame>
+        <DiffList
+          version={version}
+          title="Modified"
+          diffTypeSlug="modified"
+          tableName={tableName}
+          fullHashCount={tableDiffSummary.modified}
+          hashes={tableDiff.modified ?? []}
+          definitions={definitions}
+          otherDefinitions={{}}
+        />
+      </div>
+
+      <div className={s.side}>
+        <div className={s.stickySide}>
+          <IndexTable
+            tableDiffSummary={tableDiffSummary}
+            versionDiffSummary={versionDiffSummary}
+          />
+        </div>
+      </div>
+    </div>
   );
 }

@@ -14,6 +14,7 @@ import notFound from "../../lib/next";
 import { getHashAndVersion } from "../../lib/pageUtils";
 import { castDefinition, castDefinitionsTable } from "../../lib/utils";
 import { DestinyVendorDefinition } from "bungie-api-ts/destiny2";
+import log from "../../lib/log";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return { paths: [], fallback: "blocking" };
@@ -26,6 +27,14 @@ interface Context {
 }
 
 export const getStaticProps = async ({ params }: Context) => {
+  log.info(
+    {
+      route: "quest/[...hashAndVersion]",
+      hashAndVersion: params.hashAndVersion,
+    },
+    "getStaticProps called"
+  );
+
   const s3Client = S3Archive.newFromEnvVars();
   const { hash: rawQuestHash, version } = await getHashAndVersion(
     s3Client,

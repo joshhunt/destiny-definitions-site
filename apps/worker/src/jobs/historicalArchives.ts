@@ -5,20 +5,29 @@ import { DEFINITIONS_DIRECTORY, getS3Config, TEMP_DIRECTORY } from "../env";
 import { extractContentArchive } from "../lib/dotContent";
 import { fileExists, mkdirpForFile } from "../lib/lib";
 import { S3Archive } from "@destiny-definitions/common";
+import rootLogger from "../lib/log";
+
+const log = rootLogger.child({ workerJob: "historicalArchives" });
 
 export default async function historicalArchives() {
+  log.info("Starting job");
   const s3Config = getS3Config();
   const archiveClient = new S3Archive(s3Config);
 
   const history = await archiveClient.getVersionHistory();
   history.reverse();
-  console.log("\n\nChecking history for", history.length, "versions");
+  log.debug({ historyLength: history.length }, "Got version history");
 
   for (const version of history) {
+    const versionLogger = log.child({ versionId: version.id });
+    versionLogger.debug("Checking version");
+
     const manifest = await archiveClient.getVersionManifest(version.id);
     const enContentPath = manifest.mobileWorldContentPaths["en"];
     if (!enContentPath) {
-      throw new Error("no en mobileWorldContentPath for version " + version.id);
+      throw new Error(
+        "No English mobileWorldContentPath in archived manifest " + version.id
+      );
     }
 
     const archiveFileName = path.basename(enContentPath);
@@ -28,13 +37,13 @@ export default async function historicalArchives() {
     const sqliteExists = await fileExists(sqlitePath);
 
     if (sqliteExists) {
-      console.log("archive exists " + sqlitePath);
+      versionLogger.info({ sqlitePath }, "Archive exists");
       continue;
     }
 
     const s3Key = `versions/${version.id}/${archiveFileName}`;
+    versionLogger.info({ s3Key }, "Downloading archive from S3");
 
-    console.log("Get from S3", s3Key);
     const getCommand = archiveClient.getObjectCommand({
       Bucket: s3Config.bucket,
       Key: s3Key,
@@ -50,9 +59,11 @@ export default async function historicalArchives() {
     }
 
     await pipeBodyToFile(resp.Body, archiveFilePath);
-
-    extractContentArchive(archiveFilePath, sqlitePath);
-    console.log(sqlitePath);
+    await extractContentArchive(archiveFilePath, sqlitePath);
+    versionLogger.info(
+      { sqlitePath },
+      "Successfully downloaded archived definitions sqlite"
+    );
   }
 }
 

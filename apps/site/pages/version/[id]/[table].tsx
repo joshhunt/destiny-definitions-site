@@ -22,10 +22,12 @@ import {
   getTableDiffSummary,
   temporaryNotFound,
   isValidDiffType,
+  getVersionDiffSummary,
 } from "../../../lib/serverUtils";
 import { MissingDefinitionTable } from "@destiny-definitions/common/src/api/errors";
 import { format } from "date-fns";
 import { createTableDiffForPage } from "../../../lib/tablePageUtils";
+import log from "../../../lib/log";
 
 export default DefinitionDiffPage;
 
@@ -44,13 +46,18 @@ export const getStaticProps: GetStaticProps<
   DefinitionDiffPageProps,
   Params
 > = async (context) => {
-  const s3Client = S3Archive.newFromEnvVars();
-  const defsClient = DefinitionsArchive.newFromEnvVars(s3Client);
-
   invariant(context.params, "params is required");
   invariant(context.params.id, "versionId param is required");
   invariant(context.params.table, "table param is required");
   const { id: versionId, table: tableName, diffType } = context.params;
+
+  log.info(
+    { route: "version/[id]/[table]", versionId, tableName, diffType },
+    "getStaticProps called"
+  );
+
+  const s3Client = S3Archive.newFromEnvVars();
+  const defsClient = DefinitionsArchive.newFromEnvVars(s3Client);
 
   if (diffType && !isValidDiffType(diffType)) {
     return permanentlyNotFound();
@@ -152,6 +159,7 @@ export const getStaticProps: GetStaticProps<
       tableDiffSummary,
       tableName: tableName,
       missingTable,
+      versionDiffSummary: getVersionDiffSummary(versionDiff),
       meta: makeMetaProps(),
     },
     revalidate: duration("365 days"),

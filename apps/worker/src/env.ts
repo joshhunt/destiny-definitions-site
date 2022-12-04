@@ -18,6 +18,7 @@ function getEnvVar(key: string, defaultValue?: string): string {
 
 export const BUNGIE_API_KEY = getEnvVar("BUNGIE_API_KEY");
 export const STORAGE_VOLUME = getEnvVar("STORAGE_VOLUME");
+export const LOG_LEVEL = getEnvVar("LOG_LEVEL", "debug");
 export const WORKER_INTERVAL = getEnvVar("WORKER_INTERVAL", "1 min");
 
 export const TEMP_DIRECTORY = path.join(STORAGE_VOLUME, "temp");

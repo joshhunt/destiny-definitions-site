@@ -12,6 +12,7 @@ import {
 } from "@fortawesome/pro-solid-svg-icons";
 import { getVersionSummary, makeMetaProps } from "../lib/serverUtils";
 import Link from "next/link";
+import log from "../lib/log";
 
 interface HomeStaticProps {
   versions: ManifestVersionSummary[];
@@ -78,6 +79,8 @@ export const getStaticProps: GetStaticProps<HomeStaticProps> = async (
 
   const pageParam = indexParam.at(0) ?? "1";
   const pageNumber = parseInt(pageParam);
+
+  log.info({ route: "[[...index]]", pageNumber }, "getStaticProps called");
 
   if (indexParam.length > 1 || isNaN(pageNumber)) {
     return { notFound: true, revalidate: duration("1 week") };

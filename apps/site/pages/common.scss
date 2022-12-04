@@ -3,6 +3,20 @@
 $dark: #121212;
 $light: #fafafa;
 
+:root {
+  --font-size-sm: clamp(0.8rem, 0.17vw + 0.76rem, 0.89rem);
+  --font-size-base: clamp(1rem, 0.34vw + 0.91rem, 1.19rem);
+  --font-size-md: clamp(1.25rem, 0.61vw + 1.1rem, 1.58rem);
+  --font-size-lg: clamp(1.56rem, 1vw + 1.31rem, 2.11rem);
+  --font-size-xl: clamp(1.95rem, 1.56vw + 1.56rem, 2.81rem);
+
+  --color-added: #66bb6a;
+  --color-removed: #ef5350;
+  --color-modified: #2196f3;
+  --color-unclassified: rgb(68, 200, 175);
+  --color-reclassified: #8875a2;
+}
+
 .dark {
   --bg-color: #{$dark};
   --bg-color-alpha-75: #{rgba($dark, 0.75)};
@@ -55,4 +69,20 @@ body {
 
 :target {
   scroll-margin-top: 200px;
+}
+
+.color-added {
+  color: var(--color-added);
+}
+.color-removed {
+  color: var(--color-removed);
+}
+.color-modified {
+  color: var(--color-modified);
+}
+.color-unclassified {
+  color: var(--color-unclassified);
+}
+.color-reclassified {
+  color: var(--color-reclassified);
 }

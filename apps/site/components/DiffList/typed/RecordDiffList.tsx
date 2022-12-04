@@ -4,8 +4,7 @@ import {
   DestinyRecordDefinition,
 } from "@destiny-definitions/common";
 import React from "react";
-import { castDefinitionsTable, getDisplayName } from "../../../lib/utils";
-import BungieImage from "../../BungieImage";
+import { castDefinitionsTable } from "../../../lib/utils";
 import Table, {
   Cell,
   ProseCell,
@@ -13,15 +12,12 @@ import Table, {
   TableHeader,
   TableRow,
 } from "../../DiffTable";
-import { DiffHashLink } from "../../HashLink";
-import Interpose from "../../Interpose";
 import QuestObjectives from "../../QuestObjectives";
 import BaseCells, {
   BaseHeaderCells,
   getHasDisplayProperties,
 } from "../BaseCells";
 
-import s from "../styles.module.scss";
 import { TypedDiffListProps } from "../types";
 
 export default function RecordDiffList({

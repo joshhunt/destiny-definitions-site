@@ -1,58 +1,55 @@
 import s from "./styles.module.scss";
+import cx from "classnames";
 import { Fragment } from "react";
 import { friendlyDiffName } from "../../lib/utils";
-import { VersionDiffSummary } from "@destiny-definitions/common";
+import {
+  DefinitionTableDiffSummary,
+  VersionDiffSummary,
+} from "@destiny-definitions/common";
 
 interface IndexTableProps {
   versionDiffSummary: VersionDiffSummary;
-  versionId: string;
-  data: {
-    name: string;
-    count: number;
-    subItems:
-      | null
-      | {
-          name: string;
-          count: number;
-        }[];
-  }[];
+  tableDiffSummary: DefinitionTableDiffSummary;
 }
 
 export default function IndexTable({
-  data,
-  versionId,
+  tableDiffSummary,
   versionDiffSummary,
 }: IndexTableProps) {
-  const versionDiffCounts = Object.entries(versionDiffSummary).map(
-    ([tableName, counts]) => ({ tableName, ...counts })
-  );
   return (
     <div className={s.root}>
-      {data.map((topLevel) => {
-        return (
-          <Fragment key={topLevel.name}>
-            <a className={s.topItem} href={`#${topLevel.name}`}>
-              <div className={s.name}>{topLevel.name}</div>
-              <div className={s.count}>{topLevel.count}</div>
-            </a>
+      <TopLevelItem
+        href={`#added`}
+        label="Added"
+        count={tableDiffSummary.added}
+        numberClassName="color-added"
+      />
+      <TopLevelItem
+        href={`#unclassified`}
+        label="Unclassified"
+        count={tableDiffSummary.unclassified}
+        numberClassName="color-unclassified"
+      />
+      <TopLevelItem
+        href={`#reclassified`}
+        label="Reclassified"
+        count={tableDiffSummary.reclassified}
+        numberClassName="color-reclassified"
+      />
+      <TopLevelItem
+        href={`#removed`}
+        label="Removed"
+        count={tableDiffSummary.removed}
+        numberClassName="color-removed"
+      />
+      <TopLevelItem
+        href={`#modified`}
+        label="Modified"
+        count={tableDiffSummary.modified}
+        numberClassName="color-modified"
+      />
 
-            {topLevel.subItems?.map((subItem) => {
-              return (
-                <a
-                  key={subItem.name}
-                  className={s.subItem}
-                  href={`#${topLevel.name}_${subItem.name}`}
-                >
-                  <div className={s.name}>{subItem.name}</div>
-                  <div className={s.count}>{subItem.count}</div>
-                </a>
-              );
-            })}
-          </Fragment>
-        );
-      })}
-
-      <div className={s.otherTables}>
+      {/* <div className={s.otherTables}>
         <div className={s.topItem}>Other tables</div>
 
         <table className={s.otherTablesTable} cellPadding={0} cellSpacing={0}>
@@ -95,7 +92,28 @@ export default function IndexTable({
             ))}
           </tbody>
         </table>
-      </div>
+      </div> */}
     </div>
+  );
+}
+
+function TopLevelItem({
+  href,
+  label,
+  count,
+  numberClassName,
+}: {
+  href: string;
+  label: string;
+  count: number;
+  numberClassName: string;
+}) {
+  if (count === 0) return null;
+
+  return (
+    <a className={s.topItem} href={href}>
+      <div className={s.name}>{label}</div>
+      <div className={cx(s.count, numberClassName)}>{count}</div>
+    </a>
   );
 }

@@ -13,41 +13,59 @@ import commonStyles from "../../styles/common.module.scss";
 import s from "./styles.module.scss";
 import { DiffListProps } from "./types";
 import Link from "next/link";
+import RemovedDiffList from "./Removed";
+import ModifiedDiffList from "./Modified";
+import Aside from "../Aside";
 
-function DiffListForType(props: Omit<DiffListProps, "title">) {
-  if (props.tableName === "DestinyInventoryItemDefinition") {
-    return <InventoryItemDiffList {...props} />;
+function DiffListForType(props: DiffListProps) {
+  const { diffTypeSlug, tableName } = props;
+
+  switch (diffTypeSlug) {
+    case "removed":
+      return <RemovedDiffList {...props} />;
+
+    case "reclassified":
+      return <RemovedDiffList {...props} />;
+
+    case "modified":
+      return <ModifiedDiffList {...props} />;
+
+    default:
+      break;
   }
 
-  if (props.tableName === "DestinyActivityDefinition") {
-    return <ActivityDiffList {...props} />;
-  }
+  switch (tableName) {
+    case "DestinyInventoryItemDefinition":
+      return <InventoryItemDiffList {...props} />;
 
-  if (props.tableName === "DestinyCollectibleDefinition") {
-    return <CollectibleDiffList {...props} />;
-  }
+    case "DestinyActivityDefinition":
+      return <ActivityDiffList {...props} />;
 
-  if (props.tableName === "DestinyDestinationDefinition") {
-    return <DestinationDiffList {...props} />;
-  }
+    case "DestinyCollectibleDefinition":
+      return <CollectibleDiffList {...props} />;
 
-  if (props.tableName === "DestinyObjectiveDefinition") {
-    return <ObjectiveDiffList {...props} />;
-  }
+    case "DestinyDestinationDefinition":
+      return <DestinationDiffList {...props} />;
 
-  if (props.tableName === "DestinyPresentationNodeDefinition") {
-    return <PresentationNodeDiffList {...props} />;
-  }
+    case "DestinyObjectiveDefinition":
+      return <ObjectiveDiffList {...props} />;
 
-  if (props.tableName === "DestinyRecordDefinition") {
-    return <RecordDiffList {...props} />;
+    case "DestinyPresentationNodeDefinition":
+      return <PresentationNodeDiffList {...props} />;
+
+    case "DestinyRecordDefinition":
+      return <RecordDiffList {...props} />;
+
+    default:
+      break;
   }
 
   return <FallbackDiffList {...props} />;
 }
 
-export default function DiffList({ title, ...props }: DiffListProps) {
+export default function DiffList(props: DiffListProps) {
   const {
+    title,
     hashes,
     fullHashCount,
     tableName,
@@ -61,23 +79,21 @@ export default function DiffList({ title, ...props }: DiffListProps) {
 
   return (
     <div className={s.diffListRoot}>
-      <h3>{title}</h3>
+      <h3 id={diffTypeSlug}>{title}</h3>
 
       <DiffListForType {...props} />
 
       {hashes.length < fullHashCount && (
-        <p>
-          <em>
-            Showing first {hashes.length} definitions.{" "}
-            <Link
-              data-testid="truncation-link"
-              className={commonStyles.link}
-              href={`/version/${id}/${tableName}/${diffTypeSlug}`}
-            >
-              View all {fullHashCount}.
-            </Link>
-          </em>
-        </p>
+        <Aside>
+          Showing first {hashes.length} definitions.{" "}
+          <Link
+            data-testid="truncation-link"
+            className={commonStyles.link}
+            href={`/version/${id}/${tableName}/${diffTypeSlug}`}
+          >
+            View all {fullHashCount}.
+          </Link>
+        </Aside>
       )}
     </div>
   );

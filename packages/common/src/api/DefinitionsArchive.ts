@@ -98,9 +98,7 @@ export class DefinitionsArchive {
       return [new MissingDefinitionsDatabase(versionId), null];
     }
 
-    console.log("opening db", sqliteFilePath);
     const db = new (sqlite3.verbose().Database)(sqliteFilePath);
-    console.log("opened db", sqliteFilePath);
 
     const tableCheckSql = db.prepare(
       "SELECT name FROM sqlite_master WHERE type='table' AND name=?;",

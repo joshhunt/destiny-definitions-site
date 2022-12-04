@@ -8,6 +8,7 @@ import { friendlyDiffName, getDisplayName } from "../../../../../lib/utils";
 import duration from "../../../../../lib/duration";
 import { DefinitionsArchive, S3Archive } from "@destiny-definitions/common";
 import { makeMetaProps } from "../../../../../lib/serverUtils";
+import log from "../../../../../lib/log";
 
 interface Params {
   [key: string]: any;
@@ -24,10 +25,19 @@ export const getStaticProps: GetStaticProps<
   ModifiedDiffPageProps,
   Params
 > = async (context) => {
-  const s3Client = S3Archive.newFromEnvVars();
-  const defsClient = DefinitionsArchive.newFromEnvVars(s3Client);
   const versionId = context.params?.id ?? "";
   const tableName = context.params?.table ?? "";
+  log.info(
+    {
+      route: "version/[id]/[table]/modified/[hash]",
+      versionId,
+      tableName,
+    },
+    "getStaticProps called"
+  );
+
+  const s3Client = S3Archive.newFromEnvVars();
+  const defsClient = DefinitionsArchive.newFromEnvVars(s3Client);
   const hash = context.params?.hash ?? "";
 
   const previousVersion = await s3Client.getPreviousVersion(versionId);

@@ -59,22 +59,27 @@
 
 .countCellAdded {
   composes: countCell;
-  color: #66bb6a; // todo: variable, also in VersionDiffSummary
+  color: var(--color-added);
 }
 
 .countCellRemoved {
   composes: countCell;
-  color: #ef5350; // todo: variable, also in VersionDiffSummary
+  color: var(--color-removed);
 }
 
 .countCellUnclassified {
   composes: countCell;
-  color: #2196f3; // todo: variable, also in VersionDiffSummary
+  color: var(--color-unclassified);
 }
 
 .countCellReclassified {
   composes: countCell;
-  color: #ef5350; // todo: variable, also in VersionDiffSummary
+  color: var(--color-reclassified);
+}
+
+.countCellModified {
+  composes: countCell;
+  color: var(--color-modified);
 }
 
 .otherTablesTable {

@@ -4,24 +4,15 @@
   & + & {
     margin-top: 96px;
   }
-
-  &:before {
-    content: " ";
-    display: block;
-    width: 5rem;
-    height: 5px;
-    // margin-bottom: 0.9rem;
-    background: currentColor;
-    // margin-bottom: -20px;
-    margin-bottom: 8px;
-  }
 }
 
-.versionTitle,
-.subtitle {
-  margin-top: 0;
-  // line-height: 1;
-  // margin-bottom: 22px;
+.versionTitle:before {
+  content: " ";
+  display: block;
+  width: 2.5ch;
+  height: 0.15em;
+  background: currentColor;
+  margin-bottom: 0.5em;
 }
 
 .subtitle {

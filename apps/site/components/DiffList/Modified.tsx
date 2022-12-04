@@ -22,14 +22,10 @@ interface ModifiedDiffListProps extends DiffListProps {
 }
 
 export default function ModifiedDiffList({
-  title,
   version,
   hashes,
   definitions,
   tableName,
-  fullHashCount,
-  diffTypeSlug,
-  version: { id },
 }: ModifiedDiffListProps) {
   if (hashes.length == 0) {
     return null;
@@ -39,82 +35,55 @@ export default function ModifiedDiffList({
   const hasIcon = hashes.some((hash) => getIconSrc(definitions[hash]));
 
   return (
-    <div className={s.diffListRoot}>
-      <h3>{title}</h3>
+    <Table>
+      <TableHeader>
+        <SmallCell>Hash</SmallCell>
+        {hasIcon && <SmallCell>Icon</SmallCell>}
+        {hasName && <Cell>Name</Cell>}
+        <Cell>Link</Cell>
+      </TableHeader>
 
-      <Table>
-        <TableHeader>
-          <SmallCell>Hash</SmallCell>
-          {hasIcon && <SmallCell>Icon</SmallCell>}
-          {hasName && <Cell>Name</Cell>}
-          <Cell>Link</Cell>
-        </TableHeader>
+      <TableBody>
+        {hashes.map((hash) => {
+          const def = definitions[hash];
 
-        <TableBody>
-          {hashes.map((hash) => {
-            const def = definitions[hash];
-
-            if (!def) {
-              return (
-                <tr key={hash}>
-                  <td className={s.shrink}>{hash}</td>
-                  <td colSpan={2}>Missing data</td>
-                </tr>
-              );
-            }
-
+          if (!def) {
             return (
-              <TableRow key={hash}>
-                <SmallCell>
-                  <HashLink hash={hash} tableName={tableName} />
-                </SmallCell>
-
-                {hasIcon && (
-                  <SmallCell>
-                    <BungieImage
-                      className={s.smallIcon}
-                      src={getIconSrc(def)}
-                      alt={
-                        hasName
-                          ? `Icon of "${getDisplayName(def)}"`
-                          : "Icon of this entity"
-                      }
-                    />
-                  </SmallCell>
-                )}
-
-                {hasName && <Cell>{getDisplayName(def)}</Cell>}
-
-                <Cell>
-                  <Link
-                    data-testid="definition-diff-link"
-                    prefetch={false}
-                    className={commonStyles.link}
-                    href={`/version/${version.id}/${tableName}/modified/${hash}`}
-                  >
-                    View diff
-                  </Link>
-                </Cell>
-              </TableRow>
+              <tr key={hash}>
+                <td className={s.shrink}>{hash}</td>
+                <td colSpan={2}>Missing data</td>
+              </tr>
             );
-          })}
-        </TableBody>
-      </Table>
+          }
 
-      {hashes.length < fullHashCount && (
-        <p>
-          <em>
-            Showing first {hashes.length} definitions.{" "}
-            <Link
-              data-testid="truncation-link"
-              className={commonStyles.link}
-              href={`/version/${id}/${tableName}/${diffTypeSlug}`}
-            >
-              View all {fullHashCount}.
-            </Link>
-          </em>
-        </p>
-      )}
-    </div>
+          return (
+            <TableRow key={hash}>
+              <SmallCell>
+                <HashLink hash={hash} tableName={tableName} />
+              </SmallCell>
+
+              {hasIcon && (
+                <SmallCell>
+                  <BungieImage className={s.smallIcon} src={getIconSrc(def)} />
+                </SmallCell>
+              )}
+
+              {hasName && <Cell>{getDisplayName(def)}</Cell>}
+
+              <Cell>
+                <Link
+                  data-testid="definition-diff-link"
+                  prefetch={false}
+                  className={commonStyles.link}
+                  href={`/version/${version.id}/${tableName}/modified/${hash}`}
+                >
+                  View diff
+                </Link>
+              </Cell>
+            </TableRow>
+          );
+        })}
+      </TableBody>
+    </Table>
   );
 }
