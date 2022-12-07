@@ -111,6 +111,8 @@ export default function DefinitionDiffPage({
           <IndexTable
             tableName={tableName}
             version={version}
+            definitions={definitions}
+            tableDiff={tableDiff}
             pageTableDiffSummary={thisPageTableDiffSummary}
             tableDiffSummary={tableDiffSummary}
             versionDiffSummary={versionDiffSummary}

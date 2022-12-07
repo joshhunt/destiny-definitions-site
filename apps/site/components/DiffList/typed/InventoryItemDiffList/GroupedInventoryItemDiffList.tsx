@@ -8,7 +8,7 @@ export default function GroupedInventoryItemDiffList({
   hashes,
   ...props
 }: TypedDiffListProps) {
-  const { tableName, definitions: genericDefinitions } = props;
+  const { tableName, diffTypeSlug, definitions: genericDefinitions } = props;
 
   const isTruncated = hashes.length < props.fullHashCount;
 
@@ -39,7 +39,7 @@ export default function GroupedInventoryItemDiffList({
       {groupedHashes.map(([groupName, groupHashes]) => {
         return (
           <div key={groupName}>
-            <h4>{groupName}</h4>
+            <h4 id={`${diffTypeSlug}_${groupName}`}>{groupName}</h4>
 
             <InventoryItemDiffList
               {...props}
