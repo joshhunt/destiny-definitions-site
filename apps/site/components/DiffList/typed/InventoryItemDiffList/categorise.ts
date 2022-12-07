@@ -30,6 +30,7 @@ export enum ItemCategory {
   GhostProjection = "Ghost Projection",
   SeasonalArtifact = "Seasonal Artifact",
   Eververse = "Eververse",
+  Classified = "Classified",
   Other = "Other",
 }
 
@@ -81,6 +82,8 @@ export function groupTableDiff(
 }
 
 export function categoryForItem(itemDef: DestinyInventoryItemDefinition) {
+  if (itemDef.redacted) return ItemCategory.Classified;
+
   if (itemDef.itemCategoryHashes?.includes(1)) return ItemCategory.Weapon;
 
   if (itemDef.itemCategoryHashes?.includes(20)) return ItemCategory.Armor;
