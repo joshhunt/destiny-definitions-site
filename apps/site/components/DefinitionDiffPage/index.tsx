@@ -10,8 +10,9 @@ import {
 } from "@destiny-definitions/common";
 import s from "./styles.module.scss";
 import Aside from "../Aside";
-import { friendlyDiffName } from "../../lib/utils";
+import { friendlyTableName } from "../../lib/utils";
 import IndexTable from "../IndexTable";
+import { getTableDiffSummary } from "../../lib/serverUtils";
 
 export interface DefinitionDiffPageProps {
   version: ManifestVersion;
@@ -36,11 +37,12 @@ export default function DefinitionDiffPage({
   missingTable,
 }: DefinitionDiffPageProps) {
   const tableDiffSummary = versionDiffSummary[tableName];
+  const thisPageTableDiffSummary = getTableDiffSummary(tableDiff);
 
   return (
     <div className={s.root}>
       <div className={s.main}>
-        <h2 className={s.pageTitle}>{friendlyDiffName(tableName)}</h2>
+        <h2 className={s.pageTitle}>{friendlyTableName(tableName)}</h2>
         {missingTable && (
           <Aside>
             This table is not available in the SQLite definitions database, so
@@ -107,6 +109,9 @@ export default function DefinitionDiffPage({
       <div className={s.side}>
         <div className={s.stickySide}>
           <IndexTable
+            tableName={tableName}
+            version={version}
+            pageTableDiffSummary={thisPageTableDiffSummary}
             tableDiffSummary={tableDiffSummary}
             versionDiffSummary={versionDiffSummary}
           />

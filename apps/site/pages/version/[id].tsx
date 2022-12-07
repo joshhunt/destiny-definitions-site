@@ -2,7 +2,6 @@ import { GetStaticProps, GetStaticPaths } from "next";
 
 import s from "./styles.module.scss";
 import Version from "../../components/Version";
-import { format } from "date-fns";
 import duration from "../../lib/duration";
 import { ManifestVersionSummary, S3Archive } from "@destiny-definitions/common";
 import {
@@ -55,7 +54,7 @@ export const getStaticProps: GetStaticProps<VersionIndexStaticProps> = async (
 
   const breadcrumbs = [
     {
-      label: format(new Date(version.createdAt), "E do MMM, u"),
+      date: version.createdAt,
       to: `/version/${version.id}`,
     },
   ];

@@ -1,7 +1,7 @@
 import s from "./styles.module.scss";
 import cx from "classnames";
 import commonStyles from "../../styles/common.module.scss";
-import { friendlyDiffName } from "../../lib/utils";
+import { friendlyTableName } from "../../lib/utils";
 import definitionsMetadata from "../definitionsMetadata";
 import { VersionDiffSummary } from "@destiny-definitions/common";
 import Link from "next/link";
@@ -62,7 +62,7 @@ export default function VersionTable({
                   href={`/version/${id}/${table.tableName}`}
                   className={commonStyles.link}
                 >
-                  {friendlyDiffName(table.tableName)}
+                  {friendlyTableName(table.tableName)}
                 </Link>
               </td>
               {hasAdded && (

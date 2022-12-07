@@ -1,7 +1,7 @@
 import React from "react";
 
 import commonStyles from "../styles/common.module.scss";
-import { friendlyDiffName } from "../lib/utils";
+import { friendlyTableName } from "../lib/utils";
 import { DefinitionTableDiff } from "@destiny-definitions/common";
 
 interface HashLinkProps {
@@ -20,7 +20,7 @@ export default function HashLink({ hash, tableName }: HashLinkProps) {
       id={`hash_${hash}`}
       target="_blank"
       rel="noreferrer"
-      href={`https://data.destinysets.com/i/${friendlyDiffName(
+      href={`https://data.destinysets.com/i/${friendlyTableName(
         tableName,
         false
       )}:${hash}`}

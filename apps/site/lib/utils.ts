@@ -11,7 +11,7 @@ import _tableNameMappings from "./tableNameMappings.json";
 
 const tableNameMappings = _tableNameMappings as Record<string, string>;
 
-export function friendlyDiffName(name: string, useMobileName = true) {
+export function friendlyTableName(name: string, useMobileName = true) {
   if (useMobileName && tableNameMappings[name]) {
     return tableNameMappings[name];
   }

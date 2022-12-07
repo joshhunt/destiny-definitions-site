@@ -8,9 +8,11 @@ import s from "./styles.module.scss";
 import Interpose from "../Interpose";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/pro-solid-svg-icons";
+import { FormatDateShort } from "../DateTimeFormatters";
 
 export interface Breadcrumb {
-  label: string;
+  label?: string;
+  date?: string;
   to: string;
 }
 
@@ -38,7 +40,7 @@ export default function SiteHeader({ breadcrumbs }: SiteHeaderProps) {
               <div key={crumb.to} className={s.childCrumb}>
                 {crumb.to ? (
                   <Link className={commonStyles.invisibleLink} href={crumb.to}>
-                    {crumb.label}
+                    {crumb.date ? <FormatDateShort date={crumb.date} /> : crumb.label}
                   </Link>
                 ) : (
                   crumb.label

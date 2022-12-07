@@ -55,11 +55,7 @@ export default function ItemSummary({
   return (
     <div className={s.itemSummary}>
       <div className={s.itemSummaryWell}>
-        <BungieImage
-          className={s.icon}
-          src={def.displayProperties?.icon}
-          alt=""
-        />
+        <BungieImage className={s.icon} src={def.displayProperties?.icon} />
       </div>
 
       <div className={s.itemSummaryMain}>

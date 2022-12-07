@@ -14,7 +14,7 @@ export default function IntrinsicPerk({ def }: IntrinsicPerkProps) {
   return (
     <div className={s.root}>
       <div className={s.accessory}>
-        <BungieImage className={s.icon} src={icon} alt="Perk icon" />
+        <BungieImage className={s.icon} src={icon} />
       </div>
 
       <div className={s.main}>

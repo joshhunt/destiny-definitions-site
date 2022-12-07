@@ -1,18 +1,29 @@
 import React from "react";
 import { TypedDiffListProps } from "../../types";
 import { castDefinitionsTable } from "../../../../lib/utils";
-import { groupHashes } from "./categorise";
+import { groupHashes, ItemCategory } from "./categorise";
 import InventoryItemDiffList from "./InventoryItemDiffList";
 
 export default function GroupedInventoryItemDiffList({
-  version,
-  tableName,
   hashes,
-  definitions: genericDefinitions,
-  otherDefinitions,
+  ...props
 }: TypedDiffListProps) {
+  const { tableName, definitions: genericDefinitions } = props;
+
+  const isTruncated = hashes.length < props.fullHashCount;
+
   if (hashes.length == 0) {
     return null;
+  }
+
+  if (isTruncated) {
+    return (
+      <InventoryItemDiffList
+        {...props}
+        itemCategory={ItemCategory.Other}
+        hashes={hashes}
+      />
+    );
   }
 
   const definitions = castDefinitionsTable(
@@ -25,17 +36,15 @@ export default function GroupedInventoryItemDiffList({
 
   return (
     <>
-      {groupedHashes.map(([groupName, hashes]) => {
+      {groupedHashes.map(([groupName, groupHashes]) => {
         return (
           <div key={groupName}>
             <h4>{groupName}</h4>
+
             <InventoryItemDiffList
-              version={version}
-              hashes={hashes}
-              tableName={tableName}
-              definitions={definitions}
-              otherDefinitions={otherDefinitions}
+              {...props}
               itemCategory={groupName}
+              hashes={groupHashes}
             />
           </div>
         );

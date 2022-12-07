@@ -1,75 +1,21 @@
-import { GetServerSideProps, GetStaticPaths, GetStaticProps } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
 
 import { ManifestVersionSummary, S3Archive } from "@destiny-definitions/common";
 
-import s from "./indexStyles.module.scss";
-import Version from "../components/Version";
 import duration from "../lib/duration";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChevronLeft,
-  faChevronRight,
-} from "@fortawesome/pro-solid-svg-icons";
 import { getVersionSummary, makeMetaProps } from "../lib/serverUtils";
-import Link from "next/link";
 import log from "../lib/log";
-
-interface HomeStaticProps {
-  versions: ManifestVersionSummary[];
-  pagination: {
-    hasPrevPage: boolean;
-    currentPage: number;
-    lastPage: number;
-    hasNextPage: boolean;
-  };
-}
-
-export default function Home({ versions, pagination }: HomeStaticProps) {
-  const { hasPrevPage, currentPage, hasNextPage, lastPage } = pagination;
-  return (
-    <div className={s.root}>
-      <div className={s.versionList}>
-        {versions.map((versionSummary) => {
-          return (
-            <Version key={versionSummary.id} versionSummary={versionSummary} />
-          );
-        })}
-      </div>
-
-      <br />
-      <br />
-
-      <div className={s.pagination}>
-        {hasPrevPage && (
-          <Link href={`/${currentPage - 1}`}>
-            <FontAwesomeIcon icon={faChevronLeft} /> Prev
-          </Link>
-        )}{" "}
-        <span>
-          Page {currentPage} of {lastPage}
-        </span>{" "}
-        {hasNextPage && (
-          <Link data-testid="pagination-next" href={`/${currentPage + 1}`}>
-            Next
-            <FontAwesomeIcon icon={faChevronRight} />
-          </Link>
-        )}{" "}
-        <Link href={`/${lastPage}`}>
-          Last
-          <FontAwesomeIcon icon={faChevronRight} />
-          <FontAwesomeIcon icon={faChevronRight} />
-        </Link>
-      </div>
-    </div>
-  );
-}
+import { IndexPageProps } from "../components/IndexPage";
+import IndexPage from "../components/IndexPage";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return { paths: [], fallback: "blocking" };
 };
 const PAGE_SIZE = 10;
 
-export const getStaticProps: GetStaticProps<HomeStaticProps> = async (
+export default IndexPage;
+
+export const getStaticProps: GetStaticProps<IndexPageProps> = async (
   context
 ) => {
   const indexParam =
@@ -105,13 +51,15 @@ export const getStaticProps: GetStaticProps<HomeStaticProps> = async (
 
   const pageVersions = indexData.slice(indexStart, indexEnd);
 
-  const versionSummaries: ManifestVersionSummary[] = [];
-
-  for (const manifestVersion of pageVersions) {
+  const versionSummariesPromise = pageVersions.map(async (manifestVersion) => {
     const diffData = await s3Client.getVersionDiff(manifestVersion.id);
     const summary = getVersionSummary(manifestVersion, diffData);
-    versionSummaries.push(summary);
-  }
+    return summary;
+  });
+
+  const versionSummaries: ManifestVersionSummary[] = await Promise.all(
+    versionSummariesPromise
+  );
 
   return {
     props: {

@@ -27,12 +27,8 @@ const ModifiedDiffPage: React.FC<ModifiedDiffPageProps> = ({
     <h2>
       {definition ? (
         <>
-          <BungieImage
-            className={s.icon}
-            src={getIconSrc(definition)}
-            alt="Icon"
-          />
-          "{getDisplayName(definition)}"
+          <BungieImage className={s.icon} src={getIconSrc(definition)} />"
+          {getDisplayName(definition)}"
         </>
       ) : (
         hash

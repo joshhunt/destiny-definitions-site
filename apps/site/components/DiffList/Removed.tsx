@@ -57,15 +57,7 @@ export default function RemovedDiffList({
 
               {hasIcon && (
                 <SmallCell>
-                  <BungieImage
-                    className={s.smallIcon}
-                    src={getIconSrc(def)}
-                    alt={
-                      hasName
-                        ? `Icon of "${getDisplayName(def)}"`
-                        : "Icon of this entity"
-                    }
-                  />
+                  <BungieImage className={s.smallIcon} src={getIconSrc(def)} />
                 </SmallCell>
               )}
 

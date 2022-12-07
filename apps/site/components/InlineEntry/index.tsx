@@ -1,5 +1,5 @@
 import React from "react";
-import { friendlyDiffName } from "../../lib/utils";
+import { friendlyTableName } from "../../lib/utils";
 import BungieImage from "../BungieImage";
 import commonStyles from "../../styles/common.module.scss";
 import cx from "classnames";
@@ -33,7 +33,7 @@ const InlineChild: React.FC<InlineChildProps> = ({ definition, tableName }) => {
         className={commonStyles.invisibleLink}
         target="_blank"
         rel="noreferrer"
-        href={`https://data.destinysets.com/i/${friendlyDiffName(
+        href={`https://data.destinysets.com/i/${friendlyTableName(
           tableName,
           false
         )}:${definition.hash}`}

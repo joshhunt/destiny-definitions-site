@@ -3,7 +3,6 @@ import {
   DefinitionTable,
   S3Archive,
 } from "@destiny-definitions/common";
-import { format } from "date-fns";
 import { uniq } from "lodash";
 import { GetStaticPaths } from "next";
 import React from "react";
@@ -173,7 +172,7 @@ export const getStaticProps = async ({ params }: Context) => {
 
   const breadcrumbs = [
     {
-      label: format(new Date(version.createdAt), "E do MMM, u"),
+      date: version.createdAt,
       to: `/version/${version.id}`,
     },
     {

@@ -67,6 +67,7 @@ export default function InventoryItemDiffList({
   return (
     <Table>
       <TableHeader>
+        <SmallCell>Index</SmallCell>
         {isQuests && <Cell>Quest</Cell>}
         <SmallCell>Hash</SmallCell>
         <Cell>Item</Cell>
@@ -91,6 +92,7 @@ export default function InventoryItemDiffList({
 
           return (
             <tr key={hash}>
+              <SmallCell>{def.index}</SmallCell>
               {isQuests && (
                 <SmallCell>
                   <QuestMarker
@@ -148,11 +150,6 @@ export default function InventoryItemDiffList({
                       <BungieImage
                         className={s.screenshotPreview}
                         src={def.screenshot}
-                        alt={
-                          def.displayProperties?.name
-                            ? `Screenshot of "${def.displayProperties.name}"`
-                            : "Screenshot of this item"
-                        }
                       />
                     </a>
                   )}

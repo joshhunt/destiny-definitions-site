@@ -13,7 +13,7 @@ import {
   JSONExtractQueryObject,
   S3Archive,
 } from "@destiny-definitions/common";
-import { isTableType } from "../../../lib/utils";
+import { friendlyTableName, isTableType } from "../../../lib/utils";
 import { DestinyManifestComponentName } from "bungie-api-ts/destiny2";
 import { RPM_STAT_HASH } from "../../../components/ItemSummary/ItemTags";
 import {
@@ -25,7 +25,6 @@ import {
   getVersionDiffSummary,
 } from "../../../lib/serverUtils";
 import { MissingDefinitionTable } from "@destiny-definitions/common/src/api/errors";
-import { format } from "date-fns";
 import { createTableDiffForPage } from "../../../lib/tablePageUtils";
 import log from "../../../lib/log";
 
@@ -132,11 +131,11 @@ export const getStaticProps: GetStaticProps<
   const tableDiffUrl = `/version/${versionId}/${tableName}`;
   const breadcrumbs = [
     {
-      label: format(new Date(manifestVersion.createdAt), "E do MMM, u"),
+      date: manifestVersion.createdAt,
       to: `/version/${versionId}`,
     },
     {
-      label: tableName,
+      label: friendlyTableName(tableName),
       to: tableDiffUrl,
     },
   ];
@@ -385,6 +384,7 @@ async function getMultipleDefinitionTables(
 const baseFieldsQuery = {
   hash: 1,
   index: 1,
+  redacted: 1,
   displayProperties,
 };
 

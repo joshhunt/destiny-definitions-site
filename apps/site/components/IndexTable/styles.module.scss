@@ -19,7 +19,7 @@
 
 .topItem {
   composes: item;
-  font-weight: 500;
+  // font-weight: 500;
 }
 
 .subItem {
@@ -45,8 +45,8 @@
 }
 
 .otherTables {
-  margin-top: 24px;
-  padding-top: 24px;
+  margin-top: 8px;
+  padding-top: 8px;
   border-top: 1px solid var(--border-color);
 }
 
@@ -54,7 +54,7 @@
   padding-left: 0.75ch !important;
   text-align: right;
   font-variant-numeric: tabular-nums;
-  font-size: 0.9em;
+  font-size: 0.8em;
 }
 
 .countCellAdded {
@@ -82,12 +82,15 @@
   color: var(--color-modified);
 }
 
+.otherTableWrapper {
+  margin-left: 8px;
+  margin-bottom: 32px;
+  margin-top: 4px;
+}
+
 .otherTablesTable {
   width: 100%;
-  margin-bottom: 32px;
   border-collapse: collapse;
-  margin-left: 16px;
-  margin-top: 4px;
   border-left: 1px solid var(--border-color);
 
   td {
@@ -109,9 +112,14 @@
   overflow: hidden;
   display: inline-block;
   padding: 0;
-  padding-left: 16px;
+  padding-left: 8px;
+  font-size: 0.9em;
 
   &:hover {
     text-decoration: underline;
   }
+}
+
+.junk {
+  opacity: 0.5;
 }

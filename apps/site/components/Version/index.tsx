@@ -1,5 +1,4 @@
 import React from "react";
-import { format, parse } from "date-fns";
 import cx from "classnames";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,6 +11,7 @@ import _additionalData from "./additionalData.json";
 
 import s from "./styles.module.scss";
 import { ManifestVersionSummary } from "@destiny-definitions/common";
+import { FormatDate, FormatTime } from "../DateTimeFormatters";
 
 interface AdditionalData {
   subtitle: string;
@@ -49,7 +49,7 @@ export default function Version({
           href={`/version/${versionSummary.id}`}
         >
           {headingPrefix}
-          {format(new Date(versionSummary.createdAt), "PPPP")}{" "}
+          <FormatDate date={versionSummary.createdAt} />{" "}
           <sup>
             <FontAwesomeIcon icon={faLink} />
           </sup>
@@ -60,7 +60,9 @@ export default function Version({
         <tbody>
           <tr>
             <td>Time</td>
-            <td>{format(new Date(versionSummary.createdAt), "pppp")}</td>
+            <td>
+              <FormatTime date={versionSummary.createdAt} />
+            </td>
           </tr>
           <tr>
             <td>ID</td>

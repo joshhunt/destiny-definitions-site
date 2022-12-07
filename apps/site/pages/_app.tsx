@@ -12,7 +12,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 import "./common.scss";
 
 import React, { useEffect, useMemo, useState } from "react";
-import formatDistanceToNowStrict from "date-fns/formatDistanceToNowStrict";
+import Footer from "../components/Footer";
 
 config.autoAddCss = false;
 
@@ -40,7 +40,6 @@ export default function App({ Component, pageProps }: AppProps) {
     setIsClient(true);
   }, []);
   const meta = pageProps.meta ?? {};
-  const buildDate = useMemo(() => new Date(meta.buildDate ?? ""), []);
   return (
     <>
       <Head>
@@ -56,16 +55,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
       <Component {...pageProps} />
 
-      {meta.buildDate && (
-        <p style={{ margin: 32, fontSize: 14, opacity: 0.75 }}>
-          Page built {longFormatDate(buildDate)}
-          {isClient &&
-            ` (${formatDistanceToNowStrict(buildDate, {
-              addSuffix: true,
-            })})`}
-          . {isClient && "Client JS running."}
-        </p>
-      )}
+      <Footer buildDate={meta.buildDate ?? ""} />
     </>
   );
 }

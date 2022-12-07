@@ -6,7 +6,7 @@ import {
   VersionDiff,
   VersionDiffSummary,
 } from "@destiny-definitions/common";
-import { mapValues } from "lodash";
+import { mapValues, pickBy } from "lodash";
 import { ParsedUrlQuery } from "querystring";
 import duration from "./duration";
 
@@ -24,9 +24,15 @@ export function getVersionSummary(
 export function getVersionDiffSummary(
   versionDiff: VersionDiff
 ): VersionDiffSummary {
-  return mapValues(versionDiff, (tableDiff) => {
+  const mapped = mapValues(versionDiff, (tableDiff) => {
     return getTableDiffSummary(tableDiff);
   });
+
+  const filtered = pickBy(mapped, (hello) => {
+    return Object.values(hello).some((v) => v);
+  });
+
+  return filtered;
 }
 
 export function getTableDiffSummary(

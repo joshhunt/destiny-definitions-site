@@ -1,5 +1,6 @@
 import React from "react";
 import FallbackDiffList from "./Fallback";
+import { sortBy } from "lodash";
 
 import ActivityDiffList from "./typed/ActivityDiffList";
 import CollectibleDiffList from "./typed/CollectibleDiffList";
@@ -77,11 +78,33 @@ export default function DiffList(props: DiffListProps) {
     return null;
   }
 
+  const classifiedSorter = (hash: number) => {
+    return props.definitions[hash]?.redacted ? 10 : 1;
+  };
+
+  const indexSorter = (hash: number) =>
+    props.definitions[hash]?.index ?? Number.MAX_SAFE_INTEGER;
+
+  const sortedHashes = sortBy(hashes, classifiedSorter, indexSorter);
+
   return (
     <div className={s.diffListRoot}>
       <h3 id={diffTypeSlug}>{title}</h3>
 
-      <DiffListForType {...props} />
+      {hashes.length < fullHashCount && (
+        <Aside>
+          Showing first {hashes.length} definitions.{" "}
+          <Link
+            data-testid="truncation-link"
+            className={commonStyles.link}
+            href={`/version/${id}/${tableName}/${diffTypeSlug}`}
+          >
+            View all {fullHashCount}.
+          </Link>
+        </Aside>
+      )}
+
+      <DiffListForType {...props} hashes={sortedHashes} />
 
       {hashes.length < fullHashCount && (
         <Aside>

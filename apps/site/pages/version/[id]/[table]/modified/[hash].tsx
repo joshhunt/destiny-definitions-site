@@ -3,8 +3,7 @@ import ModifiedDiffPage, {
   ModifiedDiffPageProps,
 } from "../../../../../components/ModifiedDiffPage";
 
-import { format } from "date-fns";
-import { friendlyDiffName, getDisplayName } from "../../../../../lib/utils";
+import { friendlyTableName, getDisplayName } from "../../../../../lib/utils";
 import duration from "../../../../../lib/duration";
 import { DefinitionsArchive, S3Archive } from "@destiny-definitions/common";
 import { makeMetaProps } from "../../../../../lib/serverUtils";
@@ -70,11 +69,11 @@ export const getStaticProps: GetStaticProps<
 
   const breadcrumbs = [
     manifestVersion && {
-      label: format(new Date(manifestVersion.createdAt), "E do MMM, u"),
+      date: manifestVersion.createdAt,
       to: `/version/${versionId}`,
     },
     {
-      label: friendlyDiffName(tableName),
+      label: friendlyTableName(tableName),
       to: `/version/${versionId}/${tableName}`,
     },
     definition && {

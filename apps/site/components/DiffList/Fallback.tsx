@@ -71,15 +71,7 @@ export default function FallbackDiffList({
 
               {hasIcon && (
                 <SmallCell>
-                  <BungieImage
-                    className={s.icon}
-                    src={getIconSrc(def)}
-                    alt={
-                      hasName
-                        ? `Icon of "${getDisplayName(def)}"`
-                        : "Icon of this entity"
-                    }
-                  />
+                  <BungieImage className={s.icon} src={getIconSrc(def)} />
                 </SmallCell>
               )}
 

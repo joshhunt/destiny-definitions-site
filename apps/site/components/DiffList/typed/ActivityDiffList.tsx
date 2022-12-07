@@ -124,7 +124,6 @@ export default function ActivityDiffList({
                       <BungieImage
                         className={s.screenshotPreview}
                         src={definition.pgcrImage}
-                        alt="Icon for this activity"
                       />
                     </a>
                   )}
