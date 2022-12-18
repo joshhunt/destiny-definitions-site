@@ -12,6 +12,7 @@ processes = []
   S3_BUCKET = "destiny-definitions"
   S3_REGION = "eu-west-1"
   SWAP = true
+  NEXT_PUBLIC_IMAGE_PROXY="https://destiny-definitions-image-proxy.fly.dev/"
 
 [build.args]
   SWAP=true

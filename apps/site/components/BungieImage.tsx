@@ -1,11 +1,17 @@
 interface BungieImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {}
 
+const imageProxyPrefix = process.env.NEXT_PUBLIC_IMAGE_PROXY;
+
 export function getBungieImageURL(src: string) {
   return `https://www.bungie.net${src}`;
 }
 
 export function getCacheImageURL(src: string) {
-  return `https://destiny-definitions-image-proxy.fly.dev/${src}`;
+  if (!imageProxyPrefix) {
+    return src;
+  }
+
+  return imageProxyPrefix + src;
 }
 
 export default function BungieImage({ src, ...rest }: BungieImageProps) {
