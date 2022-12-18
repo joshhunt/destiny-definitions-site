@@ -10,6 +10,10 @@ import Table, {
   TableRow,
 } from "../DiffTable";
 import HashLink from "../HashLink";
+import BaseCells, {
+  BaseHeaderCells,
+  getHasDisplayProperties,
+} from "./BaseCells";
 
 import s from "./styles.module.scss";
 
@@ -28,28 +32,12 @@ export default function FallbackDiffList({
     return null;
   }
 
-  const hasIcon = hashes.some((hash) => {
-    const def = definitions[hash];
-    return def?.displayProperties?.icon;
-  });
-
-  const hasName = hashes.some((hash) => {
-    const def = definitions[hash];
-    return getDisplayName(def);
-  });
-
-  const hasDescription = hashes.some((hash) => {
-    const def = definitions[hash];
-    return def?.displayProperties?.description;
-  });
+  const hasDisplayProperties = getHasDisplayProperties(hashes, definitions);
 
   return (
     <Table>
       <TableHeader>
-        <SmallCell>Hash</SmallCell>
-        {hasIcon && <Cell>Icon</Cell>}
-        {hasName && <Cell>Name</Cell>}
-        {hasDescription && <Cell>Description</Cell>}
+        <BaseHeaderCells hasDisplayProperties={hasDisplayProperties} />
       </TableHeader>
 
       <TableBody>
@@ -65,19 +53,11 @@ export default function FallbackDiffList({
 
           return (
             <TableRow key={hash}>
-              <SmallCell>
-                <HashLink hash={hash} tableName={tableName} />
-              </SmallCell>
-
-              {hasIcon && (
-                <SmallCell>
-                  <BungieImage className={s.icon} src={getIconSrc(def)} />
-                </SmallCell>
-              )}
-
-              {hasName && <td className={s.nowrap}>{getDisplayName(def)}</td>}
-
-              {hasDescription && <Cell>{getDescription(def)}</Cell>}
+              <BaseCells
+                definition={def}
+                tableName={tableName}
+                hasDisplayProperties={hasDisplayProperties}
+              />
             </TableRow>
           );
         })}

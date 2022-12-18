@@ -36,6 +36,11 @@ export default function BaseCells({
   definition,
   hasDisplayProperties,
 }: BaseCellsProps) {
+  const description = getDescription(definition);
+  let truncatedDescription =
+    (description?.length ?? 0) > 256
+      ? description?.slice(0, 256).trim() + "…"
+      : description;
   return (
     <>
       <SmallCell>
@@ -53,7 +58,7 @@ export default function BaseCells({
       )}
 
       {hasDisplayProperties.description && (
-        <ProseCell>{getDescription(definition)}</ProseCell>
+        <ProseCell>{truncatedDescription}</ProseCell>
       )}
     </>
   );
