@@ -1,5 +1,5 @@
-const axios = require("axios");
-const fs = require("fs-extra");
+import axios from "axios";
+import fs from "fs-extra";
 
 const CUSTOM_MAPPINGS = {
   DestinyRecordDefinition: "Triumphs",
@@ -37,5 +37,3 @@ async function main() {
 }
 
 main().catch(console.error);
-
-export {};
