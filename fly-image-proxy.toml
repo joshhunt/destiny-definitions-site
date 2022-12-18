@@ -1,0 +1,44 @@
+app = "destiny-definitions-image-proxy"
+kill_signal = "SIGINT"
+kill_timeout = 5
+processes = []
+
+[build]
+  image = "ghcr.io/willnorris/imageproxy"
+
+[env]
+  IMAGEPROXY_CACHE = "/data"
+  IMAGEPROXY_VERBOSE = true
+  IMAGEPROXY_ALLOWHOSTS = "*.bungie.net"
+
+[mounts]
+  source="image_proxy_storage"
+  destination="/data"
+
+[experimental]
+  allowed_public_ports = []
+  auto_rollback = true
+
+[[services]]
+  internal_port = 8080
+  protocol = "tcp"
+
+  [[services.ports]]
+    handlers = ["http"]
+    port = "80"
+    force_https = true
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = "443"
+
+  [[services.http_checks]]
+    interval = 10000
+    grace_period = "5s"
+    method = "get"
+    path = "/"
+    protocol = "http"
+    restart_limit = 0
+    timeout = 2000
+    tls_skip_verify = true
+    [services.http_checks.headers]
