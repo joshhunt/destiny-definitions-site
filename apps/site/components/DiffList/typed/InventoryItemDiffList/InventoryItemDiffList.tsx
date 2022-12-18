@@ -1,4 +1,4 @@
-import BungieImage from "../../../BungieImage";
+import BungieImage, { getBungieImageURL } from "../../../BungieImage";
 import ItemSummary from "../../../ItemSummary";
 import HashLink from "../../../HashLink";
 
@@ -143,7 +143,7 @@ export default function InventoryItemDiffList({
                 <Cell>
                   {def.screenshot && (
                     <a
-                      href={`https://www.bungie.net${def.screenshot}`}
+                      href={getBungieImageURL(def.screenshot)}
                       target="_blank"
                       rel="noopener noreferrer"
                     >

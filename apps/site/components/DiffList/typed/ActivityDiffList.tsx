@@ -1,6 +1,6 @@
 import React from "react";
 import { castDefinitionsTable, getDisplayName } from "../../../lib/utils";
-import BungieImage from "../../BungieImage";
+import BungieImage, { getBungieImageURL } from "../../BungieImage";
 import Table, { Cell, TableBody, TableHeader, TableRow } from "../../DiffTable";
 import { DiffHashLink } from "../../HashLink";
 import Interpose from "../../Interpose";
@@ -117,7 +117,7 @@ export default function ActivityDiffList({
                 <Cell>
                   {definition.pgcrImage && (
                     <a
-                      href={`https://www.bungie.net${definition.pgcrImage}`}
+                      href={getBungieImageURL(definition.pgcrImage)}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
