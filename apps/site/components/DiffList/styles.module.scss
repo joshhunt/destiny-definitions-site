@@ -12,54 +12,7 @@
   height: auto;
 }
 
-.shrink {
-  width: 1%;
-}
-
-.table {
-  font-size: 14px;
-  border-collapse: collapse;
-  width: 100%;
-
-  thead {
-    font-weight: bold;
-    white-space: nowrap;
-  }
-
-  & > thead > tr > td,
-  & > tbody > tr > td {
-    border-bottom: 1px solid;
-    border-color: var(--alt-color);
-    padding: 4px 8px;
-    vertical-align: top;
-  }
-
-  td.mainColumn {
-    width: 99%;
-  }
-
-  & > tbody > tr:hover > td {
-    background: var(--hover-color);
-  }
-}
-
-.tableHeader {
-  position: sticky;
-  top: 93px;
-  background: var(--bg-color-alpha-75);
-  backdrop-filter: blur(10px);
-}
-
-.nowrap {
-  white-space: nowrap;
-}
-
-.prewrap {
-  white-space: pre-wrap;
-}
-
 .questMarker {
-  composes: shrink;
   height: 1px;
 }
 
@@ -89,16 +42,16 @@
   height: 50px;
 }
 
-table + .groupTitle {
-  margin-top: 32px;
-}
-
 .childList {
-  padding-left: 16px;
+  // padding-left: 16px;
+  padding: 0;
+  margin: 0;
 }
 
 .childItem {
   list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .bold {
@@ -147,4 +100,8 @@ table + .groupTitle {
 
 .codeSnippet {
   margin-bottom: 0;
+}
+
+.shrink {
+  content: "shrink";
 }

@@ -19,6 +19,7 @@ export default [
 
   { name: "DestinyPresentationNodeDefinition" },
   { name: "DestinyRecordDefinition" },
+  { name: "DestinyEventCardDefinition" },
   { name: "DestinyCollectibleDefinition" },
   { name: "DestinyObjectiveDefinition" },
   { name: "DestinyChecklistDefinition" },

@@ -1,16 +1,17 @@
 import {
-  AllDestinyManifestComponentsTagged,
-  AnyDefinition,
-  AnyDefinitionTable,
-  BareDestinyDefinition,
-  DestinyInventoryItemDefinitionTagged,
-} from "../types";
-
+  DeepPartial,
+  DefinitionTable,
+  GenericDefinition,
+} from "@destiny-definitions/common";
+import {
+  DestinyDefinitionFrom,
+  DestinyManifestComponentName,
+} from "bungie-api-ts/destiny2";
 import _tableNameMappings from "./tableNameMappings.json";
 
 const tableNameMappings = _tableNameMappings as Record<string, string>;
 
-export function friendlyDiffName(name: string, useMobileName = true) {
+export function friendlyTableName(name: string, useMobileName = true) {
   if (useMobileName && tableNameMappings[name]) {
     return tableNameMappings[name];
   }
@@ -20,37 +21,56 @@ export function friendlyDiffName(name: string, useMobileName = true) {
   return match ? match[1] : name;
 }
 
-export function isAllInventoryItems(
-  defs: AnyDefinitionTable
-): defs is Record<string, DestinyInventoryItemDefinitionTagged> {
-  return Object.values(defs).every(
-    (d) => d.__type === "DestinyInventoryItemDefinition"
-  );
-}
-
-export function castDefinitions<T>(
-  defs: AnyDefinitionTable,
-  tableName: keyof AllDestinyManifestComponentsTagged
-) {
-  const isValid = Object.values(defs).every((d) => d.__type === tableName);
+export function castDefinitionsTable<
+  T extends DestinyManifestComponentName = DestinyManifestComponentName
+>(
+  castToTableName: T,
+  inputTableName: string,
+  defs: DefinitionTable<unknown>
+): DefinitionTable<DestinyDefinitionFrom<T>> {
+  const isValid = inputTableName === castToTableName;
 
   if (!isValid) {
-    throw new Error(
-      `Tried to cast table to ${tableName} but they're not all that type`
-    );
+    throw new Error(`Unable to cast ${inputTableName} to ${castToTableName}`);
   }
 
-  return (defs as unknown) as T;
+  return defs as DefinitionTable<DestinyDefinitionFrom<T>>;
 }
 
-export function getDisplayName(def: AnyDefinition & BareDestinyDefinition) {
+export function castDefinition<
+  T extends DestinyManifestComponentName = DestinyManifestComponentName
+>(
+  castToTableName: T,
+  inputTableName: string,
+  definition: unknown
+): DestinyDefinitionFrom<T> {
+  const isValid = inputTableName === castToTableName;
+
+  if (!isValid) {
+    throw new Error(`Unable to cast ${inputTableName} to ${castToTableName}`);
+  }
+
+  return definition as DestinyDefinitionFrom<T>;
+}
+
+export function isTableType<
+  T extends DestinyManifestComponentName = DestinyManifestComponentName
+>(
+  castToTableName: T,
+  inputTableName: string,
+  defs: Record<string, unknown>
+): defs is DefinitionTable<DeepPartial<DestinyDefinitionFrom<T>>> {
+  return inputTableName === castToTableName;
+}
+
+export function getDisplayName(def: GenericDefinition | undefined) {
   return def?.displayProperties?.name;
 }
 
-export function getIconSrc(def: AnyDefinition & BareDestinyDefinition) {
+export function getIconSrc(def: GenericDefinition | undefined) {
   return def?.displayProperties?.icon;
 }
 
-export function getDescription(def: AnyDefinition & BareDestinyDefinition) {
+export function getDescription(def: GenericDefinition | undefined) {
   return def?.displayProperties?.description;
 }

@@ -1,248 +1,122 @@
-import React, { Fragment } from "react";
-
-import {
-  AnyDefinitionTable,
-  DiffGroup,
-  ItemCategory,
-  ItemCategoryValues,
-  AllDestinyManifestComponentsTagged,
-} from "../../types";
-
+import React from "react";
 import FallbackDiffList from "./Fallback";
-import ObjectiveDiffList from "./Objective";
-import RecordDiffList from "./Record";
-import CollectibleDiffList from "./Collectible";
-import PresentationNodeDiffList from "./PresentationNode";
-import InventoryItemDiffList from "./InventoryItem";
+import { sortBy } from "lodash";
+
+import ActivityDiffList from "./typed/ActivityDiffList";
+import CollectibleDiffList from "./typed/CollectibleDiffList";
+import DestinationDiffList from "./typed/DestinationDiffList";
+import PresentationNodeDiffList from "./typed/PresentationNodeDiffList";
+import ObjectiveDiffList from "./typed/ObjectiveDiffList";
+import RecordDiffList from "./typed/RecordDiffList";
+import InventoryItemDiffList from "./typed/InventoryItemDiffList/GroupedInventoryItemDiffList";
 import commonStyles from "../../styles/common.module.scss";
 
 import s from "./styles.module.scss";
-import { castDefinitions } from "../../lib/utils";
-import ActivityDiffList from "./Activity";
-import DestinationDiffList from "./Destination";
-import VendorDiffList from "./Vendor";
+import { DiffListProps } from "./types";
+import Link from "next/link";
+import RemovedDiffList from "./Removed";
 import ModifiedDiffList from "./Modified";
+import Aside from "../Aside";
 
-interface DiffListProps {
-  name: string;
-  diffType: string;
-  hashes: DiffGroup | number[];
-  definitions: AnyDefinitionTable;
-  definitionName: string;
-  otherDefinitions: Partial<AllDestinyManifestComponentsTagged>;
-  useFallback?: boolean;
-  useModified?: boolean;
-  isTruncated?: boolean;
-  versionId: string;
-}
+function DiffListForType(props: DiffListProps) {
+  const { diffTypeSlug, tableName } = props;
 
-interface ForDefinitionTypeProps {
-  hashes: number[];
-  definitions: AnyDefinitionTable;
-  itemCategory?: string;
-  definitionName: string;
-  otherDefinitions: Partial<AllDestinyManifestComponentsTagged>;
-  useFallback?: boolean;
-  useModified?: boolean;
-}
+  switch (diffTypeSlug) {
+    case "removed":
+      return <RemovedDiffList {...props} />;
 
-function ForDefinitionType({
-  itemCategory,
-  hashes,
-  definitions,
-  definitionName,
-  otherDefinitions,
-  useFallback,
-  useModified,
-}: ForDefinitionTypeProps) {
-  const zeroth = hashes[0];
-  const def = definitions[zeroth];
-
-  switch (useFallback ? "fallback" : useModified ? "modified" : def?.__type) {
-    case "DestinyVendorDefinition":
-      return (
-        <VendorDiffList
-          definitionName={definitionName}
-          hashes={hashes}
-          definitions={castDefinitions(definitions, "DestinyVendorDefinition")}
-          otherDefinitions={otherDefinitions}
-        />
-      );
-
-    case "DestinyActivityDefinition":
-      return (
-        <ActivityDiffList
-          definitionName={definitionName}
-          hashes={hashes}
-          definitions={castDefinitions(
-            definitions,
-            "DestinyActivityDefinition"
-          )}
-          otherDefinitions={otherDefinitions}
-        />
-      );
-
-    case "DestinyDestinationDefinition":
-      return (
-        <DestinationDiffList
-          definitionName={definitionName}
-          hashes={hashes}
-          definitions={castDefinitions(
-            definitions,
-            "DestinyDestinationDefinition"
-          )}
-          otherDefinitions={otherDefinitions}
-        />
-      );
-
-    case "DestinyObjectiveDefinition":
-      return (
-        <ObjectiveDiffList
-          definitionName={definitionName}
-          hashes={hashes}
-          definitions={castDefinitions(
-            definitions,
-            "DestinyObjectiveDefinition"
-          )}
-          otherDefinitions={otherDefinitions}
-        />
-      );
-
-    case "DestinyPresentationNodeDefinition":
-      return (
-        <PresentationNodeDiffList
-          definitionName={definitionName}
-          hashes={hashes}
-          definitions={castDefinitions(
-            definitions,
-            "DestinyPresentationNodeDefinition"
-          )}
-          otherDefinitions={otherDefinitions}
-        />
-      );
-
-    case "DestinyRecordDefinition":
-      return (
-        <RecordDiffList
-          definitionName={definitionName}
-          hashes={hashes}
-          definitions={castDefinitions(definitions, "DestinyRecordDefinition")}
-          otherDefinitions={otherDefinitions}
-        />
-      );
-
-    case "DestinyCollectibleDefinition":
-      return (
-        <CollectibleDiffList
-          definitionName={definitionName}
-          hashes={hashes}
-          definitions={castDefinitions(
-            definitions,
-            "DestinyCollectibleDefinition"
-          )}
-        />
-      );
-
-    case "DestinyInventoryItemDefinition":
-      return (
-        <InventoryItemDiffList
-          definitionName={definitionName}
-          itemCategory={itemCategory || ItemCategory.Other}
-          hashes={hashes}
-          definitions={castDefinitions(
-            definitions,
-            "DestinyInventoryItemDefinition"
-          )}
-          otherDefinitions={otherDefinitions}
-        />
-      );
+    case "reclassified":
+      return <RemovedDiffList {...props} />;
 
     case "modified":
-      return (
-        <ModifiedDiffList
-          definitionName={definitionName}
-          hashes={hashes}
-          definitions={definitions}
-        />
-      );
+      return <ModifiedDiffList {...props} />;
 
     default:
-      return (
-        <FallbackDiffList
-          definitionName={definitionName}
-          hashes={hashes}
-          definitions={definitions}
-        />
-      );
+      break;
   }
+
+  switch (tableName) {
+    case "DestinyInventoryItemDefinition":
+      return <InventoryItemDiffList {...props} />;
+
+    case "DestinyActivityDefinition":
+      return <ActivityDiffList {...props} />;
+
+    case "DestinyCollectibleDefinition":
+      return <CollectibleDiffList {...props} />;
+
+    case "DestinyDestinationDefinition":
+      return <DestinationDiffList {...props} />;
+
+    case "DestinyObjectiveDefinition":
+      return <ObjectiveDiffList {...props} />;
+
+    case "DestinyPresentationNodeDefinition":
+      return <PresentationNodeDiffList {...props} />;
+
+    case "DestinyRecordDefinition":
+      return <RecordDiffList {...props} />;
+
+    default:
+      break;
+  }
+
+  return <FallbackDiffList {...props} />;
 }
 
-const NO_CATEGORY = "NO_CATEGORY";
+export default function DiffList(props: DiffListProps) {
+  const {
+    title,
+    hashes,
+    fullHashCount,
+    tableName,
+    version: { id },
+    diffTypeSlug,
+  } = props;
 
-export default function DiffList({
-  name,
-  hashes,
-  definitions,
-  definitionName,
-  otherDefinitions,
-  useFallback,
-  useModified,
-  isTruncated,
-  versionId,
-  diffType,
-}: DiffListProps) {
-  const groupedHashes = Array.isArray(hashes)
-    ? { [NO_CATEGORY]: hashes }
-    : hashes;
-
-  const hasItems = Object.values(groupedHashes || {}).some((v) => v.length);
-
-  if (!hasItems) {
+  if (props.hashes.length === 0) {
     return null;
   }
 
-  const id = name.toLowerCase();
+  const classifiedSorter = (hash: number) => {
+    return props.definitions[hash]?.redacted ? 10 : 1;
+  };
 
-  const sortedGroups = Object.entries(groupedHashes).sort((a, b) => {
-    return ItemCategoryValues.indexOf(a[0]) - ItemCategoryValues.indexOf(b[0]);
-  });
+  const indexSorter = (hash: number) =>
+    props.definitions[hash]?.index ?? Number.MAX_SAFE_INTEGER;
+
+  const sortedHashes = sortBy(hashes, classifiedSorter, indexSorter);
 
   return (
     <div className={s.diffListRoot}>
-      <h3 id={id}>{name}</h3>
+      <h3 id={diffTypeSlug}>{title}</h3>
 
-      {sortedGroups.map(([category, hashes]) => (
-        <Fragment key={category}>
-          {category !== NO_CATEGORY && (
-            <h4 className={s.groupTitle} id={`${id}_${category}`}>
-              {category}
-            </h4>
-          )}
+      {hashes.length < fullHashCount && (
+        <Aside>
+          Showing first {hashes.length} definitions.{" "}
+          <Link
+            data-testid="truncation-link"
+            className={commonStyles.link}
+            href={`/version/${id}/${tableName}/${diffTypeSlug}`}
+          >
+            View all {fullHashCount}.
+          </Link>
+        </Aside>
+      )}
 
-          <ForDefinitionType
-            definitionName={definitionName}
-            hashes={hashes}
-            definitions={definitions}
-            itemCategory={category}
-            otherDefinitions={otherDefinitions}
-            useFallback={useFallback}
-            useModified={useModified}
-          />
-        </Fragment>
-      ))}
+      <DiffListForType {...props} hashes={sortedHashes} />
 
-      {isTruncated && (
-        <p>
-          <em>
-            Showing only first 100 entries.{" "}
-            <a
-              href={`/version/${versionId}/${definitionName}/${diffType}`}
-              className={commonStyles.link}
-            >
-              Show all.
-            </a>
-          </em>
-        </p>
+      {hashes.length < fullHashCount && (
+        <Aside>
+          Showing first {hashes.length} definitions.{" "}
+          <Link
+            data-testid="truncation-link"
+            className={commonStyles.link}
+            href={`/version/${id}/${tableName}/${diffTypeSlug}`}
+          >
+            View all {fullHashCount}.
+          </Link>
+        </Aside>
       )}
     </div>
   );

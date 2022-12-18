@@ -1,9 +1,11 @@
-import { DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
-import { useDiffData } from "../diffDataContext";
 import cx from "classnames";
 import commonStyles from "../../styles/common.module.scss";
 import s from "./styles.module.scss";
-import { AllDestinyManifestComponentsTagged } from "../../types";
+import {
+  DefinitionTable,
+  DestinyInventoryItemDefinition,
+  ManifestVersion,
+} from "@destiny-definitions/common";
 
 export const QuestStartMarker = () => {
   return <div className={s.start} />;
@@ -18,17 +20,18 @@ export const QuestEndMarker = () => {
 };
 
 interface QuestMarkerProps {
-  definitions: AllDestinyManifestComponentsTagged["DestinyInventoryItemDefinition"];
+  version: ManifestVersion;
+  definitions: DefinitionTable<DestinyInventoryItemDefinition>;
   definition: DestinyInventoryItemDefinition;
   siblingDiffHashes: number[];
 }
 
 export const QuestMarker: React.FC<QuestMarkerProps> = ({
+  version,
   definition,
   definitions,
   siblingDiffHashes,
 }) => {
-  const diffData = useDiffData();
   const questLineItemHash = definition?.objectives?.questlineItemHash ?? 0;
   const questLineItem = definitions[questLineItemHash];
 
@@ -43,6 +46,9 @@ export const QuestMarker: React.FC<QuestMarkerProps> = ({
   }
 
   const questStartHash = questSteps[0]?.itemHash;
+  if (!questStartHash) {
+    return <></>;
+  }
   const questEndHash = questSteps[questSteps.length - 1]?.itemHash;
 
   const questStartHashIndex = siblingDiffHashes.indexOf(questStartHash);
@@ -56,7 +62,7 @@ export const QuestMarker: React.FC<QuestMarkerProps> = ({
     return (
       <a
         className={cx(commonStyles.link, commonStyles.nobreak)}
-        href={`/quest/${diffData.versionId}/${definition.hash}`}
+        href={`/quest/${version.id}/${definition.hash}`}
       >
         View quest
       </a>
@@ -68,7 +74,7 @@ export const QuestMarker: React.FC<QuestMarkerProps> = ({
       <div className={s.markerContainer}>
         <a
           className={cx(commonStyles.link, commonStyles.nobreak)}
-          href={`/quest/${diffData.versionId}/${definition.hash}`}
+          href={`/quest/${version.id}/${definition.hash}`}
         >
           View quest
         </a>

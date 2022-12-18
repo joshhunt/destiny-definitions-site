@@ -2,17 +2,12 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import ModifiedDiffPage, {
   ModifiedDiffPageProps,
 } from "../../../../../components/ModifiedDiffPage";
-import { getPreviousVersion, getVersion } from "../../../../../remote";
 
-import { format } from "date-fns";
-import { friendlyDiffName, getDisplayName } from "../../../../../lib/utils";
+import { friendlyTableName, getDisplayName } from "../../../../../lib/utils";
 import duration from "../../../../../lib/duration";
-import gql from "graphql-tag";
-import queryGraphql from "../../../../../lib/graphql/queryGraphql";
-import {
-  QLModifiedDiffPageQuery,
-  QLModifiedDiffPageQueryVariables,
-} from "../../../../../lib/graphql/types.generated";
+import { DefinitionsArchive, S3Archive } from "@destiny-definitions/common";
+import { makeMetaProps } from "../../../../../lib/serverUtils";
+import log from "../../../../../lib/log";
 
 interface Params {
   [key: string]: any;
@@ -29,39 +24,56 @@ export const getStaticProps: GetStaticProps<
   ModifiedDiffPageProps,
   Params
 > = async (context) => {
-  console.log("Running getStaticProps with context", context);
   const versionId = context.params?.id ?? "";
   const tableName = context.params?.table ?? "";
+  log.info(
+    {
+      route: "version/[id]/[table]/modified/[hash]",
+      versionId,
+      tableName,
+    },
+    "getStaticProps called"
+  );
+
+  const s3Client = S3Archive.newFromEnvVars();
+  const defsClient = DefinitionsArchive.newFromEnvVars(s3Client);
   const hash = context.params?.hash ?? "";
 
-  const previousVersion = await getPreviousVersion(versionId);
+  const previousVersion = await s3Client.getPreviousVersion(versionId);
 
   if (!previousVersion) {
     throw new Error("Could not find previous version");
   }
 
-  const [manifestVersion] = await Promise.all([getVersion(versionId)]);
+  const manifestVersion = await s3Client.getVersion(versionId);
 
-  const data = await queryGraphql<
-    QLModifiedDiffPageQuery,
-    QLModifiedDiffPageQueryVariables
-  >(QUERY, {
-    version: versionId,
-    previousVersion: previousVersion.id,
-    hash,
-    table: tableName,
-  });
+  const [defErr, definition] = await defsClient.getDefinition(
+    versionId,
+    tableName,
+    parseInt(hash)
+  );
 
-  const definition = data.definition;
-  const previousDefinition = data.previousDefinition;
+  const [prevDefErr, previousDefinition] = await defsClient.getDefinition(
+    previousVersion.id,
+    tableName,
+    parseInt(hash)
+  );
+
+  if (defErr) {
+    throw defErr;
+  }
+
+  if (prevDefErr) {
+    throw prevDefErr;
+  }
 
   const breadcrumbs = [
     manifestVersion && {
-      label: format(new Date(manifestVersion.createdAt), "E do MMM, u"),
+      date: manifestVersion.createdAt,
       to: `/version/${versionId}`,
     },
     {
-      label: friendlyDiffName(tableName),
+      label: friendlyTableName(tableName),
       to: `/version/${versionId}/${tableName}`,
     },
     definition && {
@@ -77,26 +89,10 @@ export const getStaticProps: GetStaticProps<
       definition,
       previousDefinition,
       breadcrumbs,
+      meta: makeMetaProps(),
     },
     revalidate: duration("30 days"),
   };
 };
 
 export default ModifiedDiffPage;
-
-const QUERY = gql`
-  query ModifiedDiffPage(
-    $version: String
-    $previousVersion: String
-    $hash: String
-    $table: String
-  ) {
-    definition: JSONDefinition(version: $version, hash: $hash, table: $table)
-
-    previousDefinition: JSONDefinition(
-      version: $previousVersion
-      hash: $hash
-      table: $table
-    )
-  }
-`;

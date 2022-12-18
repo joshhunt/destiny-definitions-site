@@ -1,0 +1,16 @@
+{
+  "repository": "https://github.com/joshhunt/destiny-definitions-site.git",
+  "license": "AGPL",
+  "name": "@destiny-definitions/root",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "start": "turbo run start",
+    "lint": "turbo run lint",
+    "clean": "turbo run clean"
+  },
+  "devDependencies": {
+    "turbo": "1.6.3"
+  }
+}

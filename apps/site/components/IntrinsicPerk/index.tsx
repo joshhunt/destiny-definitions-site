@@ -1,27 +1,25 @@
-import { DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
+import { DestinyInventoryItemDefinition } from "@destiny-definitions/common";
 import React from "react";
-import { DestinyInventoryItemDefinitionTagged } from "../../types";
 import BungieImage from "../BungieImage";
 import s from "./styles.module.scss";
 
 interface IntrinsicPerkProps {
-  def: DestinyInventoryItemDefinitionTagged;
+  def: DestinyInventoryItemDefinition;
 }
 
 export default function IntrinsicPerk({ def }: IntrinsicPerkProps) {
+  const { name, description, icon } = def.displayProperties ?? {};
+  if (!name) return null;
+
   return (
     <div className={s.root}>
       <div className={s.accessory}>
-        <BungieImage
-          className={s.icon}
-          src={def.displayProperties.icon}
-          alt="Perk icon"
-        />
+        <BungieImage className={s.icon} src={icon} />
       </div>
 
       <div className={s.main}>
-        <div className={s.name}>{def.displayProperties.name}</div>
-        <div className={s.description}>{def.displayProperties.description}</div>
+        <div className={s.name}>{name}</div>
+        {description && <div className={s.description}>{description}</div>}
       </div>
     </div>
   );

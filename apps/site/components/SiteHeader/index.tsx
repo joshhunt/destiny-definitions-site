@@ -5,10 +5,16 @@ import Link from "next/link";
 import commonStyles from "../../styles/common.module.scss";
 
 import s from "./styles.module.scss";
-import { Breadcrumb } from "../../types";
 import Interpose from "../Interpose";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { faChevronRight } from "@fortawesome/pro-solid-svg-icons";
+import { FormatDateShort } from "../DateTimeFormatters";
+
+export interface Breadcrumb {
+  label?: string;
+  date?: string;
+  to: string;
+}
 
 interface SiteHeaderProps {
   breadcrumbs?: Breadcrumb[];
@@ -34,7 +40,7 @@ export default function SiteHeader({ breadcrumbs }: SiteHeaderProps) {
               <div key={crumb.to} className={s.childCrumb}>
                 {crumb.to ? (
                   <Link className={commonStyles.invisibleLink} href={crumb.to}>
-                    {crumb.label}
+                    {crumb.date ? <FormatDateShort date={crumb.date} /> : crumb.label}
                   </Link>
                 ) : (
                   crumb.label

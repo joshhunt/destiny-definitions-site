@@ -1,13 +1,13 @@
-import { DestinyInventoryItemDefinition } from "bungie-api-ts/destiny2";
 import React from "react";
 import getItemTags from "./tagUtils";
 import s from "./styles.module.scss";
+import { DestinyInventoryItemDefinition } from "@destiny-definitions/common";
 
 interface ItemTagsProps {
   definition: DestinyInventoryItemDefinition;
 }
 
-const RPM_STAT_HASH = 4284893193;
+export const RPM_STAT_HASH = 4284893193;
 
 const ItemTags: React.FC<ItemTagsProps> = ({ definition }) => {
   const tags = getItemTags(definition);

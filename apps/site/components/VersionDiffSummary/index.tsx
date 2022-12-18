@@ -1,105 +1,126 @@
-import { AllDefinitionDiffs } from "../../types";
-
 import s from "./styles.module.scss";
+import cx from "classnames";
 import commonStyles from "../../styles/common.module.scss";
-import { friendlyDiffName } from "../../../../lib/utils";
+import { friendlyTableName } from "../../lib/utils";
 import definitionsMetadata from "../definitionsMetadata";
+import { VersionDiffSummary } from "@destiny-definitions/common";
+import Link from "next/link";
 
 interface VersionDiffSummaryProps {
   id: string;
-  allDefinitionDiffs: AllDefinitionDiffs;
+  diffSummary: VersionDiffSummary;
 }
 
-export default function VersionDiffSummary({
+export default function VersionTable({
   id,
-  allDefinitionDiffs,
+  diffSummary,
 }: VersionDiffSummaryProps) {
+  const tables = Object.entries(diffSummary)
+    .filter(([tableName, tableSummary]) =>
+      Object.values(tableSummary).some((v) => v)
+    )
+    .map(([tableName, tableSummary]) => ({ tableName, ...tableSummary }))
+    .sort((tableA, tableB) => {
+      const aIndex = definitionsMetadata[tableA.tableName]?.index ?? 9999;
+      const bIndex = definitionsMetadata[tableB.tableName]?.index ?? 9999;
+
+      return aIndex - bIndex;
+    });
+
+  const hasAdded = tables.some((v) => v.added);
+  const hasRemoved = tables.some((v) => v.removed);
+  const hasUnclassified = tables.some((v) => v.unclassified);
+  const hasReclassfied = tables.some((v) => v.reclassified);
+  const hasModified = tables.some((v) => v.modified);
+
   return (
     <table className={s.table}>
       <thead>
         <tr>
           <td>Definition table</td>
-          <td>Added</td>
-          <td>Unclassified</td>
-          <td>Removed</td>
-          <td>Modified</td>
+          {hasAdded && <td>Added</td>}
+          {hasUnclassified && <td>Unclassified</td>}
+          {hasReclassfied && <td>Reclassified</td>}
+          {hasRemoved && <td>Removed</td>}
+          {hasModified && <td>Modified</td>}
         </tr>
       </thead>
 
       <tbody>
-        {Object.entries(allDefinitionDiffs)
-          .sort(([tableNameA], [tableNameB]) => {
-            const aIndex = definitionsMetadata[tableNameA]?.index ?? 9999;
-            const bIndex = definitionsMetadata[tableNameB]?.index ?? 9999;
+        {tables.map((table) => {
+          const meta = definitionsMetadata[table.tableName];
 
-            return aIndex - bIndex;
-          })
-          .filter(([tableName, diffs]) =>
-            Object.values(diffs).some((vv) => vv.length)
-          )
-          .map(([tableName, diffs]) => {
-            const meta = definitionsMetadata[tableName];
-
-            return (
-              <tr key={tableName} className={meta?.junk ? s.junkRow : ""}>
-                <td>
-                  <a
-                    href={`/version/${id}/${tableName}`}
-                    className={commonStyles.link}
-                  >
-                    {friendlyDiffName(tableName)}
-                  </a>
-                </td>
-                <td>
-                  <DiffNumber
-                    value={diffs.added.length}
-                    prefix="+"
-                    className={s.numberAdded}
-                  />
-                </td>
-                <td>
-                  <DiffNumber
-                    value={diffs.unclassified.length}
-                    className={s.numberUnclassified}
-                  />
-                </td>
-                <td>
-                  <DiffNumber
-                    value={diffs.removed.length}
-                    prefix="-"
-                    className={s.numberRemoved}
-                  />
-                </td>
-                <td>
-                  <DiffNumber
-                    value={diffs.modified.length}
-                    className={s.numberModified}
-                  />
-                </td>
-              </tr>
-            );
-          })}
+          return (
+            <tr
+              key={table.tableName}
+              data-testid={meta?.junk ? "junk-table-row" : "table-row"}
+              className={meta?.junk ? s.junkRow : ""}
+            >
+              <td>
+                <Link
+                  data-testid="version-table-link"
+                  href={`/version/${id}/${table.tableName}`}
+                  className={commonStyles.link}
+                >
+                  {friendlyTableName(table.tableName)}
+                </Link>
+              </td>
+              {hasAdded && (
+                <DiffNumberCell
+                  value={table.added}
+                  prefix="+"
+                  className="color-added"
+                />
+              )}
+              {hasUnclassified && (
+                <DiffNumberCell
+                  value={table.unclassified}
+                  className="color-unclassified"
+                />
+              )}
+              {hasReclassfied && (
+                <DiffNumberCell
+                  value={table.reclassified}
+                  className="color-reclassified"
+                />
+              )}
+              {hasRemoved && (
+                <DiffNumberCell
+                  value={table.removed}
+                  prefix="-"
+                  className="color-removed"
+                />
+              )}
+              {hasModified && (
+                <DiffNumberCell
+                  value={table.modified ?? 0}
+                  className="color-modified"
+                />
+              )}
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );
 }
 
-interface DiffNumberProps {
+interface DiffNumberCellProps {
   value: number;
   className?: string;
   prefix?: React.ReactNode;
 }
 
-const DiffNumber: React.FC<DiffNumberProps> = ({
+const DiffNumberCell: React.FC<DiffNumberCellProps> = ({
   value,
   className,
   prefix,
 }) => {
   const isZero = value === 0;
   return (
-    <span className={isZero ? s.zeroNumber : className}>
+    <td className={cx(s.numberCell, isZero ? s.zeroNumber : className)}>
       {!isZero && prefix}
       {value}
-    </span>
+    </td>
   );
 };

@@ -1,4 +1,5 @@
 import React from "react";
+import { getIconSrc } from "../../lib/utils";
 import BungieImage from "../BungieImage";
 import { QuestItem } from "../QuestPage/types";
 
@@ -11,14 +12,11 @@ interface ItemHeaderProps {
 
 const ItemHeader: React.FC<ItemHeaderProps> = ({ item }) => {
   const name =
-    item.setData?.questLineName ||
-    item.displayProperties.name ||
-    item.displayProperties?.name ||
-    "";
+    item.setData?.questLineName || item.displayProperties?.name || "";
 
   return (
     <div className={s.itemSummary}>
-      <BungieImage className={s.icon} src={item.displayProperties.icon} />
+      <BungieImage className={s.icon} src={getIconSrc(item)} />
 
       <div>
         <h2 className={s.title}>

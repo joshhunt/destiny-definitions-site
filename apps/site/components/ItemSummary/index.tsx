@@ -1,42 +1,52 @@
 import s from "./styles.module.scss";
-import {
-  DestinyInventoryItemDefinition,
-  TierType,
-} from "bungie-api-ts/destiny2";
 import BungieImage from "../BungieImage";
-import { DestinyInventoryItemDefinitionTagged } from "../../types";
 import IntrinsicPerk from "../IntrinsicPerk";
 import React from "react";
 import ItemTags from "./ItemTags";
+import {
+  AllDestinyManifestComponents,
+  DefinitionTable,
+  DestinyInventoryItemDefinition,
+} from "@destiny-definitions/common";
 
 interface ItemSummaryProps {
   definition: DestinyInventoryItemDefinition;
-  definitions: Record<string, DestinyInventoryItemDefinitionTagged>;
+  definitions: DefinitionTable<DestinyInventoryItemDefinition>;
+  otherDefinitions: AllDestinyManifestComponents;
 }
 
 function findIntrinsicPerk(
   itemDef: DestinyInventoryItemDefinition,
-  definitions: Record<string, DestinyInventoryItemDefinitionTagged>
+  otherItemDefinitions: DefinitionTable<DestinyInventoryItemDefinition>
 ) {
   const socket = itemDef.sockets?.socketEntries?.find((socket) => {
-    const def = definitions[socket.singleInitialItemHash];
+    if (!socket?.singleInitialItemHash) return false;
+
+    const def = otherItemDefinitions[socket.singleInitialItemHash];
     return (
       def?.uiItemDisplayStyle === "ui_display_style_intrinsic_plug" &&
-      def.displayProperties.name
+      def.displayProperties?.name
     );
   });
 
-  return socket && definitions[socket.singleInitialItemHash];
+  return (
+    socket?.singleInitialItemHash &&
+    otherItemDefinitions[socket.singleInitialItemHash]
+  );
 }
 
 export default function ItemSummary({
   definition: def,
   definitions,
+  otherDefinitions,
 }: ItemSummaryProps) {
-  const isExotic = def.inventory?.tierType === 6 ?? false;
-  const intrinsicPerk = isExotic && findIntrinsicPerk(def, definitions);
+  const { DestinyInventoryItemDefinition: otherItemDefs = {} } =
+    otherDefinitions;
 
-  let displayName: React.ReactNode = def.displayProperties.name;
+  const isExotic = def.inventory?.tierType === 6 ?? false;
+  const intrinsicPerk = isExotic && findIntrinsicPerk(def, otherItemDefs);
+
+  let displayName: React.ReactNode = def.displayProperties?.name;
 
   if (!displayName && def.setData?.questLineName) {
     displayName = <em>Quest step from '{def.setData.questLineName}'</em>;
@@ -45,11 +55,7 @@ export default function ItemSummary({
   return (
     <div className={s.itemSummary}>
       <div className={s.itemSummaryWell}>
-        <BungieImage
-          className={s.icon}
-          src={def.displayProperties.icon}
-          alt=""
-        />
+        <BungieImage className={s.icon} src={def.displayProperties?.icon} />
       </div>
 
       <div className={s.itemSummaryMain}>
@@ -59,7 +65,7 @@ export default function ItemSummary({
           <ItemTags definition={def} />
         </div>
 
-        {def.displayProperties.description && (
+        {def.displayProperties?.description && (
           <p className={s.description}>{def.displayProperties.description}</p>
         )}
 

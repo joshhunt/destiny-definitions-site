@@ -1,59 +1,51 @@
-import cx from "classnames";
 import Link from "next/link";
 import React from "react";
 
 import { getDisplayName, getIconSrc } from "../../lib/utils";
-import { AnyDefinitionTable, BareDestinyDefinition } from "../../types";
 import BungieImage from "../BungieImage";
-import { useDiffData } from "../diffDataContext";
 import HashLink from "../HashLink";
 import commonStyles from "../../styles/common.module.scss";
 
 import s from "./styles.module.scss";
+import { DiffListProps } from "./types";
+import { ManifestVersion } from "@destiny-definitions/common";
+import Table, {
+  Cell,
+  SmallCell,
+  TableBody,
+  TableHeader,
+  TableRow,
+} from "../DiffTable";
 
-interface ModifiedDiffListProps {
-  hashes: number[];
-  definitions: AnyDefinitionTable;
-  definitionName: string;
+interface ModifiedDiffListProps extends DiffListProps {
+  version: ManifestVersion;
 }
 
 export default function ModifiedDiffList({
+  version,
   hashes,
   definitions,
-  definitionName,
+  tableName,
 }: ModifiedDiffListProps) {
-  const { modifiedDeepDiffs, versionId } = useDiffData();
-
   if (hashes.length == 0) {
     return null;
   }
 
-  const hasIcon = hashes.some((hash) => {
-    const def = definitions[hash] as BareDestinyDefinition;
-    return def?.displayProperties?.icon;
-  });
-
-  const hasName = hashes.some((hash) => {
-    const def = definitions[hash];
-    return getDisplayName(def);
-  });
+  const hasName = hashes.some((hash) => getDisplayName(definitions[hash]));
+  const hasIcon = hashes.some((hash) => getIconSrc(definitions[hash]));
 
   return (
-    <table className={s.table}>
-      <thead className={s.tableHeader}>
-        <tr>
-          <td className={s.shrink}>Hash</td>
-          {hasIcon && <td>Icon</td>}
-          {hasName && <td>Name</td>}
-          <td>Properties changed</td>
-          <td>Link</td>
-        </tr>
-      </thead>
+    <Table>
+      <TableHeader>
+        <SmallCell>Hash</SmallCell>
+        {hasIcon && <SmallCell>Icon</SmallCell>}
+        {hasName && <Cell>Name</Cell>}
+        <Cell>Link</Cell>
+      </TableHeader>
 
-      <tbody>
+      <TableBody>
         {hashes.map((hash) => {
           const def = definitions[hash];
-          const modifiedDiffs = modifiedDeepDiffs[hash];
 
           if (!def) {
             return (
@@ -65,41 +57,33 @@ export default function ModifiedDiffList({
           }
 
           return (
-            <tr key={hash}>
-              <td className={s.shrink}>
-                <HashLink hash={hash} definitionName={definitionName} />
-              </td>
+            <TableRow key={hash}>
+              <SmallCell>
+                <HashLink hash={hash} tableName={tableName} />
+              </SmallCell>
 
               {hasIcon && (
-                <td className={s.shrink}>
-                  <BungieImage
-                    className={s.smallIcon}
-                    src={getIconSrc(def)}
-                    alt={
-                      hasName
-                        ? `Icon of "${getDisplayName(def)}"`
-                        : "Icon of this entity"
-                    }
-                  />
-                </td>
+                <SmallCell>
+                  <BungieImage className={s.smallIcon} src={getIconSrc(def)} />
+                </SmallCell>
               )}
 
-              {hasName && <td className={s.nowrap}>{getDisplayName(def)}</td>}
+              {hasName && <Cell>{getDisplayName(def)}</Cell>}
 
-              <td>{modifiedDiffs.diff.length}</td>
-
-              <td>
+              <Cell>
                 <Link
+                  data-testid="definition-diff-link"
+                  prefetch={false}
                   className={commonStyles.link}
-                  href={`/version/${versionId}/${definitionName}/modified/${hash}`}
+                  href={`/version/${version.id}/${tableName}/modified/${hash}`}
                 >
                   View diff
                 </Link>
-              </td>
-            </tr>
+              </Cell>
+            </TableRow>
           );
         })}
-      </tbody>
-    </table>
+      </TableBody>
+    </Table>
   );
 }
