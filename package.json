@@ -4,7 +4,7 @@
   "name": "@destiny-definitions/root",
   "private": true,
   "scripts": {
-    "build": "turbo run build",
+    "build": "turbo run build --filter=@destiny-definitions/gen-config",
     "dev": "turbo run dev",
     "start": "turbo run start",
     "lint": "turbo run lint",

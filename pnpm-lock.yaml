@@ -8,6 +8,37 @@ importers:
     devDependencies:
       turbo: 1.6.3
 
+  apps/gen-config:
+    specifiers:
+      '@destiny-definitions/common': workspace:*
+      '@types/mkdirp': ^1.0.2
+      '@types/node': 18.11.9
+      bungie-api-ts: ^4.19.0
+      dotenv: ^16.0.2
+      esbuild: ^0.15.14
+      mkdirp: ^1.0.4
+      node-stream-zip: ^1.15.0
+      nodemon: 2.0.20
+      parse-duration: ^1.0.2
+      pino: ^8.7.0
+      pino-pretty: ^9.1.1
+      typescript: 4.8.4
+    dependencies:
+      '@destiny-definitions/common': link:../../packages/common
+      bungie-api-ts: 4.19.0
+      dotenv: 16.0.3
+      mkdirp: 1.0.4
+      node-stream-zip: 1.15.0
+      parse-duration: 1.0.2
+      pino: 8.7.0
+    devDependencies:
+      '@types/mkdirp': 1.0.2
+      '@types/node': 18.11.9
+      esbuild: 0.15.16
+      nodemon: 2.0.20
+      pino-pretty: 9.1.1
+      typescript: 4.8.4
+
   apps/site:
     specifiers:
       '@destiny-definitions/common': workspace:*
