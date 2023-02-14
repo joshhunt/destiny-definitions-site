@@ -84,7 +84,7 @@ export default function IndexTable({
       added: addedSubNav,
       unclassified: unclassifiedSubNav,
     };
-  }, []);
+  }, [tableName, tableDiff]);
 
   return (
     <div className={s.root}>
