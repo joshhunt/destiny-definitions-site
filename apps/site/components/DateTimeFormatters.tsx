@@ -1,35 +1,38 @@
+import { useMemo } from "react";
 import {
+  ensureDate,
   formatDate,
-  formatDateFixedLocale,
   formatDateShort,
-  formatDateShortFixedLocale,
   formatDateTime,
-  formatDateTimeFixedLocale,
   formatTime,
-  formatTimeFixedLocale,
 } from "../lib/formatDate";
 import useIsClient from "../lib/useIsClient";
 
-export function FormatDate({ date }: { date: Date | string }) {
-  const isClient = useIsClient();
-  return <>{isClient ? formatDate(date) : formatDateFixedLocale(date)}</>;
+function useDate(date: Date | string) {
+  return useMemo(() => ensureDate(date), []);
 }
 
-export function FormatDateShort({ date }: { date: Date | string }) {
+export function FormatDate({ date: _date }: { date: Date | string }) {
   const isClient = useIsClient();
-  return (
-    <>{isClient ? formatDateShort(date) : formatDateShortFixedLocale(date)}</>
-  );
+  const date = useDate(_date);
+
+  return <>{isClient ? formatDate(date) : date.toUTCString()}</>;
 }
 
-export function FormatTime({ date }: { date: Date | string }) {
+export function FormatDateShort({ date: _date }: { date: Date | string }) {
   const isClient = useIsClient();
-  return <>{isClient ? formatTime(date) : formatTimeFixedLocale(date)}</>;
+  const date = useDate(_date);
+  return <>{isClient ? formatDateShort(date) : date.toUTCString()}</>;
 }
 
-export function FormatDateTime({ date }: { date: Date | string }) {
+export function FormatTime({ date: _date }: { date: Date | string }) {
   const isClient = useIsClient();
-  return (
-    <>{isClient ? formatDateTime(date) : formatDateTimeFixedLocale(date)}</>
-  );
+  const date = useDate(_date);
+  return <>{isClient ? formatTime(date) : date.toUTCString()}</>;
+}
+
+export function FormatDateTime({ date: _date }: { date: Date | string }) {
+  const isClient = useIsClient();
+  const date = useDate(_date);
+  return <>{isClient ? formatDateTime(date) : date.toUTCString()}</>;
 }
