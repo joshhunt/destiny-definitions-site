@@ -11,7 +11,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 
 import "./common.scss";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Footer from "../components/Footer";
 import { Breadcrumb } from "../components/Breadcrumbs";
 
