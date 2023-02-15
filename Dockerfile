@@ -22,7 +22,7 @@ RUN set -ex \
 
 # Prepare node dependencies
 ADD .npmrc pnpm-lock.yaml ./
-RUN pnpm fetch 
+RUN pnpm fetch
 
 # Copy over root project files
 ADD package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json Procfile ./
@@ -47,6 +47,9 @@ ADD apps/site/styles ./apps/site/styles
 # Copy worker
 ADD apps/worker/package.json apps/worker/tsconfig.json ./apps/worker/
 ADD apps/worker/src ./apps/worker/src
+
+# ADD apps/gen-config/package.json apps/gen-config/tsconfig.json ./apps/gen-config/
+# ADD apps/gen-config/src ./apps/gen-config/src
 
 # Install dependencies
 RUN pnpm install -r --offline
