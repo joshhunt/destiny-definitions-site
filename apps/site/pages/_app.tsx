@@ -4,7 +4,7 @@ import { AppProps as NextAppProps } from "next/app";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 
-import SiteHeader, { Breadcrumb } from "../components/SiteHeader";
+import SiteHeader from "../components/SiteHeader";
 
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
@@ -13,6 +13,7 @@ import "./common.scss";
 
 import React, { useEffect, useMemo, useState } from "react";
 import Footer from "../components/Footer";
+import { Breadcrumb } from "../components/Breadcrumbs";
 
 config.autoAddCss = false;
 
