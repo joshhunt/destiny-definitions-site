@@ -45,7 +45,7 @@ function Footer({
         Site maintained ({sarcasm}) by{" "}
         <a
           target="_blank"
-          href="https://twitter.com/joshhunt"
+          href="https://hachyderm.io/@joshhunt"
           style={{ color: "inherit" }}
         >
           joshhunt
