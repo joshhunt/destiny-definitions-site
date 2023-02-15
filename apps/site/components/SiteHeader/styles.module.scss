@@ -1,12 +1,19 @@
 .root {
-  padding: 32px;
-  padding-bottom: 0;
+  --header-padding-v: 24px;
+  --header-padding-h: var(--site-padding);
+
+  padding: 0 var(--header-padding-h);
   margin-bottom: 32px;
   background: var(--bg-color-alpha-75);
   backdrop-filter: blur(10px);
   position: sticky;
   top: 0;
   z-index: 10;
+}
+
+.rootInner {
+  border-bottom: 1px solid var(--border-color);
+  padding: var(--header-padding-v) 0;
 }
 
 .title {
@@ -17,18 +24,3 @@
   line-height: 1.4;
 }
 
-.breadcrumbs {
-  display: flex;
-  align-items: center;
-
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 32px;
-}
-
-.childCrumb {
-  font-size: 20px;
-}
-
-.seperator {
-  margin: 0 1em;
-}

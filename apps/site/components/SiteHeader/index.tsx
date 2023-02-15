@@ -5,16 +5,7 @@ import Link from "next/link";
 import commonStyles from "../../styles/common.module.scss";
 
 import s from "./styles.module.scss";
-import Interpose from "../Interpose";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronRight } from "@fortawesome/pro-solid-svg-icons";
-import { FormatDateShort } from "../DateTimeFormatters";
-
-export interface Breadcrumb {
-  label?: string;
-  date?: string;
-  to: string;
-}
+import { Breadcrumbs, Breadcrumb } from "../Breadcrumbs";
 
 interface SiteHeaderProps {
   breadcrumbs?: Breadcrumb[];
@@ -23,31 +14,14 @@ interface SiteHeaderProps {
 export default function SiteHeader({ breadcrumbs }: SiteHeaderProps) {
   return (
     <div className={s.root}>
-      <div className={s.breadcrumbs}>
-        <Interpose
-          node={
-            <FontAwesomeIcon className={s.seperator} icon={faChevronRight} />
-          }
-        >
+      <div className={s.rootInner}>
+        <Breadcrumbs breadcrumbs={breadcrumbs ?? []}>
           <h1 className={s.title}>
             <Link className={commonStyles.invisibleLink} href="/">
               Destiny Definitions Archive
             </Link>
           </h1>
-
-          {breadcrumbs &&
-            breadcrumbs.map((crumb) => (
-              <div key={crumb.to} className={s.childCrumb}>
-                {crumb.to ? (
-                  <Link className={commonStyles.invisibleLink} href={crumb.to}>
-                    {crumb.date ? <FormatDateShort date={crumb.date} /> : crumb.label}
-                  </Link>
-                ) : (
-                  crumb.label
-                )}
-              </div>
-            ))}
-        </Interpose>
+        </Breadcrumbs>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 @import "../styles/type.scss";
 
 $dark: #121212;
-$light: #fafafa;
+$light: #f8f8f8;
 
 :root {
   --font-size-sm: clamp(0.8rem, 0.17vw + 0.76rem, 0.89rem);
@@ -15,6 +15,8 @@ $light: #fafafa;
   --color-modified: #2196f3;
   --color-unclassified: rgb(68, 200, 175);
   --color-reclassified: #8875a2;
+
+  --site-padding: 32px;
 }
 
 .dark {

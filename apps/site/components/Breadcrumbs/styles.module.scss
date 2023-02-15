@@ -1,0 +1,18 @@
+.root {
+  display: flex;
+  align-items: center;
+}
+
+.childCrumb {
+  font-size: 20px;
+}
+
+.seperator {
+  margin: 0 1.2ch;
+  font-size: .8em;
+  color: var(--text-fade-color);
+}
+
+.activeLink {
+  font-weight: 500;
+}
