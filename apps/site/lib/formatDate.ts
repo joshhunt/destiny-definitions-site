@@ -4,7 +4,7 @@ const TIME_FORMAT: Intl.DateTimeFormatOptions = {
   hour12: true,
   hour: "numeric",
   minute: "numeric",
-  // timeZone: "GMT",
+  timeZone: "GMT",
   timeZoneName: "shortOffset",
 };
 const DATE_TIME_FORMAT: Intl.DateTimeFormatOptions = {
