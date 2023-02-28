@@ -64,7 +64,7 @@ export function isTableType<
 }
 
 export function getDisplayName(def: GenericDefinition | undefined) {
-  return def?.displayProperties?.name;
+  return def?.displayProperties?.name || def?.name;
 }
 
 export function getIconSrc(def: GenericDefinition | undefined) {

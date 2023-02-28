@@ -76,6 +76,7 @@ export type HashGroup = [string, number[]][];
 // Definition types
 //
 export interface GenericDefinition {
+  name?: string;
   hash?: number;
   index?: number;
   redacted?: boolean;

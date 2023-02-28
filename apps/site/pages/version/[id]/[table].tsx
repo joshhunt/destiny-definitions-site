@@ -385,6 +385,7 @@ const baseFieldsQuery = {
   hash: 1,
   index: 1,
   redacted: 1,
+  name: 1,
   displayProperties,
 };
 
