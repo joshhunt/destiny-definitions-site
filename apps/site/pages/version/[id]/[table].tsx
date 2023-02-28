@@ -186,7 +186,15 @@ function getDependencyHashes(
 
   if (isTableType("DestinyInventoryItemDefinition", tableName, definitions)) {
     for (const hash of newHashes) {
-      const def = definitions[hash];
+      const def: typeof definitions[keyof typeof definitions] | undefined =
+        definitions[hash];
+
+      if (!def) {
+        log.info(
+          { route: "version/[id]/[table]", tableName, hash },
+          "Can not find definition for hash in getDependencyHashes"
+        );
+      }
 
       addHashes(
         deps,
