@@ -68,7 +68,9 @@ export function getDisplayName(def: GenericDefinition | undefined) {
 }
 
 export function getIconSrc(def: GenericDefinition | undefined) {
-  return def?.displayProperties?.icon;
+  return (
+    def?.displayProperties?.icon || def?.iconImagePath || def?.colorImagePath
+  );
 }
 
 export function getDescription(def: GenericDefinition | undefined) {
