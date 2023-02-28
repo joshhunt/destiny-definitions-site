@@ -14,15 +14,27 @@ export default [
   { name: "DestinyBreakerTypeDefinition" },
   { name: "DestinyEnergyTypeDefinition" },
 
+  { name: "DestinyLoadoutNameDefinition" },
+  { name: "DestinyLoadoutIconDefinition" },
+  { name: "DestinyLoadoutColorDefinition" },
+  { name: "DestinyLoadoutConstantsDefinition" },
+
   { name: "DestinyItemCategoryDefinition" },
   { name: "DestinyEquipmentSlotDefinition" },
 
   { name: "DestinyPresentationNodeDefinition" },
   { name: "DestinyRecordDefinition" },
+
+  { name: "DestinyGuardianRankDefinition" },
+  { name: "DestinyGuardianRankConstantsDefinition" },
+
   { name: "DestinyEventCardDefinition" },
   { name: "DestinyCollectibleDefinition" },
   { name: "DestinyObjectiveDefinition" },
   { name: "DestinyChecklistDefinition" },
+
+  { name: "DestinySocialCommendationDefinition" },
+  { name: "DestinySocialCommendationNodeDefinition" },
 
   { name: "DestinyVendorDefinition" },
   { name: "DestinyVendorGroupDefinition" },
