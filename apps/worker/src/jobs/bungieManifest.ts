@@ -13,7 +13,14 @@ const workerLogger = rootLogger.child({ workerJob: "bungieManifest" });
 export default async function () {
   workerLogger.info("Starting job");
 
-  const { Response: manifest } = await getDestinyManifest($http);
+  const manifestResponse = await getDestinyManifest($http);
+  const { Response: manifest } = manifestResponse;
+
+  if (!manifest) {
+    workerLogger.warn({ response: manifestResponse }, "No manifest");
+    return;
+  }
+
   const log = workerLogger.child({
     bungieManifestVersion: manifest?.version,
   });
