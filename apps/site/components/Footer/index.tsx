@@ -54,6 +54,7 @@ function Footer({
         on Mastodon. Site maintained ({sarcasm}) by{" "}
         <a
           target="_blank"
+          rel="me"
           href="https://hachyderm.io/@joshhunt"
           style={{ color: "inherit" }}
         >
