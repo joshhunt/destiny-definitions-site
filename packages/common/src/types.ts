@@ -77,6 +77,8 @@ export type HashGroup = [string, number[]][];
 //
 export interface GenericDefinition {
   name?: string;
+  iconImagePath?: string;
+  colorImagePath?: string;
   hash?: number;
   index?: number;
   redacted?: boolean;

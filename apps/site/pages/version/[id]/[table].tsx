@@ -386,6 +386,8 @@ const baseFieldsQuery = {
   index: 1,
   redacted: 1,
   name: 1,
+  iconImagePath: 1,
+  colorImagePath: 1,
   displayProperties,
 };
 
