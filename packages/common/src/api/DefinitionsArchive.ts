@@ -1,7 +1,7 @@
 import invariant from "@destiny-definitions/invariant";
 import { S3Archive } from "./S3Archive";
 import path from "path";
-import sqlite3 from "sqlite3";
+import sqlite3, { Database } from "sqlite3";
 import fs from "fs/promises";
 import {
   DefinitionTable,
@@ -11,6 +11,7 @@ import {
 import { uniq } from "lodash";
 import { JSONExtractQueryObject, makeJsonExtractQuery } from "./jsonShape";
 import {
+  ErrorOpeningSQLiteDatabase,
   InvalidDefinitionTableName,
   MaybeAppError,
   MissingDefinitionsDatabase,
@@ -51,6 +52,7 @@ export class DefinitionsArchive {
       [hash],
       fieldsQuery
     );
+
     if (err) {
       return [err, null];
     }
@@ -98,7 +100,13 @@ export class DefinitionsArchive {
       return [new MissingDefinitionsDatabase(versionId), null];
     }
 
-    const db = new (sqlite3.verbose().Database)(sqliteFilePath);
+    let db: Database;
+
+    try {
+      db = new (sqlite3.verbose().Database)(sqliteFilePath);
+    } catch (err) {
+      return [new ErrorOpeningSQLiteDatabase(versionId), null];
+    }
 
     const tableCheckSql = db.prepare(
       "SELECT name FROM sqlite_master WHERE type='table' AND name=?;",
@@ -184,3 +192,9 @@ function sqliteAll<T>(statement: sqlite3.Statement): Promise<T[]> {
     statement.all(callback);
   });
 }
+
+process.on("uncaughtException", function (err) {
+  console.error(new Date().toUTCString() + " uncaughtException:", err.message);
+  console.error(err.stack);
+  process.exit(1);
+});

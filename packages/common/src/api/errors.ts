@@ -32,6 +32,16 @@ export class MissingDefinitionTable extends Error {
   }
 }
 
+export class ErrorOpeningSQLiteDatabase extends Error {
+  versionID: string;
+
+  constructor(versionID: string) {
+    super(`Unable to open SQLite database for version ${versionID}`);
+    this.name = "MissingDefinitionTable";
+    this.versionID = versionID;
+  }
+}
+
 export class VersionNotFoundInHistory extends Error {
   versionID: string;
 
@@ -45,7 +55,8 @@ export class VersionNotFoundInHistory extends Error {
 export type DefinitionsError =
   | MissingDefinitionsDatabase
   | MissingDefinitionTable
-  | InvalidDefinitionTableName;
+  | InvalidDefinitionTableName
+  | ErrorOpeningSQLiteDatabase;
 
 export type MaybeAppError<ReturnValue, ErrorType = DefinitionsError> =
   | [ErrorType, null]
