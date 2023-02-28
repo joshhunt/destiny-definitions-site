@@ -61,7 +61,9 @@ export const getStaticProps = async ({ params }: Context) => {
   );
 
   const allQuestItemHashes =
-    thisQuestDefinition.setData?.itemList?.map((v) => v.itemHash) ?? [];
+    thisQuestDefinition.setData?.itemList
+      ?.map((v) => v.itemHash ?? 0)
+      .filter(Boolean) ?? [];
 
   const [questDefsErr, questDefinitionsRaw] = await defsClient.getDefinitions(
     version.id,
@@ -101,15 +103,16 @@ export const getStaticProps = async ({ params }: Context) => {
   }
 
   const allQuestDefs =
-    thisQuestDefinition.setData?.itemList.map(
-      (v) => questDefinitions[v.itemHash]
+    thisQuestDefinition.setData?.itemList?.map(
+      (v) => questDefinitions[v.itemHash ?? 0]
     ) ?? [];
 
-  const rewardItemHashes = uniq(
-    allQuestDefs
-      .flatMap((v) => v.value?.itemValue.map((vv) => vv.itemHash))
-      .filter((v) => v) ?? []
-  );
+  const allRewardItemHashes = allQuestDefs
+    .flatMap((v) => v.value?.itemValue?.map((vv) => vv.itemHash))
+    .map((v) => v ?? 0)
+    .filter((v) => v);
+
+  const rewardItemHashes = uniq(allRewardItemHashes);
 
   const [rewardDefsErr, rewardItemDefinitions] =
     await defsClient.getDefinitions(

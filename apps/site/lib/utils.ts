@@ -1,12 +1,10 @@
 import {
   DeepPartial,
   DefinitionTable,
-  GenericDefinition,
-} from "@destiny-definitions/common";
-import {
   DestinyDefinitionFrom,
   DestinyManifestComponentName,
-} from "bungie-api-ts/destiny2";
+  GenericDefinition,
+} from "@destiny-definitions/common";
 import _tableNameMappings from "./tableNameMappings.json";
 
 const tableNameMappings = _tableNameMappings as Record<string, string>;
