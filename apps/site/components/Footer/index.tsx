@@ -49,7 +49,7 @@ function Footer({
           href="https://botsin.space/@destinyapi"
           style={{ color: "inherit" }}
         >
-          destinyapi@botsin.space
+          destinyapi
         </a>{" "}
         on Mastodon. Site maintained ({sarcasm}) by{" "}
         <a
