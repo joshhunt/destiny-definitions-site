@@ -12,6 +12,7 @@ import {
   DestinyPlaceDefinition as _DestinyPlaceDefinition,
   DestinyRecordDefinition as _DestinyRecordDefinition,
   DestinyMetricDefinition as _DestinyMetricDefinition,
+  DestinyLoadoutNameDefinition as _DestinyLoadoutNameDefinition,
 } from "bungie-api-ts/destiny2";
 
 export interface ManifestVersion {
@@ -76,9 +77,9 @@ export type HashGroup = [string, number[]][];
 // Definition types
 //
 export interface GenericDefinition {
-  name?: string;
-  iconImagePath?: string;
-  colorImagePath?: string;
+  // name?: string;
+  // iconImagePath?: string;
+  // colorImagePath?: string;
   hash?: number;
   index?: number;
   redacted?: boolean;
@@ -105,12 +106,19 @@ export type AllDestinyManifestComponents = {
   DestinyMetricDefinition?: DefinitionTable<DestinyMetricDefinition>;
 };
 
+interface HackTempProperties {
+  name?: string;
+  iconImagePath?: string;
+  colorImagePath?: string;
+}
+
 export declare type DestinyDefinitionFrom<
   K extends DestinyManifestComponentName
 > = DeepPartial<OrigAllDestinyManifestComponents[K][number]>;
 
-export type DestinyInventoryItemDefinition =
-  DeepPartial<_DestinyInventoryItemDefinition>;
+export type DestinyInventoryItemDefinition = DeepPartial<
+  _DestinyInventoryItemDefinition & HackTempProperties
+>;
 
 export type DestinyObjectiveDefinition =
   DeepPartial<_DestinyObjectiveDefinition>;
