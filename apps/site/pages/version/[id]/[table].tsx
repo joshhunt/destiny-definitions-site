@@ -194,6 +194,7 @@ function getDependencyHashes(
           { route: "version/[id]/[table]", tableName, hash },
           "Can not find definition for hash in getDependencyHashes"
         );
+        continue;
       }
 
       addHashes(
