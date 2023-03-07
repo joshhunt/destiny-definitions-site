@@ -24,11 +24,9 @@ export default function DestinationDiffList({
   const { DestinyPlaceDefinition: placeDefs = {} } = otherDefinitions;
 
   const hasDisplayProperties = getHasDisplayProperties(hashes, definitions);
-  const hasPlace = hashes.some(
-    (v) => placeDefs[definitions[v]?.placeHash ?? 0]
-  );
+  const hasPlace = hashes.some((v) => placeDefs[definitions[v]?.placeHash]);
   const hasBubbles = hashes.some(
-    (v) => definitions[v]?.bubbleSettings?.length ?? 0 > 0
+    (v) => definitions[v]?.bubbleSettings?.length > 0
   );
 
   return (
@@ -42,7 +40,7 @@ export default function DestinationDiffList({
       <TableBody>
         {hashes.map((hash) => {
           const definition = definitions[hash];
-          const placeDef = placeDefs[definition?.placeHash ?? 0];
+          const placeDef = placeDefs[definition?.placeHash];
 
           return (
             <TableRow key={hash}>
@@ -55,9 +53,9 @@ export default function DestinationDiffList({
               {hasPlace && <Cell>{getDisplayName(placeDef)}</Cell>}
               {hasBubbles && (
                 <Cell>
-                  {(definition.bubbleSettings?.length ?? 0) > 0 && (
+                  {definition.bubbleSettings?.length > 0 && (
                     <ul>
-                      {definition.bubbleSettings?.map((bubble) => (
+                      {definition.bubbleSettings.map((bubble) => (
                         <li>{getDisplayName(bubble)}</li>
                       ))}
                     </ul>

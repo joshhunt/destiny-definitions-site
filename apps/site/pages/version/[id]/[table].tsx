@@ -211,7 +211,7 @@ function getDependencyHashes(
 
       const socketSingleInitialItemHashes =
         def.inventory?.tierType === 6 &&
-        def.sockets?.socketEntries?.map((v) => v?.singleInitialItemHash);
+        def.sockets?.socketEntries?.map((v) => v.singleInitialItemHash);
       addHashes(
         deps,
         "DestinyInventoryItemDefinition",
@@ -263,35 +263,35 @@ function getDependencyHashes(
       addHashes(
         deps,
         "DestinyPresentationNodeDefinition",
-        def.children?.presentationNodes?.map((v) => v?.presentationNodeHash),
+        def.children?.presentationNodes?.map((v) => v.presentationNodeHash),
         { hash: 1, displayProperties: { name: 1, icon: 1 } }
       );
 
       addHashes(
         deps,
         "DestinyCollectibleDefinition",
-        def.children?.collectibles?.map((v) => v?.collectibleHash),
+        def.children?.collectibles?.map((v) => v.collectibleHash),
         { hash: 1, displayProperties: { name: 1, icon: 1 } }
       );
 
       addHashes(
         deps,
         "DestinyRecordDefinition",
-        def.children?.records?.map((v) => v?.recordHash),
+        def.children?.records?.map((v) => v.recordHash),
         { hash: 1, displayProperties: { name: 1, icon: 1 } }
       );
 
       addHashes(
         deps,
         "DestinyMetricDefinition",
-        def.children?.metrics?.map((v) => v?.metricHash),
+        def.children?.metrics?.map((v) => v.metricHash),
         { hash: 1, displayProperties: { name: 1, icon: 1 } }
       );
 
       addHashes(
         deps,
         "DestinyInventoryItemDefinition",
-        def.children?.craftables?.map((v) => v?.craftableItemHash),
+        def.children?.craftables?.map((v) => v.craftableItemHash),
         { hash: 1, displayProperties: { name: 1, icon: 1 } }
       );
 
@@ -325,7 +325,7 @@ function getDependencyHashes(
         deps,
         "DestinyObjectiveDefinition",
         def.intervalInfo?.intervalObjectives?.map(
-          (v) => v?.intervalObjectiveHash
+          (v) => v.intervalObjectiveHash
         ),
         {
           hash: 1,
