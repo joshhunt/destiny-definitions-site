@@ -12,6 +12,7 @@ import {
   DefinitionTable,
   JSONExtractQueryObject,
   S3Archive,
+  AllDestinyManifestComponents,
 } from "@destiny-definitions/common";
 import { friendlyTableName, isTableType } from "../../../lib/utils";
 import { DestinyManifestComponentName } from "bungie-api-ts/destiny2";

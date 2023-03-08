@@ -5,6 +5,7 @@ import {
 } from "@destiny-definitions/common";
 import {
   DestinyDefinitionFrom,
+  DestinyDisplayPropertiesDefinition,
   DestinyManifestComponentName,
 } from "bungie-api-ts/destiny2";
 import _tableNameMappings from "./tableNameMappings.json";
@@ -63,16 +64,69 @@ export function isTableType<
   return inputTableName === castToTableName;
 }
 
+type DisplayPropKey = keyof DestinyDisplayPropertiesDefinition;
+type DPValue = DestinyDisplayPropertiesDefinition[DisplayPropKey];
+
+function hasDisplayProperties<
+  K extends keyof DestinyDisplayPropertiesDefinition
+>(
+  def: GenericDefinition
+): def is GenericDefinition & {
+  displayProperties: DeepPartial<DestinyDisplayPropertiesDefinition>;
+} {
+  return "displayProperties" in def && def.displayProperties !== undefined;
+}
+
 export function getDisplayName(def: GenericDefinition | undefined) {
-  return def?.displayProperties?.name || def?.name;
+  if (!def) {
+    return undefined;
+  }
+
+  if (
+    hasDisplayProperties(def) &&
+    "name" in def.displayProperties &&
+    def.displayProperties.name
+  ) {
+    return def.displayProperties.name;
+  }
+
+  if ("name" in def && def.name) {
+    return def.name;
+  }
 }
 
 export function getIconSrc(def: GenericDefinition | undefined) {
-  return (
-    def?.displayProperties?.icon || def?.iconImagePath || def?.colorImagePath
-  );
+  if (!def) {
+    return undefined;
+  }
+
+  if (
+    hasDisplayProperties(def) &&
+    "icon" in def.displayProperties &&
+    def.displayProperties.icon
+  ) {
+    return def.displayProperties.icon;
+  }
+
+  if ("iconImagePath" in def && def.iconImagePath) {
+    return def.iconImagePath;
+  }
+
+  if ("colorImagePath" in def && def.colorImagePath) {
+    return def.colorImagePath;
+  }
 }
 
 export function getDescription(def: GenericDefinition | undefined) {
-  return def?.displayProperties?.description;
+  if (!def) {
+    return undefined;
+  }
+
+  if (
+    hasDisplayProperties(def) &&
+    "description" in def.displayProperties &&
+    def.displayProperties.description
+  ) {
+    return def.displayProperties.description;
+  }
 }

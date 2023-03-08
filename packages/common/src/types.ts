@@ -13,6 +13,8 @@ import {
   DestinyRecordDefinition as _DestinyRecordDefinition,
   DestinyMetricDefinition as _DestinyMetricDefinition,
   DestinyLoadoutNameDefinition as _DestinyLoadoutNameDefinition,
+  DestinyLoadoutIconDefinition as _DestinyLoadoutIconDefinition,
+  DestinyLoadoutColorDefinition as _DestinyLoadoutColorDefinition,
 } from "bungie-api-ts/destiny2";
 
 export interface ManifestVersion {
@@ -76,23 +78,24 @@ export type HashGroup = [string, number[]][];
 //
 // Definition types
 //
-export interface GenericDefinition {
-  // name?: string;
-  // iconImagePath?: string;
-  // colorImagePath?: string;
-  hash?: number;
-  index?: number;
-  redacted?: boolean;
-  displayProperties?: {
-    name?: string;
-    description?: string;
-    icon?: string;
-  };
-}
+export type GenericDefinition = DestinyDefinitionFrom<
+  keyof AllDestinyManifestComponents
+>;
+
+const def = {} as GenericDefinition;
 
 export interface DefinitionTable<T = GenericDefinition> {
   [hash: string]: T;
 }
+
+interface Hello {
+  world?: string;
+  name?: string;
+}
+
+type Full<T> = {
+  [P in keyof T]-?: T[P];
+};
 
 export type AllDestinyManifestComponents = {
   DestinyInventoryItemDefinition?: DefinitionTable<DestinyInventoryItemDefinition>;
@@ -104,7 +107,13 @@ export type AllDestinyManifestComponents = {
   DestinyPlaceDefinition?: DefinitionTable<DestinyPlaceDefinition>;
   DestinyRecordDefinition?: DefinitionTable<DestinyRecordDefinition>;
   DestinyMetricDefinition?: DefinitionTable<DestinyMetricDefinition>;
+
+  DestinyLoadoutNameDefinition?: DefinitionTable<DestinyLoadoutNameDefinition>;
+  DestinyLoadoutIconDefinition?: DefinitionTable<DestinyLoadoutIconDefinition>;
+  DestinyLoadoutColorDefinition?: DefinitionTable<DestinyLoadoutColorDefinition>;
 };
+
+export type DestinyManifestComponentName = keyof AllDestinyManifestComponents;
 
 interface HackTempProperties {
   name?: string;
@@ -114,7 +123,7 @@ interface HackTempProperties {
 
 export declare type DestinyDefinitionFrom<
   K extends DestinyManifestComponentName
-> = DeepPartial<OrigAllDestinyManifestComponents[K][number]>;
+> = DeepPartial<Full<AllDestinyManifestComponents>[K][number]>;
 
 export type DestinyInventoryItemDefinition = DeepPartial<
   _DestinyInventoryItemDefinition & HackTempProperties
@@ -140,4 +149,9 @@ export type DestinyMetricDefinition = DeepPartial<_DestinyMetricDefinition>;
 
 export type DestinyPlaceDefinition = DeepPartial<_DestinyPlaceDefinition>;
 
-export type DestinyManifestComponentName = keyof AllDestinyManifestComponents;
+export type DestinyLoadoutNameDefinition =
+  DeepPartial<_DestinyLoadoutNameDefinition>;
+export type DestinyLoadoutIconDefinition =
+  DeepPartial<_DestinyLoadoutIconDefinition>;
+export type DestinyLoadoutColorDefinition =
+  DeepPartial<_DestinyLoadoutColorDefinition>;
