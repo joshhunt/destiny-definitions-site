@@ -2,12 +2,10 @@ import {
   DeepPartial,
   DefinitionTable,
   GenericDefinition,
-} from "@destiny-definitions/common";
-import {
   DestinyDefinitionFrom,
-  DestinyDisplayPropertiesDefinition,
   DestinyManifestComponentName,
-} from "bungie-api-ts/destiny2";
+} from "@destiny-definitions/common";
+import { DestinyDisplayPropertiesDefinition } from "bungie-api-ts/destiny2";
 import _tableNameMappings from "./tableNameMappings.json";
 
 const tableNameMappings = _tableNameMappings as Record<string, string>;
@@ -64,12 +62,7 @@ export function isTableType<
   return inputTableName === castToTableName;
 }
 
-type DisplayPropKey = keyof DestinyDisplayPropertiesDefinition;
-type DPValue = DestinyDisplayPropertiesDefinition[DisplayPropKey];
-
-function hasDisplayProperties<
-  K extends keyof DestinyDisplayPropertiesDefinition
->(
+function hasDisplayProperties(
   def: GenericDefinition
 ): def is GenericDefinition & {
   displayProperties: DeepPartial<DestinyDisplayPropertiesDefinition>;
@@ -77,7 +70,9 @@ function hasDisplayProperties<
   return "displayProperties" in def && def.displayProperties !== undefined;
 }
 
-export function getDisplayName(def: GenericDefinition | undefined) {
+export function getDisplayName(
+  def: GenericDefinition | undefined
+): string | undefined {
   if (!def) {
     return undefined;
   }
@@ -95,7 +90,9 @@ export function getDisplayName(def: GenericDefinition | undefined) {
   }
 }
 
-export function getIconSrc(def: GenericDefinition | undefined) {
+export function getIconSrc(
+  def: GenericDefinition | undefined
+): string | undefined {
   if (!def) {
     return undefined;
   }
@@ -117,7 +114,9 @@ export function getIconSrc(def: GenericDefinition | undefined) {
   }
 }
 
-export function getDescription(def: GenericDefinition | undefined) {
+export function getDescription(
+  def: GenericDefinition | undefined
+): string | undefined {
   if (!def) {
     return undefined;
   }

@@ -82,76 +82,60 @@ export type GenericDefinition = DestinyDefinitionFrom<
   keyof AllDestinyManifestComponents
 >;
 
-const def = {} as GenericDefinition;
-
 export interface DefinitionTable<T = GenericDefinition> {
   [hash: string]: T;
 }
 
-interface Hello {
-  world?: string;
-  name?: string;
-}
-
-type Full<T> = {
+type NonPartial<T> = {
   [P in keyof T]-?: T[P];
 };
 
 export type AllDestinyManifestComponents = {
-  DestinyInventoryItemDefinition?: DefinitionTable<DestinyInventoryItemDefinition>;
-  DestinyObjectiveDefinition?: DefinitionTable<DestinyObjectiveDefinition>;
-  DestinyCollectibleDefinition?: DefinitionTable<DestinyCollectibleDefinition>;
-  DestinyVendorDefinition?: DefinitionTable<DestinyVendorDefinition>;
-  DestinyPresentationNodeDefinition?: DefinitionTable<DestinyPresentationNodeDefinition>;
-  DestinyDestinationDefinition?: DefinitionTable<DestinyDestinationDefinition>;
-  DestinyPlaceDefinition?: DefinitionTable<DestinyPlaceDefinition>;
-  DestinyRecordDefinition?: DefinitionTable<DestinyRecordDefinition>;
-  DestinyMetricDefinition?: DefinitionTable<DestinyMetricDefinition>;
-
-  DestinyLoadoutNameDefinition?: DefinitionTable<DestinyLoadoutNameDefinition>;
-  DestinyLoadoutIconDefinition?: DefinitionTable<DestinyLoadoutIconDefinition>;
-  DestinyLoadoutColorDefinition?: DefinitionTable<DestinyLoadoutColorDefinition>;
+  [TableName in keyof OrigAllDestinyManifestComponents]?: DefinitionTable<
+    DeepPartial<OrigAllDestinyManifestComponents[TableName][number]> & {
+      __typeThisPropertyDoesntExist: TableName;
+    }
+  >;
 };
 
 export type DestinyManifestComponentName = keyof AllDestinyManifestComponents;
 
-interface HackTempProperties {
-  name?: string;
-  iconImagePath?: string;
-  colorImagePath?: string;
-}
-
 export declare type DestinyDefinitionFrom<
   K extends DestinyManifestComponentName
-> = DeepPartial<Full<AllDestinyManifestComponents>[K][number]>;
+> = NonPartial<AllDestinyManifestComponents>[K][number];
 
-export type DestinyInventoryItemDefinition = DeepPartial<
-  _DestinyInventoryItemDefinition & HackTempProperties
->;
+export type DestinyInventoryItemDefinition =
+  NonPartial<AllDestinyManifestComponents>["DestinyInventoryItemDefinition"][number];
 
 export type DestinyObjectiveDefinition =
-  DeepPartial<_DestinyObjectiveDefinition>;
+  NonPartial<AllDestinyManifestComponents>["DestinyObjectiveDefinition"][number];
 
 export type DestinyCollectibleDefinition =
-  DeepPartial<_DestinyCollectibleDefinition>;
+  NonPartial<AllDestinyManifestComponents>["DestinyCollectibleDefinition"][number];
 
-export type DestinyVendorDefinition = DeepPartial<_DestinyVendorDefinition>;
+export type DestinyVendorDefinition =
+  NonPartial<AllDestinyManifestComponents>["DestinyVendorDefinition"][number];
 
 export type DestinyPresentationNodeDefinition =
-  DeepPartial<_DestinyPresentationNodeDefinition>;
+  NonPartial<AllDestinyManifestComponents>["DestinyPresentationNodeDefinition"][number];
 
 export type DestinyDestinationDefinition =
-  DeepPartial<_DestinyDestinationDefinition>;
+  NonPartial<AllDestinyManifestComponents>["DestinyDestinationDefinition"][number];
 
-export type DestinyRecordDefinition = DeepPartial<_DestinyRecordDefinition>;
+export type DestinyRecordDefinition =
+  NonPartial<AllDestinyManifestComponents>["DestinyRecordDefinition"][number];
 
-export type DestinyMetricDefinition = DeepPartial<_DestinyMetricDefinition>;
+export type DestinyMetricDefinition =
+  NonPartial<AllDestinyManifestComponents>["DestinyMetricDefinition"][number];
 
-export type DestinyPlaceDefinition = DeepPartial<_DestinyPlaceDefinition>;
+export type DestinyPlaceDefinition =
+  NonPartial<AllDestinyManifestComponents>["DestinyPlaceDefinition"][number];
 
 export type DestinyLoadoutNameDefinition =
-  DeepPartial<_DestinyLoadoutNameDefinition>;
+  NonPartial<AllDestinyManifestComponents>["DestinyLoadoutNameDefinition"][number];
+
 export type DestinyLoadoutIconDefinition =
-  DeepPartial<_DestinyLoadoutIconDefinition>;
+  NonPartial<AllDestinyManifestComponents>["DestinyLoadoutIconDefinition"][number];
+
 export type DestinyLoadoutColorDefinition =
-  DeepPartial<_DestinyLoadoutColorDefinition>;
+  NonPartial<AllDestinyManifestComponents>["DestinyLoadoutColorDefinition"][number];
