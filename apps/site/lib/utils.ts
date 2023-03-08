@@ -1,10 +1,11 @@
 import {
   DeepPartial,
   DefinitionTable,
+  GenericDefinition,
   DestinyDefinitionFrom,
   DestinyManifestComponentName,
-  GenericDefinition,
 } from "@destiny-definitions/common";
+import { DestinyDisplayPropertiesDefinition } from "bungie-api-ts/destiny2";
 import _tableNameMappings from "./tableNameMappings.json";
 
 const tableNameMappings = _tableNameMappings as Record<string, string>;
@@ -61,16 +62,76 @@ export function isTableType<
   return inputTableName === castToTableName;
 }
 
-export function getDisplayName(def: GenericDefinition | undefined) {
-  return def?.displayProperties?.name || def?.name;
+function hasDisplayProperties(
+  def: GenericDefinition
+): def is GenericDefinition & {
+  displayProperties: DeepPartial<DestinyDisplayPropertiesDefinition>;
+} {
+  return "displayProperties" in def && def.displayProperties !== undefined;
 }
 
-export function getIconSrc(def: GenericDefinition | undefined) {
-  return (
-    def?.displayProperties?.icon || def?.iconImagePath || def?.colorImagePath
-  );
+export function getDisplayName(
+  def: GenericDefinition | undefined
+): string | undefined {
+  if (!def) {
+    return undefined;
+  }
+
+  if (
+    hasDisplayProperties(def) &&
+    "name" in def.displayProperties &&
+    def.displayProperties.name
+  ) {
+    return def.displayProperties.name;
+  }
+
+  if ("name" in def && def.name) {
+    return def.name;
+  }
 }
 
-export function getDescription(def: GenericDefinition | undefined) {
-  return def?.displayProperties?.description;
+export function getIconSrc(
+  def: GenericDefinition | undefined
+): string | undefined {
+  if (!def) {
+    return undefined;
+  }
+
+  if (
+    hasDisplayProperties(def) &&
+    "icon" in def.displayProperties &&
+    def.displayProperties.icon
+  ) {
+    return def.displayProperties.icon;
+  }
+
+  if ("iconImagePath" in def && def.iconImagePath) {
+    return def.iconImagePath;
+  }
+
+  if ("colorImagePath" in def && def.colorImagePath) {
+    return def.colorImagePath;
+  }
+}
+
+export function getDescription(
+  def: GenericDefinition | undefined
+): string | undefined {
+  if (!def) {
+    return undefined;
+  }
+
+  if (
+    hasDisplayProperties(def) &&
+    "description" in def.displayProperties &&
+    def.displayProperties.description
+  ) {
+    return def.displayProperties.description;
+  }
+}
+
+export function notEmpty<TValue>(
+  value: TValue | null | undefined
+): value is TValue {
+  return value !== null && value !== undefined;
 }

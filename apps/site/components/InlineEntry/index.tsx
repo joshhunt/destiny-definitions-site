@@ -1,5 +1,5 @@
 import React from "react";
-import { friendlyTableName } from "../../lib/utils";
+import { friendlyTableName, getDisplayName, getIconSrc } from "../../lib/utils";
 import BungieImage from "../BungieImage";
 import commonStyles from "../../styles/common.module.scss";
 import cx from "classnames";
@@ -17,12 +17,12 @@ const InlineChild: React.FC<InlineChildProps> = ({ definition, tableName }) => {
     return null;
   }
 
-  const icon = definition.displayProperties?.icon;
+  const icon = getIconSrc(definition);
 
   const kids = (
     <span className={cx(s.content, commonStyles.invisibleLink)}>
       {icon && <BungieImage className={s.icon} src={icon} />}
-      {definition.displayProperties?.name || <em>No name</em>}
+      {getDisplayName(definition) || <em>No name</em>}
       {tableName && <div className={s.tooltip}>{tableName}</div>}
     </span>
   );

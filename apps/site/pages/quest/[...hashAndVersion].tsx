@@ -11,7 +11,11 @@ import { InteractionRewardSet } from "../../components/QuestPage/types";
 import duration from "../../lib/duration";
 import notFound from "../../lib/next";
 import { getHashAndVersion } from "../../lib/pageUtils";
-import { castDefinition, castDefinitionsTable } from "../../lib/utils";
+import {
+  castDefinition,
+  castDefinitionsTable,
+  notEmpty,
+} from "../../lib/utils";
 import { DestinyVendorDefinition } from "bungie-api-ts/destiny2";
 import log from "../../lib/log";
 
@@ -62,8 +66,8 @@ export const getStaticProps = async ({ params }: Context) => {
 
   const allQuestItemHashes =
     thisQuestDefinition.setData?.itemList
-      ?.map((v) => v.itemHash ?? 0)
-      .filter(Boolean) ?? [];
+      ?.map((v) => v.itemHash)
+      .filter(notEmpty) ?? [];
 
   const [questDefsErr, questDefinitionsRaw] = await defsClient.getDefinitions(
     version.id,
@@ -80,7 +84,7 @@ export const getStaticProps = async ({ params }: Context) => {
 
   const allObjectiveHashes = Object.values(questDefinitions)
     .flatMap((v) => v.objectives?.objectiveHashes)
-    .filter(nonNullable);
+    .filter(notEmpty);
 
   const objectiveDefinitions = await defsClient.getDefinitions(
     version.id,
@@ -104,15 +108,14 @@ export const getStaticProps = async ({ params }: Context) => {
 
   const allQuestDefs =
     thisQuestDefinition.setData?.itemList?.map(
-      (v) => questDefinitions[v.itemHash ?? 0]
+      (v) => questDefinitions[v.itemHash ?? -1]
     ) ?? [];
 
-  const allRewardItemHashes = allQuestDefs
-    .flatMap((v) => v.value?.itemValue?.map((vv) => vv.itemHash))
-    .map((v) => v ?? 0)
-    .filter((v) => v);
-
-  const rewardItemHashes = uniq(allRewardItemHashes);
+  const rewardItemHashes = uniq(
+    allQuestDefs
+      .flatMap((v) => v.value?.itemValue?.map((vv) => vv.itemHash))
+      .filter(notEmpty) ?? []
+  );
 
   const [rewardDefsErr, rewardItemDefinitions] =
     await defsClient.getDefinitions(
@@ -217,7 +220,3 @@ const QuestPageWrapper: React.FC<QuestPageProps> = (props) => {
 };
 
 export default QuestPageWrapper;
-
-function nonNullable<T>(value: T): value is NonNullable<T> {
-  return value !== null && value !== undefined;
-}

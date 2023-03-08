@@ -32,9 +32,9 @@ export function createQuestObjective(objective: DestinyObjectiveDefinition) {
   );
 }
 
-export type QuestItem = ReturnType<typeof createQuestItem>;
-export type QuestVendor = ReturnType<typeof createQuestVendor>;
-export type QuestObjective = ReturnType<typeof createQuestObjective>;
+export type QuestItem = DestinyInventoryItemDefinition;
+export type QuestVendor = DestinyVendorDefinition;
+export type QuestObjective = DestinyObjectiveDefinition;
 
 export type InteractionRewardSet = Record<
   number,

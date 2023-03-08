@@ -35,10 +35,10 @@ export default function ActivityDiffList({
 
   const hasDisplayProperties = getHasDisplayProperties(hashes, definitions);
   const hasDestination = hashes.some(
-    (hash) => destinationDefs[definitions[hash]?.destinationHash ?? 0]
+    (hash) => destinationDefs[definitions[hash]?.destinationHash ?? -1]
   );
   const hasPlace = hashes.some(
-    (hash) => placeDefs[definitions[hash]?.placeHash ?? 0]
+    (hash) => placeDefs[definitions[hash]?.placeHash ?? -1]
   );
   const hasPgcrImage = hashes.some((hash) => definitions[hash]?.pgcrImage);
 
