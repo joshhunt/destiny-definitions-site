@@ -1,21 +1,4 @@
-import {
-  // DestinyManifestComponentName,
-  AllDestinyManifestComponents as OrigAllDestinyManifestComponents,
-
-  // Definitions
-  DestinyInventoryItemDefinition as _DestinyInventoryItemDefinition,
-  DestinyObjectiveDefinition as _DestinyObjectiveDefinition,
-  DestinyCollectibleDefinition as _DestinyCollectibleDefinition,
-  DestinyVendorDefinition as _DestinyVendorDefinition,
-  DestinyPresentationNodeDefinition as _DestinyPresentationNodeDefinition,
-  DestinyDestinationDefinition as _DestinyDestinationDefinition,
-  DestinyPlaceDefinition as _DestinyPlaceDefinition,
-  DestinyRecordDefinition as _DestinyRecordDefinition,
-  DestinyMetricDefinition as _DestinyMetricDefinition,
-  DestinyLoadoutNameDefinition as _DestinyLoadoutNameDefinition,
-  DestinyLoadoutIconDefinition as _DestinyLoadoutIconDefinition,
-  DestinyLoadoutColorDefinition as _DestinyLoadoutColorDefinition,
-} from "bungie-api-ts/destiny2";
+import { AllDestinyManifestComponents as OrigAllDestinyManifestComponents } from "bungie-api-ts/destiny2";
 
 import { DeepPartial } from "./tsUtils";
 
@@ -31,6 +14,8 @@ type NonPartial<T> = {
   [P in keyof T]-?: T[P];
 };
 
+// Make all definitions DeepPartial, and pretend to add the __typeThisPropertyDoesntExist to typescript
+// won't collapse down a union of all definitions
 export type AllDestinyManifestComponents = {
   [TableName in keyof OrigAllDestinyManifestComponents]?: DefinitionTable<
     DeepPartial<OrigAllDestinyManifestComponents[TableName][number]> & {
