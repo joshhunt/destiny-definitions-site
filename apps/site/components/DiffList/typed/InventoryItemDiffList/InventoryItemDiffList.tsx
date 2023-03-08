@@ -133,7 +133,7 @@ export default function InventoryItemDiffList({
 
               {isArmor && (
                 <Cell>
-                  {CLASS_TYPE_NAME[def.classType] ?? <em>Unknown</em>}
+                  {CLASS_TYPE_NAME[def.classType ?? -1] ?? <em>Unknown</em>}
                 </Cell>
               )}
 
