@@ -7,7 +7,7 @@ import {
   DefinitionTable,
   DestinyManifestComponentName,
   GenericDefinition,
-} from "../types";
+} from "../definitionsTypes";
 import { uniq } from "lodash";
 import { JSONExtractQueryObject, makeJsonExtractQuery } from "./jsonShape";
 import {
