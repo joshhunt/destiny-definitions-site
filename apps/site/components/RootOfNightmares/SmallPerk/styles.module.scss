@@ -1,0 +1,18 @@
+.smallPerk {
+  width: calc(6 * 8px);
+}
+
+.smallPerkIcon {
+  // width: calc(5 * 8px);
+  width: 100%;
+  height: auto;
+}
+
+.smallPerkName {
+  font-size: 14px;
+}
+
+.enhancedPerkIcon {
+  background: rgba(yellow, 0.2);
+  border-radius: 100px;
+}

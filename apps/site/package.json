@@ -16,6 +16,7 @@
   "dependencies": {
     "@destiny-definitions/common": "workspace:*",
     "@destiny-definitions/invariant": "workspace:*",
+    "@floating-ui/react": "^0.20.1",
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
     "@fortawesome/pro-solid-svg-icons": "^6.2.1",
     "@fortawesome/react-fontawesome": "^0.2.0",

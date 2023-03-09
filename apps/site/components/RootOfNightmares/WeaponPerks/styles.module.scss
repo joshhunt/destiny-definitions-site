@@ -1,0 +1,30 @@
+.socketCategory {
+  margin-bottom: 40px;
+}
+
+.socketCategoryName {
+  font-size: 1.1em;
+  font-weight: 500;
+  margin-bottom: 16px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border-color);
+  // max-width: 800px;
+}
+
+.largePerkList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.horizontalSockets {
+  display: flex;
+  gap: 16px;
+  // gap: 32px;
+}
+
+.smallPerkList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

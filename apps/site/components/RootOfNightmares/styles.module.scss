@@ -1,0 +1,18 @@
+.root {
+  margin: 32px;
+  margin-top: 0;
+}
+
+.spoilerDisclaimer {
+  height: 80vh;
+  background: #e700df;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: -1;
+}

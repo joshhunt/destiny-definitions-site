@@ -65,3 +65,6 @@ export type DestinyLoadoutIconDefinition =
 
 export type DestinyLoadoutColorDefinition =
   NonPartial<AllDestinyManifestComponents>["DestinyLoadoutColorDefinition"][number];
+
+export type DestinySocketCategoryDefinition =
+  NonPartial<AllDestinyManifestComponents>["DestinySocketCategoryDefinition"][number];

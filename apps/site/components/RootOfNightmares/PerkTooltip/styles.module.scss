@@ -1,0 +1,39 @@
+.root {
+  background: var(--bg-color-alpha-25);
+  backdrop-filter: blur(10px) brightness(100%);
+  width: 400px;
+  border: 1px solid var(--border-color);
+}
+
+.header {
+  background: var(--bg-color-alpha-25);
+  backdrop-filter: blur(10px);
+  padding: 16px;
+}
+
+.name {
+  font-size: 1.1em;
+  font-weight: 500;
+}
+
+.type {
+  font-size: 14px;
+  color: var(--text-fade-color);
+}
+
+.body {
+  padding: 16px;
+}
+
+.description {
+  margin: 0;
+}
+
+.availableEnhanced {
+  color: var(--text-fade-color);
+  margin: 0;
+}
+
+.description + .availableEnhanced {
+  margin-top: 16px;
+}

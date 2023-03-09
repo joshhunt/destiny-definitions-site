@@ -25,7 +25,7 @@ $light: #f8f8f8;
   --bg-color-alpha-25: #{rgba($dark, 0.6)};
 
   --text-color: #{$light};
-  --text-fade-color: #{rgba($light, 0.8)};
+  --text-fade-color: #cacaca;
   --hover-color: #{rgba($light, 0.047)};
 
   --border-color: #{rgba($light, 0.188)};
@@ -88,3 +88,11 @@ body {
 .color-reclassified {
   color: var(--color-reclassified);
 }
+
+// body {
+//   padding-top: 80vh;
+// }
+
+// body > * {
+//   background: var(--bg-color);
+// }

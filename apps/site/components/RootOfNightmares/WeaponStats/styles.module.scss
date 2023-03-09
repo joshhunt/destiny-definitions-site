@@ -1,0 +1,60 @@
+.root {
+  padding: 0;
+  width: 100%;
+  border-spacing: 0;
+}
+
+.statHeading {
+  font-size: 1.1em;
+  font-weight: 500;
+  margin-bottom: 16px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.stat {
+  font-size: 14px;
+  line-height: 1;
+  border-collapse: collapse;
+  border: none;
+  padding: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat tr {
+  border-width: 8px;
+}
+
+.stat td {
+  padding-bottom: 8px;
+}
+
+.statName {
+  width: 1%;
+  white-space: nowrap;
+  padding: 2px 8px 6px 0;
+}
+
+.statValue {
+  text-align: right;
+  width: 1%;
+  white-space: nowrap;
+  padding: 2px 8px 6px 16px;
+}
+
+.statTrackWrapper {
+  background: rgba(white, 0.1);
+  position: relative;
+  z-index: 2;
+  padding: 2px;
+  // padding: 4px 8px;
+  height: 1em;
+}
+
+.statTrack {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background: rgba(white, 0.45);
+}

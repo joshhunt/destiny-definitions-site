@@ -1,0 +1,27 @@
+.largePerk {
+  display: grid;
+  column-gap: 16px;
+  grid-template-rows: auto auto;
+  grid-template-columns: calc(6 * 8px) auto;
+  grid-template-areas:
+    "a b"
+    "a c";
+}
+
+.largePerkIcon {
+  width: 100%;
+  height: auto;
+  grid-area: a;
+}
+
+.largePerkName {
+  grid-area: b;
+  font-size: 1.1em;
+}
+
+.largePerkDescription {
+  grid-area: c;
+  font-size: 14px;
+  white-space: pre-line;
+  color: var(--text-fade-color);
+}
