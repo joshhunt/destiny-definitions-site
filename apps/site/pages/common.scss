@@ -67,6 +67,7 @@ html,
 body {
   margin: 0;
   padding: 0;
+  scroll-behavior: smooth;
 }
 
 :target {
@@ -90,7 +91,7 @@ body {
 }
 
 // body {
-//   padding-top: 80vh;
+//   padding-top: 100vh;
 // }
 
 // body > * {

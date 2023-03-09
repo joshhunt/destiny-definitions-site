@@ -3,9 +3,7 @@ import {
   DestinyInventoryItemDefinition,
 } from "@destiny-definitions/common";
 import React from "react";
-import BungieImage from "../../BungieImage";
 import s from "./styles.module.scss";
-import { getIconSrc } from "../../../lib/utils";
 import WeaponStats from "../WeaponStats";
 import WeaponHeader from "../WeaponHeader";
 import WeaponPerks from "../WeaponPerks";
@@ -20,8 +18,12 @@ const WeaponDetails: React.FC<WeaponDetailsProps> = ({
   otherDefinitions,
 }) => {
   return (
-    <div className={s.item}>
+    <div className={s.item} id={`item_${item.hash}`}>
       <WeaponHeader item={item} otherDefinitions={otherDefinitions} />
+
+      <p>
+        <em>{item.flavorText}</em>
+      </p>
 
       <div className={s.detailsSplit}>
         <WeaponStats item={item} otherDefinitions={otherDefinitions} />

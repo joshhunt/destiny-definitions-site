@@ -4,15 +4,90 @@
 }
 
 .spoilerDisclaimer {
-  height: 80vh;
-  background: #e700df;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: 100vh;
   color: white;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: -1;
+
+  background: url("https://images.contentstack.io/v3/assets/blte410e3b15535c144/blt2902ccb19e6fea96/63ff744e127b1e1130913058/scales.jpg")
+      repeat,
+    url("https://images.contentstack.io/v3/assets/blte410e3b15535c144/blt75faeb233d8be823/63ff744e94e69a2df810f64c/roots2.jpg")
+      repeat,
+    url("https://images.contentstack.io/v3/assets/blte410e3b15535c144/blt076f517429d838df/63ff744f4d5a1946d3dd8e01/roots.jpg")
+      repeat;
+  transform: translate3d(0, 0, 0);
+  // animation: move 60s linear infinite, colorRotate 60s linear infinite;
+  background-blend-mode: soft-light, overlay, normal;
+}
+
+.spoilerContent {
+  backdrop-filter: blur(20px);
+  background: rgba(#121212, 0.2);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.weaponBuckets {
+  display: grid;
+  gap: 32px;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.gearList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@keyframes move {
+  0% {
+    background-position: 0 -1330px, -1862px 0, 0 0;
+  }
+  100% {
+    background-position: 0 0, 0 0, -1460px 0;
+  }
+}
+
+@keyframes colorRotate {
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}
+
+.invisibleLink {
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+  z-index: 1;
+
+  &:hover {
+    text-decoration: underline;
+
+    &:after {
+      background: rgba(white, 0.07);
+    }
+  }
+
+  &:after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    bottom: -4px;
+    right: -4px;
+    background: rgba(white, 0);
+    z-index: 2;
+    transition: 50ms ease-in-out background-color;
+  }
 }
