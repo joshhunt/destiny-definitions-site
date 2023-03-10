@@ -148,6 +148,13 @@ export default function RootOfNightmaresPage(props: RootOfNightmaresPageProps) {
           </div>
         ))}
       </div>
+
+      <div className={s.section}>
+        <SectionHeading>Lore</SectionHeading>
+        <p className={s.loreExplainer}>
+          <em>Lore pages available after raid clear</em>
+        </p>
+      </div>
     </div>
   );
 }
