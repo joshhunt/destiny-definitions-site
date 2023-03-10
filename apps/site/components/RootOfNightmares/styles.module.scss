@@ -72,6 +72,12 @@
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
+.modList {
+  display: grid;
+  gap: 32px;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+}
+
 .gearList {
   display: flex;
   flex-direction: column;

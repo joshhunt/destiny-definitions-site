@@ -19,6 +19,7 @@ const StatTableName = "DestinyStatDefinition" as const;
 const SocketCategoryTableName = "DestinySocketCategoryDefinition" as const;
 const PlugSetTableName = "DestinyPlugSetDefinition" as const;
 const BucketTableName = "DestinyInventoryBucketDefinition" as const;
+const PerkTableName = "DestinySandboxPerkDefinition" as const;
 
 // DSC
 // const WEAPON_HASHES = [
@@ -41,6 +42,11 @@ const ARMOR_HASHES = [
   3475635982, 630432767, 824228793, 3846650177, 2138394740, 3810243376,
   3608027009, 2787963735, 807905267, 621315878, 4123705451, 2445962586,
   2597227950, 3702434452, 2915322487,
+];
+
+const MOD_HASHES = [
+  539051925, 1389309840, 1947468772, 4243059257, 2158846614, 1036972936,
+  1036972937, 1036972938, 1036972939,
 ];
 
 function deLoreItem(item: DestinyInventoryItemDefinition) {
@@ -106,6 +112,16 @@ export const getServerSideProps: GetServerSideProps<
     throw new Error("error with weapon itemDefs");
   }
   const weapons = Object.values(_weapons);
+
+  const [, _mods] = await defsClient.getDefinitions(
+    latestVersion.id,
+    ItemTableName,
+    MOD_HASHES
+  );
+  if (!_mods || !isTableType(ItemTableName, ItemTableName, _mods)) {
+    throw new Error("error with mod itemDefs");
+  }
+  const mods = Object.values(_mods);
 
   const [, _armor] = await defsClient.getDefinitions(
     latestVersion.id,
@@ -236,6 +252,23 @@ export const getServerSideProps: GetServerSideProps<
     )
     .filter(notEmpty);
 
+  const sandboxPerkHashes = uniq(
+    mods.flatMap((v) => v.perks?.map((v) => v.perkHash))
+  ).filter(notEmpty);
+
+  const [, sandboxPerkDefs] = await defsClient.getDefinitions(
+    latestVersion.id,
+    PerkTableName,
+    sandboxPerkHashes
+  );
+
+  if (
+    !sandboxPerkDefs ||
+    !isTableType(PerkTableName, PerkTableName, sandboxPerkDefs)
+  ) {
+    throw new Error("error with sandboxPerkDefs");
+  }
+
   const weaponBucketTypeHashes = uniq(
     weapons.map((v) => v.inventory?.bucketTypeHash)
   ).filter(notEmpty);
@@ -270,6 +303,7 @@ export const getServerSideProps: GetServerSideProps<
     [ItemTableName]: itemDefs,
     [PlugSetTableName]: plugSetDefs,
     [BucketTableName]: bucketTypeDefs,
+    [PerkTableName]: sandboxPerkDefs,
   };
 
   context.res.setHeader(
@@ -280,6 +314,7 @@ export const getServerSideProps: GetServerSideProps<
   props = {
     weapons,
     armor,
+    mods,
     otherDefinitions,
   };
 

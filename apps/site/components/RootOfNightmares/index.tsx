@@ -5,6 +5,7 @@ import {
 import { groupBy, sortBy } from "lodash";
 import { notEmpty } from "../../lib/utils";
 import ItemSummary from "./ItemSummary";
+import LargePerk from "./LargePerk";
 import SectionHeading from "./SectionHeading";
 import s from "./styles.module.scss";
 import WeaponDetails from "./WeaponDetails";
@@ -13,6 +14,7 @@ import WeaponHeading from "./WeaponHeading";
 export interface RootOfNightmaresPageProps {
   weapons: DestinyInventoryItemDefinition[];
   armor: DestinyInventoryItemDefinition[];
+  mods: DestinyInventoryItemDefinition[];
   otherDefinitions: AllDestinyManifestComponents;
 }
 
@@ -32,6 +34,11 @@ const armorBucketOrder = [
   1585787867, // classItem
 ];
 
+const modOrder = [
+  539051925, 1389309840, 1947468772, 4243059257, 2158846614, 1036972936,
+  1036972937, 1036972938, 1036972939,
+];
+
 function weaponSorter(item: DestinyInventoryItemDefinition) {
   const index =
     BUCKET_ORDER.indexOf((item?.inventory?.bucketTypeHash ?? -1).toString()) ??
@@ -49,8 +56,12 @@ function indexSorter(item: DestinyInventoryItemDefinition) {
   return item.index;
 }
 
+function modSorter(item: DestinyInventoryItemDefinition) {
+  return modOrder.indexOf(item.hash) ?? 9999;
+}
+
 export default function RootOfNightmaresPage(props: RootOfNightmaresPageProps) {
-  const { weapons, armor, otherDefinitions } = props;
+  const { weapons, armor, mods, otherDefinitions } = props;
 
   const sortedWeapons = sortBy(
     weapons.filter(notEmpty),
@@ -136,6 +147,18 @@ export default function RootOfNightmaresPage(props: RootOfNightmaresPageProps) {
                 </div>
               );
             })}
+        </div>
+      </div>
+
+      <div className={s.section}>
+        <SectionHeading>Raid mods</SectionHeading>
+
+        <div className={s.modList}>
+          {sortBy(mods.filter(notEmpty), modSorter).map((item) => (
+            <div key={item.hash}>
+              <LargePerk perkItem={item} otherDefinitions={otherDefinitions} />
+            </div>
+          ))}
         </div>
       </div>
 
