@@ -57,9 +57,22 @@ function deLoreItem(item: DestinyInventoryItemDefinition) {
   }
 }
 
+let props: any = undefined;
+
 export const getServerSideProps: GetServerSideProps<
   RootOfNightmaresPageProps
 > = async (context) => {
+  if (props) {
+    context.res.setHeader(
+      "Cache-Control",
+      "public, s-maxage=500, stale-while-revalidate=500"
+    );
+
+    return {
+      props,
+    };
+  }
+
   const s3Client = S3Archive.newFromEnvVars();
   const defsClient = DefinitionsArchive.newFromEnvVars(s3Client);
 
@@ -264,11 +277,13 @@ export const getServerSideProps: GetServerSideProps<
     "public, s-maxage=500, stale-while-revalidate=500"
   );
 
+  props = {
+    weapons,
+    armor,
+    otherDefinitions,
+  };
+
   return {
-    props: {
-      weapons,
-      armor,
-      otherDefinitions,
-    },
+    props,
   };
 };
