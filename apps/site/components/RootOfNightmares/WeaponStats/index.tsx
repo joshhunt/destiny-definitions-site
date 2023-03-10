@@ -57,6 +57,13 @@ const WeaponStats: React.FC<WeaponStatsProps> = ({
           })}
         </tbody>
       </table>
+
+      <p className={s.disclaimer}>
+        <em>
+          Stats are the 'base investment stats' which, in game, are modified by
+          the intrinsic weapon frame and other perks.
+        </em>
+      </p>
     </div>
   );
 };

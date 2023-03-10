@@ -2,6 +2,7 @@
   padding: 0;
   width: 100%;
   border-spacing: 0;
+  margin-bottom: 8px;
 }
 
 .statHeading {
@@ -57,4 +58,10 @@
   left: 0;
   bottom: 0;
   background: rgba(white, 0.45);
+}
+
+.disclaimer {
+  font-size: var(--font-size-sm);
+  color: var(--text-fade-color);
+  margin-top: 0;
 }
