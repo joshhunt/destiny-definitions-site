@@ -41,6 +41,14 @@ const modOrder = [
   1036972937, 1036972938, 1036972939,
 ];
 
+const loreOrder = [
+  // Acolytes of Nezarec: Koraxis
+  3810243376, 3608027009, 2787963735, 807905267, 621315878,
+
+  // Acolytes of Nezarec: Briar
+  3475635982,
+];
+
 function weaponSorter(item: DestinyInventoryItemDefinition) {
   const index =
     BUCKET_ORDER.indexOf((item?.inventory?.bucketTypeHash ?? -1).toString()) ??
@@ -198,10 +206,6 @@ export default function RootOfNightmaresPage(props: RootOfNightmaresPageProps) {
             </div>
           );
         })}
-
-        <p className={s.loreExplainer}>
-          <em>Lore pages available after raid clear</em>
-        </p>
       </div>
     </div>
   );
