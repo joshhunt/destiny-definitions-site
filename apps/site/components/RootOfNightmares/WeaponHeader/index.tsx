@@ -13,6 +13,12 @@ interface WeaponHeaderProps {
   otherDefinitions: AllDestinyManifestComponents;
 }
 
+const CLASS_NAME: Record<string, string> = {
+  "0": "Titan",
+  "1": "Hunter",
+  "2": "Warlock",
+};
+
 const AMMO_TYPE: Record<number, { name: string; icon: string }> = {
   1: {
     name: "Primary",
@@ -51,7 +57,9 @@ const WeaponHeader: React.FC<WeaponHeaderProps> = ({
 
       <div className={s.subtitle}>
         <Attributes>
-          <span className={s.itemType}>{item.itemTypeDisplayName}</span>
+          <span className={s.itemType}>
+            {CLASS_NAME[item.classType ?? -1]} {item.itemTypeDisplayName}
+          </span>
           {damageTypeDef && (
             <>
               <BungieImage

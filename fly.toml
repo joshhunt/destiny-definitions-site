@@ -12,6 +12,7 @@ processes = []
   S3_BUCKET = "destiny-definitions"
   S3_REGION = "eu-west-1"
   SWAP = true
+  SHOW_LORE = true
 
 [build.args]
   SWAP=true

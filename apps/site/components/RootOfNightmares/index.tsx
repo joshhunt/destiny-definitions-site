@@ -1,6 +1,7 @@
 import {
   AllDestinyManifestComponents,
   DestinyInventoryItemDefinition,
+  DestinyLoreDefinition,
 } from "@destiny-definitions/common";
 import { groupBy, sortBy } from "lodash";
 import { notEmpty } from "../../lib/utils";
@@ -9,6 +10,7 @@ import LargePerk from "./LargePerk";
 import SectionHeading from "./SectionHeading";
 import s from "./styles.module.scss";
 import WeaponDetails from "./WeaponDetails";
+import WeaponHeader from "./WeaponHeader";
 import WeaponHeading from "./WeaponHeading";
 
 export interface RootOfNightmaresPageProps {
@@ -35,7 +37,7 @@ const armorBucketOrder = [
 ];
 
 const modOrder = [
-  539051925, 1389309840, 1947468772, 4243059257, 2158846614, 1036972936,
+  -9, 539051925, 1389309840, 1947468772, 4243059257, 2158846614, 1036972936,
   1036972937, 1036972938, 1036972939,
 ];
 
@@ -57,7 +59,7 @@ function indexSorter(item: DestinyInventoryItemDefinition) {
 }
 
 function modSorter(item: DestinyInventoryItemDefinition) {
-  return modOrder.indexOf(item.hash) ?? 9999;
+  return modOrder.indexOf(item.hash ?? -1) || 9999;
 }
 
 export default function RootOfNightmaresPage(props: RootOfNightmaresPageProps) {
@@ -104,7 +106,13 @@ export default function RootOfNightmaresPage(props: RootOfNightmaresPageProps) {
 
                   <div className={s.gearList}>
                     {sortBy(armorForClass, armorSorter).map((item) => (
-                      <ItemSummary key={item.hash} item={item} />
+                      <a
+                        key={item.hash}
+                        className={s.invisibleLink}
+                        href={`#item_${item.hash}`}
+                      >
+                        <ItemSummary item={item} />
+                      </a>
                     ))}
                   </div>
                 </div>
@@ -174,6 +182,23 @@ export default function RootOfNightmaresPage(props: RootOfNightmaresPageProps) {
 
       <div className={s.section}>
         <SectionHeading>Lore</SectionHeading>
+
+        {armor.map((item) => {
+          const loreDef =
+            otherDefinitions.DestinyLoreDefinition?.[item.loreHash ?? -1];
+
+          return (
+            <div className={s.loreBox} id={`item_${item.hash}`}>
+              <WeaponHeader item={item} otherDefinitions={otherDefinitions} />
+
+              <h4>{item.flavorText}</h4>
+              <div className={s.lore}>
+                {loreDef?.displayProperties?.description}
+              </div>
+            </div>
+          );
+        })}
+
         <p className={s.loreExplainer}>
           <em>Lore pages available after raid clear</em>
         </p>

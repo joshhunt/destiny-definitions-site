@@ -117,3 +117,12 @@
     transition: 50ms ease-in-out background-color;
   }
 }
+
+.lore {
+  max-width: 800px;
+  white-space: pre-line;
+}
+
+.loreBox + .loreBox {
+  margin-top: calc(16px * 5);
+}

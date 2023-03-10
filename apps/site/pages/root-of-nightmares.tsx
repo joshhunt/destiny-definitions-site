@@ -20,6 +20,7 @@ const SocketCategoryTableName = "DestinySocketCategoryDefinition" as const;
 const PlugSetTableName = "DestinyPlugSetDefinition" as const;
 const BucketTableName = "DestinyInventoryBucketDefinition" as const;
 const PerkTableName = "DestinySandboxPerkDefinition" as const;
+const LoreTableName = "DestinyLoreDefinition" as const;
 
 // DSC
 // const WEAPON_HASHES = [
@@ -68,16 +69,16 @@ let props: any = undefined;
 export const getServerSideProps: GetServerSideProps<
   RootOfNightmaresPageProps
 > = async (context) => {
-  if (props) {
-    context.res.setHeader(
-      "Cache-Control",
-      "public, s-maxage=500, stale-while-revalidate=500"
-    );
+  // if (props) {
+  //   context.res.setHeader(
+  //     "Cache-Control",
+  //     "public, s-maxage=500, stale-while-revalidate=500"
+  //   );
 
-    return {
-      props,
-    };
-  }
+  //   return {
+  //     props,
+  //   };
+  // }
 
   const s3Client = S3Archive.newFromEnvVars();
   const defsClient = DefinitionsArchive.newFromEnvVars(s3Client);
@@ -136,6 +137,19 @@ export const getServerSideProps: GetServerSideProps<
   if (!showLore) {
     weapons.forEach(deLoreItem);
     armor.forEach(deLoreItem);
+  }
+
+  const loreHashes = uniq(armor.map((v) => v.loreHash))
+    .filter(notEmpty)
+    .filter((v) => v);
+
+  const [, loreDefs] = await defsClient.getDefinitions(
+    latestVersion.id,
+    LoreTableName,
+    loreHashes
+  );
+  if (!loreDefs || !isTableType(LoreTableName, LoreTableName, loreDefs)) {
+    throw new Error("error with loreDefs");
   }
 
   const damageTypeHashes = weapons
@@ -304,6 +318,7 @@ export const getServerSideProps: GetServerSideProps<
     [PlugSetTableName]: plugSetDefs,
     [BucketTableName]: bucketTypeDefs,
     [PerkTableName]: sandboxPerkDefs,
+    [LoreTableName]: loreDefs,
   };
 
   context.res.setHeader(

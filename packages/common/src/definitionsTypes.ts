@@ -33,6 +33,9 @@ export declare type DestinyDefinitionFrom<
 export type DestinyInventoryItemDefinition =
   NonPartial<AllDestinyManifestComponents>["DestinyInventoryItemDefinition"][number];
 
+export type DestinyLoreDefinition =
+  NonPartial<AllDestinyManifestComponents>["DestinyLoreDefinition"][number];
+
 export type DestinyObjectiveDefinition =
   NonPartial<AllDestinyManifestComponents>["DestinyObjectiveDefinition"][number];
 
