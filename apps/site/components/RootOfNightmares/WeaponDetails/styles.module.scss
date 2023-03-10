@@ -4,6 +4,18 @@
 
 .detailsSplit {
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 1fr;
   gap: 32px;
+}
+
+@media (min-width: 900px) {
+  .detailsSplit {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 1200px) {
+  .detailsSplit {
+    grid-template-columns: 1fr 2fr;
+  }
 }
