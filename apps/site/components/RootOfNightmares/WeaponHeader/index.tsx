@@ -5,6 +5,7 @@ import {
 import React from "react";
 import { getIconSrc } from "../../../lib/utils";
 import BungieImage from "../../BungieImage";
+import RedactedText from "../Redacted";
 import s from "./styles.module.scss";
 
 interface WeaponHeaderProps {
@@ -44,9 +45,9 @@ const WeaponHeader: React.FC<WeaponHeaderProps> = ({
     <div className={s.itemSummary}>
       <BungieImage className={s.icon} src={getIconSrc(item)} />
 
-      <h2 className={s.title}>
-        <span>{item.displayProperties?.name}</span>
-      </h2>
+      <h3 className={s.title}>
+        <RedactedText text={item.displayProperties?.name} />
+      </h3>
 
       <div className={s.subtitle}>
         <Attributes>

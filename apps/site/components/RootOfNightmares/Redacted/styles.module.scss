@@ -1,0 +1,12 @@
+.redacted {
+  background: var(--text-color);
+  color: var(--bg-color);
+}
+
+.tooltip {
+  background: rgba(lighten(#121212, 2%), 75%);
+  backdrop-filter: blur(10px) brightness(100%);
+  border: 1px solid var(--border-color);
+  padding: 8px;
+  font-size: 14px;
+}

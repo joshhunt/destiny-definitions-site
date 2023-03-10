@@ -1,12 +1,12 @@
 .root {
-  background: var(--bg-color-alpha-25);
+  background: rgba(lighten(#121212, 2%), 75%);
   backdrop-filter: blur(10px) brightness(100%);
   width: 400px;
   border: 1px solid var(--border-color);
 }
 
 .header {
-  background: var(--bg-color-alpha-25);
+  background: rgba(#121212, 0.9);
   backdrop-filter: blur(10px);
   padding: 16px;
 }

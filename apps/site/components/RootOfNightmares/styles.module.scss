@@ -3,6 +3,35 @@
   margin-top: 0;
 }
 
+// .hero {
+//   min-height: 75vh;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   margin: -32px -32px -32px 0;
+//   background-image: url("https://images.contentstack.io/v3/assets/blte410e3b15535c144/blt5857a6745474a091/63ff744e633ef836f6c2a0cf/rr-hero.jpg");
+// }
+
+.pageTitle {
+  margin-bottom: 32px;
+  line-height: 1;
+}
+
+.subtitle {
+  margin-bottom: 4px;
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 800;
+  opacity: 0.9;
+  color: #82af34;
+  animation: colorRotate 6s linear infinite;
+}
+
+.section {
+  margin-bottom: 64px;
+}
+
 .spoilerDisclaimer {
   height: 100vh;
   color: white;
@@ -47,15 +76,6 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-
-@keyframes move {
-  0% {
-    background-position: 0 -1330px, -1862px 0, 0 0;
-  }
-  100% {
-    background-position: 0 0, 0 0, -1460px 0;
-  }
 }
 
 @keyframes colorRotate {

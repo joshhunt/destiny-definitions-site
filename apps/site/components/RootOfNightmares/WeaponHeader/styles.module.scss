@@ -13,15 +13,14 @@
   margin: 0;
   grid-area: b;
   line-height: 1;
+  font-size: var(--font-size-md);
 }
 
 .subtitle {
   grid-area: c;
   line-height: 1;
-
   font-size: 21px;
   margin: 0;
-  // opacity: 0.8;
   color: var(--text-fade-color);
 }
 

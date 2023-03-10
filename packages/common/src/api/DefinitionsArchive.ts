@@ -4,11 +4,12 @@ import path from "path";
 import sqlite3, { Database } from "sqlite3";
 import fs from "fs/promises";
 import {
+  AllDestinyManifestComponents,
   DefinitionTable,
   DestinyManifestComponentName,
   GenericDefinition,
 } from "../definitionsTypes";
-import { uniq } from "lodash";
+import { uniq, merge } from "lodash";
 import { JSONExtractQueryObject, makeJsonExtractQuery } from "./jsonShape";
 import {
   ErrorOpeningSQLiteDatabase,
@@ -20,9 +21,20 @@ import {
 
 const TABLE_NAME_RE = /Destiny\w+Definition/;
 
+const AMMO_TYPES: [hash: number, ammoType: number][] = [
+  [231031173, 1],
+  [484515708, 1],
+  [1471212226, 2],
+  [135029084, 2],
+  [1491665733, 3],
+  [2972949637, 3],
+];
+
 export class DefinitionsArchive {
   s3ArchiveClient: S3Archive;
   definitionsFolder: string;
+  additionalDefinitions: AllDestinyManifestComponents = {};
+  altDefsUrlBase?: string;
 
   static newFromEnvVars(s3Client?: S3Archive) {
     const defsDir = path.join(process.env.STORAGE_VOLUME ?? "", "definitions");
@@ -38,6 +50,22 @@ export class DefinitionsArchive {
 
     this.s3ArchiveClient = s3ArchiveClient;
     this.definitionsFolder = definitionsFolder;
+  }
+
+  async loadAdditionalDefinitions(urlBase: string, path: string) {
+    this.altDefsUrlBase = urlBase;
+    const url = urlBase + path;
+
+    const resp = await fetch(url);
+    this.additionalDefinitions = await resp.json();
+    const itemDefs = this.additionalDefinitions.DestinyInventoryItemDefinition;
+    if (itemDefs) {
+      for (const [itemHash, ammoType] of AMMO_TYPES) {
+        if (itemDefs[itemHash]?.equippingBlock) {
+          (itemDefs[itemHash] as any).equippingBlock.ammoType = ammoType;
+        }
+      }
+    }
   }
 
   async getDefinition<TableName extends string | DestinyManifestComponentName>(
@@ -128,6 +156,8 @@ export class DefinitionsArchive {
     let jsonColumn = "json";
 
     if (fieldsQuery) {
+      fieldsQuery.redacted = 1;
+
       if (!Object.hasOwn(fieldsQuery, "hash")) {
         throw new Error("Fields query must contain hash");
       }
@@ -151,6 +181,23 @@ export class DefinitionsArchive {
 
     for (const row of queryResult) {
       const def = JSON.parse(row.json);
+
+      if (def.redacted) {
+        const additionalDef =
+          this.additionalDefinitions[
+            tableName as DestinyManifestComponentName
+          ]?.[def.hash];
+
+        if (additionalDef) {
+          if ((additionalDef as any).displayProperties?.icon) {
+            (additionalDef as any).displayProperties.icon = `${
+              this.altDefsUrlBase
+            }${(additionalDef as any).displayProperties.icon}`;
+          }
+          merge(def, additionalDef);
+        }
+      }
+
       definitions[def.hash] = def;
     }
 

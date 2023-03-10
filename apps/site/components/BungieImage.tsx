@@ -3,6 +3,7 @@ interface BungieImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {}
 const imageProxyPrefix = process.env.NEXT_PUBLIC_IMAGE_PROXY;
 
 export function getBungieImageURL(src: string) {
+  if (src.startsWith("http")) return src;
   return `https://www.bungie.net${src}`;
 }
 

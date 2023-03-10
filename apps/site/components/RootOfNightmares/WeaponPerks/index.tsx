@@ -30,7 +30,7 @@ const WeaponPerks: React.FC<WeaponPerksProps> = ({
     <div>
       {socketCategories.map((category) => {
         return (
-          <div className={s.socketCategory}>
+          <div key={category.category.hash} className={s.socketCategory}>
             <SocketCategoryRenderer category={category} />
           </div>
         );
@@ -78,7 +78,11 @@ function LargePerkList({
   return (
     <div className={s.largePerkList}>
       {perks.map((perkItem) => (
-        <LargePerk perkItem={perkItem} noDescription={noDescription} />
+        <LargePerk
+          key={perkItem.hash}
+          perkItem={perkItem}
+          noDescription={noDescription}
+        />
       ))}
     </div>
   );
@@ -121,7 +125,7 @@ const SocketCategoryPerks: React.FC<SocketCategoryRendererProps> = ({
       </WeaponHeading>
 
       <div data-category-perks className={s.horizontalSockets}>
-        {category.sockets.map(({ plugOptions, initialPlug }) => {
+        {category.sockets.map(({ plugOptions, initialPlug }, index) => {
           const plugItems = [...(plugOptions ?? []), initialPlug]
             .filter(notEmpty)
             .sort(
@@ -151,9 +155,10 @@ const SocketCategoryPerks: React.FC<SocketCategoryRendererProps> = ({
           }
 
           return (
-            <div className={s.smallPerkList}>
+            <div key={index} className={s.smallPerkList}>
               {deduped.map((plugItem) => (
                 <SmallPerk
+                  key={plugItem.perk.hash}
                   perkItem={plugItem.perk}
                   enhancedPerkItem={plugItem.enhancedPerk}
                 />
@@ -169,7 +174,7 @@ const SocketCategoryPerks: React.FC<SocketCategoryRendererProps> = ({
 const SocketCategoryConsumable: React.FC<SocketCategoryRendererProps> = ({
   category,
 }) => {
-  const plugs = category.sockets.map((v) => v.initialPlug);
+  const plugs = category.sockets.map((v) => v.initialPlug).filter(notEmpty);
 
   return (
     <div>
@@ -179,7 +184,7 @@ const SocketCategoryConsumable: React.FC<SocketCategoryRendererProps> = ({
 
       <div data-category-perks className={s.horizontalSockets}>
         {plugs.map((plugItem) => (
-          <div className={s.largePerk}>
+          <div key={plugItem.hash} className={s.largePerk}>
             <BungieImage
               className={s.smallPerkIcon}
               src={getIconSrc(plugItem)}

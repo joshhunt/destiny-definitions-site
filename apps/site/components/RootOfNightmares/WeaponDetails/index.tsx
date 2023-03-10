@@ -7,6 +7,7 @@ import s from "./styles.module.scss";
 import WeaponStats from "../WeaponStats";
 import WeaponHeader from "../WeaponHeader";
 import WeaponPerks from "../WeaponPerks";
+import RedactedText from "../Redacted";
 
 interface WeaponDetailsProps {
   item: DestinyInventoryItemDefinition;
@@ -21,9 +22,13 @@ const WeaponDetails: React.FC<WeaponDetailsProps> = ({
     <div className={s.item} id={`item_${item.hash}`}>
       <WeaponHeader item={item} otherDefinitions={otherDefinitions} />
 
-      <p>
-        <em>{item.flavorText}</em>
-      </p>
+      {item.flavorText && (
+        <p>
+          <em>
+            <RedactedText text={item.flavorText} />
+          </em>
+        </p>
+      )}
 
       <div className={s.detailsSplit}>
         <WeaponStats item={item} otherDefinitions={otherDefinitions} />

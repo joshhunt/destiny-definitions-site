@@ -2,6 +2,7 @@ import { DestinyInventoryItemDefinition } from "@destiny-definitions/common";
 import React from "react";
 import { getIconSrc, getDisplayName, getDescription } from "../../../lib/utils";
 import BungieImage from "../../BungieImage";
+import RedactedText from "../Redacted";
 import s from "./styles.module.scss";
 
 interface ItemSummaryProps {
@@ -14,7 +15,7 @@ const ItemSummary: React.FC<ItemSummaryProps> = ({ item, noDescription }) => (
     <BungieImage className={s.largePerkIcon} src={getIconSrc(item)} />
 
     <div className={s.largePerkName} style={{ fontWeight: 500 }}>
-      {getDisplayName(item)}
+      <RedactedText text={getDisplayName(item)} />
     </div>
 
     {!noDescription && (
