@@ -59,7 +59,7 @@ function deLoreItem(item: DestinyInventoryItemDefinition) {
 
 export const getServerSideProps: GetServerSideProps<
   RootOfNightmaresPageProps
-> = async () => {
+> = async (context) => {
   const s3Client = S3Archive.newFromEnvVars();
   const defsClient = DefinitionsArchive.newFromEnvVars(s3Client);
 
@@ -258,6 +258,11 @@ export const getServerSideProps: GetServerSideProps<
     [PlugSetTableName]: plugSetDefs,
     [BucketTableName]: bucketTypeDefs,
   };
+
+  context.res.setHeader(
+    "Cache-Control",
+    "public, s-maxage=500, stale-while-revalidate=500"
+  );
 
   return {
     props: {

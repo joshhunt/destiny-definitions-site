@@ -3,6 +3,19 @@
   color: var(--bg-color);
 }
 
+.redactedExplainer {
+  display: none;
+}
+
+.redacted:hover {
+  .redactedText {
+    display: none;
+  }
+  .redactedExplainer {
+    display: inline;
+  }
+}
+
 .tooltip {
   background: rgba(lighten(#121212, 2%), 75%);
   backdrop-filter: blur(10px) brightness(100%);

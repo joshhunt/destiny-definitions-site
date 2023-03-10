@@ -2,7 +2,7 @@ import {
   AllDestinyManifestComponents,
   DestinyInventoryItemDefinition,
 } from "@destiny-definitions/common";
-import { groupBy } from "lodash";
+import { groupBy, sortBy } from "lodash";
 import { notEmpty } from "../../lib/utils";
 import ItemSummary from "./ItemSummary";
 import SectionHeading from "./SectionHeading";
@@ -24,10 +24,44 @@ const CLASS_NAME: Record<string, string> = {
   "2": "Warlock",
 };
 
+const armorBucketOrder = [
+  3448274439, // helmet
+  3551918588, // arms
+  14239492, // chest
+  20886954, // legs
+  1585787867, // classItem
+];
+
+function weaponSorter(item: DestinyInventoryItemDefinition) {
+  const index =
+    BUCKET_ORDER.indexOf((item?.inventory?.bucketTypeHash ?? -1).toString()) ??
+    999;
+  return index;
+}
+
+function armorSorter(item: DestinyInventoryItemDefinition) {
+  const index =
+    armorBucketOrder.indexOf(item?.inventory?.bucketTypeHash ?? -1) ?? 999;
+  return index;
+}
+
+function indexSorter(item: DestinyInventoryItemDefinition) {
+  return item.index;
+}
+
 export default function RootOfNightmaresPage(props: RootOfNightmaresPageProps) {
   const { weapons, armor, otherDefinitions } = props;
 
-  const weaponsBySlot = groupBy(weapons, (v) => v.inventory?.bucketTypeHash);
+  const sortedWeapons = sortBy(
+    weapons.filter(notEmpty),
+    weaponSorter,
+    indexSorter
+  );
+
+  const weaponsBySlot = groupBy(
+    sortedWeapons,
+    (v) => v.inventory?.bucketTypeHash
+  );
 
   const armorByClass = groupBy(armor, (v) => v.classType ?? -1);
 
@@ -49,9 +83,7 @@ export default function RootOfNightmaresPage(props: RootOfNightmaresPageProps) {
 
         <div className={s.weaponBuckets}>
           {Object.entries(armorByClass)
-            .sort(
-              ([a], [b]) => BUCKET_ORDER.indexOf(a) - BUCKET_ORDER.indexOf(b)
-            )
+            .sort(([a], [b]) => parseInt(a) - parseInt(b))
             .map(([classType, armorForClass]) => {
               const className = CLASS_NAME[classType];
 
@@ -60,7 +92,7 @@ export default function RootOfNightmaresPage(props: RootOfNightmaresPageProps) {
                   <WeaponHeading>{className}</WeaponHeading>
 
                   <div className={s.gearList}>
-                    {armorForClass.map((item) => (
+                    {sortBy(armorForClass, armorSorter).map((item) => (
                       <ItemSummary key={item.hash} item={item} />
                     ))}
                   </div>
@@ -91,7 +123,7 @@ export default function RootOfNightmaresPage(props: RootOfNightmaresPageProps) {
                   </WeaponHeading>
 
                   <div className={s.gearList}>
-                    {weaponsForBucket.map((item) => (
+                    {sortBy(weaponsForBucket, indexSorter).map((item) => (
                       <a
                         key={item.hash}
                         className={s.invisibleLink}
@@ -110,14 +142,11 @@ export default function RootOfNightmaresPage(props: RootOfNightmaresPageProps) {
       <div className={s.section}>
         <SectionHeading>Weapon rolls</SectionHeading>
 
-        {weapons
-          .sort((a, b) => (b.index ?? 0) - (a.index ?? 0))
-          .filter(notEmpty)
-          .map((item) => (
-            <div key={item.hash}>
-              <WeaponDetails item={item} otherDefinitions={otherDefinitions} />
-            </div>
-          ))}
+        {sortedWeapons.map((item) => (
+          <div key={item.hash}>
+            <WeaponDetails item={item} otherDefinitions={otherDefinitions} />
+          </div>
+        ))}
       </div>
     </div>
   );
