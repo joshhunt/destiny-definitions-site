@@ -1,7 +1,6 @@
 import {
   AllDestinyManifestComponents,
   DestinyInventoryItemDefinition,
-  DestinyLoreDefinition,
 } from "@destiny-definitions/common";
 import { groupBy, sortBy } from "lodash";
 import { notEmpty } from "../../lib/utils";
@@ -42,11 +41,9 @@ const modOrder = [
 ];
 
 const loreOrder = [
-  // Acolytes of Nezarec: Koraxis
-  3810243376, 3608027009, 2787963735, 807905267, 621315878,
-
-  // Acolytes of Nezarec: Briar
-  3475635982,
+  3475635982, 630432767, 824228793, 3846650177, 2138394740, 3810243376,
+  3608027009, 2787963735, 807905267, 621315878, 4123705451, 2445962586,
+  2597227950, 3702434452, 2915322487,
 ];
 
 function weaponSorter(item: DestinyInventoryItemDefinition) {
@@ -70,6 +67,15 @@ function modSorter(item: DestinyInventoryItemDefinition) {
   return modOrder.indexOf(item.hash ?? -1) || 9999;
 }
 
+function loreItemSorter(item: DestinyInventoryItemDefinition) {
+  const pos = loreOrder.indexOf(item.hash ?? -10);
+
+  if (pos == -1) {
+    return 999;
+  }
+
+  return pos + 1;
+}
 export default function RootOfNightmaresPage(props: RootOfNightmaresPageProps) {
   const { weapons, armor, mods, otherDefinitions } = props;
 
@@ -191,7 +197,7 @@ export default function RootOfNightmaresPage(props: RootOfNightmaresPageProps) {
       <div className={s.section}>
         <SectionHeading>Lore</SectionHeading>
 
-        {armor.map((item) => {
+        {sortBy(armor, loreItemSorter).map((item) => {
           const loreDef =
             otherDefinitions.DestinyLoreDefinition?.[item.loreHash ?? -1];
 

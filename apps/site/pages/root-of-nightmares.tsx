@@ -69,16 +69,16 @@ let props: any = undefined;
 export const getServerSideProps: GetServerSideProps<
   RootOfNightmaresPageProps
 > = async (context) => {
-  // if (props) {
-  //   context.res.setHeader(
-  //     "Cache-Control",
-  //     "public, s-maxage=500, stale-while-revalidate=500"
-  //   );
+  if (props) {
+    context.res.setHeader(
+      "Cache-Control",
+      "public, s-maxage=500, stale-while-revalidate=500"
+    );
 
-  //   return {
-  //     props,
-  //   };
-  // }
+    return {
+      props,
+    };
+  }
 
   const s3Client = S3Archive.newFromEnvVars();
   const defsClient = DefinitionsArchive.newFromEnvVars(s3Client);
