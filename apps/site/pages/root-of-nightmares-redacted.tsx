@@ -147,7 +147,7 @@ export const getServerSideProps: GetServerSideProps<
 
   const altDefsUrlBase = process.env.ALT_DEFS_URL_BASE;
   const altDefsUrlPath = process.env.ALT_DEFS_URL_PATH;
-  const showLore = process.env.SHOW_LORE || false;
+  const showLore = false;
 
   if (!altDefsUrlBase) {
     throw new Error("ALT_DEFS_URL_BASE not configured");

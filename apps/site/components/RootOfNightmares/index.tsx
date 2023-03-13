@@ -1,6 +1,8 @@
 import {
   AllDestinyManifestComponents,
   DestinyInventoryItemDefinition,
+  DestinyLoreDefinition,
+  DestinyPresentationNodeDefinition,
 } from "@destiny-definitions/common";
 import { groupBy, sortBy } from "lodash";
 import { notEmpty } from "../../lib/utils";
@@ -17,6 +19,11 @@ export interface RootOfNightmaresPageProps {
   armor: DestinyInventoryItemDefinition[];
   mods: DestinyInventoryItemDefinition[];
   otherDefinitions: AllDestinyManifestComponents;
+}
+
+export interface LoreCollection {
+  bookPresentationNode: DestinyPresentationNodeDefinition;
+  pages: DestinyLoreDefinition[];
 }
 
 const BUCKET_ORDER = ["1498876634", "2465295065", "953998645"];
