@@ -11,7 +11,7 @@ import { GetServerSideProps } from "next";
 import RootOfNightmaresPage, {
   LoreCollection,
   RootOfNightmaresPageProps,
-} from "../components/RootOfNightmares";
+} from "../components/LootPreviews/RootOfNightmares";
 import { isTableType, notEmpty } from "../lib/utils";
 
 export default RootOfNightmaresPage;

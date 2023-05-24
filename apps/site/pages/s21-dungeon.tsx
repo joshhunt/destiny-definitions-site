@@ -2,19 +2,16 @@ import {
   AllDestinyManifestComponents,
   DefinitionsArchive,
   DestinyInventoryItemDefinition,
-  DestinyPresentationNodeDefinition,
-  DestinyRecordDefinition,
   S3Archive,
 } from "@destiny-definitions/common";
 import _, { uniq } from "lodash";
 import { GetServerSideProps } from "next";
-import RootOfNightmaresPage, {
-  LoreCollection,
-  RootOfNightmaresPageProps,
-} from "../components/RootOfNightmares";
+import S21LootPreview, {
+  S21LootPreviewPageProps,
+} from "../components/LootPreviews/S21Dungeon";
 import { isTableType, notEmpty } from "../lib/utils";
 
-export default RootOfNightmaresPage;
+export default S21LootPreview;
 
 const ItemTableName = "DestinyInventoryItemDefinition" as const;
 const DamageTableName = "DestinyDamageTypeDefinition" as const;
@@ -27,37 +24,27 @@ const LoreTableName = "DestinyLoreDefinition" as const;
 const PNodeTableName = "DestinyPresentationNodeDefinition" as const;
 const RecordTableName = "DestinyRecordDefinition" as const;
 
-// DSC
-// const WEAPON_HASHES = [
-//   2399110176, 2990047042, 3366545721, 1392919471, 3281285075, 4248569242,
-//   4230965989,
-// ];
-
-// const ARMOR_HASHES = [
-//   3015085684, 1887490701, 751162931, 2558289743, 2956588906, 893751566,
-//   2343515647, 4001862073, 1264765761, 1021060724, 1462908657, 79460168,
-//   3975122240, 756445218, 2902277629,
-// ];
-
 // RON
 const WEAPON_HASHES = [
-  3371017761, 484515708, 2972949637, 1491665733, 135029084, 231031173,
-  1471212226,
+  1441805468, 839786290, 1757202961, 3262192268, 1125217994,
 ];
+
 const ARMOR_HASHES = [
-  3475635982, 630432767, 824228793, 3846650177, 2138394740, 3810243376,
-  3608027009, 2787963735, 807905267, 621315878, 4123705451, 2445962586,
-  2597227950, 3702434452, 2915322487,
+  2324998093, 2977663932, 2978918436, 2363472582, 3722748537, 896458489,
+  409820272, 42941848, 726878794, 2733403573, 540625098, 587762963, 457617725,
+  322717029, 1961182320,
 ];
 
-const MOD_HASHES = [
-  539051925, 1389309840, 1947468772, 4243059257, 2158846614, 1036972936,
-  1036972937, 1036972938, 1036972939,
+const COSMETICS_HASHES = [
+  2069797999, // emblem,
+  2274944459, // vehicle
 ];
-
-const LORE_BOOK_PRESENTATION_NODES = [3269408847];
 
 function deLoreItem(item: DestinyInventoryItemDefinition) {
+  if (!item.redacted) {
+    return;
+  }
+
   if (item.loreHash) {
     (item as any).loreHash = -69;
   }
@@ -94,42 +81,8 @@ async function getItems(
   return Object.values(definitionsObject);
 }
 
-// async function getLoreBook(
-//   defsClient: DefinitionsArchive,
-//   versionId: string
-// ): Promise<LoreCollection> {
-//   const bookPresentationNodeHash = LORE_BOOK_PRESENTATION_NODES[0];
-
-//   const [, _bookNode] = await defsClient.getDefinition(
-//     versionId,
-//     PNodeTableName,
-//     bookPresentationNodeHash
-//   );
-//   if (!_bookNode) throw new Error("could not get lore presentation node");
-//   const bookNode = _bookNode as DestinyPresentationNodeDefinition;
-
-//   const loreRecordHashes =
-//     bookNode.children?.records?.map((v) => v.recordHash).filter(notEmpty) ?? [];
-
-//   const [, _recordDefs] = await defsClient.getDefinitions(
-//     versionId,
-//     RecordTableName,
-//     loreRecordHashes
-//   );
-//   if (!_recordDefs) throw new Error("could not get lore records");
-//   const recordDefs = Object.values(_recordDefs) as DestinyRecordDefinition[];
-
-//   const [, _loreDefs] = await defsClient.getDefinitions(
-//     versionId,
-//     LoreTableName,
-//     loreRecordHashes
-//   );
-//   if (!_loreDefs) throw new Error("could not get lore records");
-//   const loreDefs = Object.values(_loreDefs) as DestinyRecordDefinition[];
-// }
-
 export const getServerSideProps: GetServerSideProps<
-  RootOfNightmaresPageProps
+  S21LootPreviewPageProps
 > = async (context) => {
   if (props) {
     context.res.setHeader(
@@ -147,7 +100,7 @@ export const getServerSideProps: GetServerSideProps<
 
   const altDefsUrlBase = process.env.ALT_DEFS_URL_BASE;
   const altDefsUrlPath = process.env.ALT_DEFS_URL_PATH;
-  const showLore = false;
+  const showLore = process.env.SHOW_S21_LORE || false;
 
   if (!altDefsUrlBase) {
     throw new Error("ALT_DEFS_URL_BASE not configured");
@@ -165,18 +118,34 @@ export const getServerSideProps: GetServerSideProps<
     throw new Error("Could not get latest version");
   }
 
-  const [weapons, armor, mods] = await Promise.all([
+  const [weapons, armor, cosmetics] = await Promise.all([
     getItems(defsClient, latestVersion.id, WEAPON_HASHES),
     getItems(defsClient, latestVersion.id, ARMOR_HASHES),
-    getItems(defsClient, latestVersion.id, MOD_HASHES),
+    getItems(defsClient, latestVersion.id, COSMETICS_HASHES),
   ]);
 
   if (!showLore) {
     weapons.forEach(deLoreItem);
     armor.forEach(deLoreItem);
+    cosmetics.forEach(deLoreItem);
   }
 
-  const loreHashes = uniq(armor.map((v) => v.loreHash))
+  cosmetics.push({
+    __typeThisPropertyDoesntExist: "DestinyInventoryItemDefinition",
+    hash: -1,
+    index: -1,
+    displayProperties: {
+      name: '"Ghoul"',
+      icon: "https://destiny-extra-definitions.s3.ap-southeast-2.amazonaws.com/images/investment_globals_client/2DE_1B29.png",
+    },
+    itemTypeDisplayName: "Seal title",
+  });
+
+  const loreHashes = uniq([
+    ...armor.map((v) => v.loreHash),
+    ...weapons.map((v) => v.loreHash),
+    ...cosmetics.map((v) => v.loreHash),
+  ])
     .filter(notEmpty)
     .filter((v) => v);
 
@@ -304,7 +273,7 @@ export const getServerSideProps: GetServerSideProps<
     .filter(notEmpty);
 
   const sandboxPerkHashes = uniq(
-    mods.flatMap((v) => v.perks?.map((v) => v.perkHash))
+    cosmetics.flatMap((v) => v.perks?.map((v) => v.perkHash))
   ).filter(notEmpty);
 
   const [, sandboxPerkDefs] = await defsClient.getDefinitions(
@@ -363,10 +332,13 @@ export const getServerSideProps: GetServerSideProps<
     "public, s-maxage=500, stale-while-revalidate=500"
   );
 
+  const breadcrumbs = [{ to: "/s21-dungeon", label: "Ghosts of the Deep" }];
+
   props = {
+    breadcrumbs,
     weapons,
     armor,
-    mods,
+    cosmetics,
     otherDefinitions,
   };
 

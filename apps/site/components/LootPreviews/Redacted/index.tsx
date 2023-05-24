@@ -23,9 +23,7 @@ const RedactedText: React.FC<RedactedTextProps> = ({ text }) => {
       <>
         <span className={s.redacted}>
           <span className={s.redactedText}>{"[Redacted]"}</span>
-          <span className={s.redactedExplainer}>
-            {"[Available after the raid starts]"}
-          </span>
+          <span className={s.redactedExplainer}>{"[Available on launch]"}</span>
         </span>
       </>
     );

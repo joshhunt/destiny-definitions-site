@@ -20,7 +20,7 @@ const ItemSummary: React.FC<ItemSummaryProps> = ({ item, noDescription }) => (
 
     {!noDescription && (
       <div className={s.largePerkDescription}>
-        {getDescription(item) ?? item.itemTypeDisplayName}
+        <RedactedText text={getDescription(item) ?? item.itemTypeDisplayName} />
       </div>
     )}
   </div>
