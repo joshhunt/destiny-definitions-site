@@ -77,6 +77,10 @@ export function getDisplayName(
     return undefined;
   }
 
+  if (def.hash === 859929450) {
+    return "Unyielding Casque";
+  }
+
   if (
     hasDisplayProperties(def) &&
     "name" in def.displayProperties &&
