@@ -2,9 +2,11 @@ import {
   AllDestinyManifestComponents,
   DestinyInventoryItemDefinition,
 } from "@destiny-definitions/common";
-import React from "react";
+import Image from "next/image";
+import React, { useMemo } from "react";
 import { getIconSrc } from "../../../lib/utils";
 import BungieImage from "../../BungieImage";
+import craftableIcon from "../craftable.jpg";
 import RedactedText from "../Redacted";
 import s from "./styles.module.scss";
 
@@ -47,6 +49,25 @@ const WeaponHeader: React.FC<WeaponHeaderProps> = ({
 
   const ammoType = AMMO_TYPE[item.equippingBlock?.ammoType ?? -1];
 
+  const isCraftable = useMemo(() => {
+    for (const socket of item.sockets?.socketEntries ?? []) {
+      const plugSet =
+        otherDefinitions.DestinyPlugSetDefinition?.[
+          socket.reusablePlugSetHash ?? -1
+        ];
+
+      for (const plugSetItem of plugSet?.reusablePlugItems ?? []) {
+        const plugItem =
+          otherDefinitions.DestinyInventoryItemDefinition?.[
+            plugSetItem?.plugItemHash ?? -1
+          ];
+        if (plugItem?.inventory?.tierType === 3) {
+          return true;
+        }
+      }
+    }
+  }, [item, otherDefinitions]);
+
   return (
     <div className={s.itemSummary}>
       <BungieImage className={s.icon} src={getIconSrc(item)} />
@@ -60,20 +81,29 @@ const WeaponHeader: React.FC<WeaponHeaderProps> = ({
           <span className={s.itemType}>
             {CLASS_NAME[item.classType ?? -1]} {item.itemTypeDisplayName}
           </span>
+
           {damageTypeDef && (
-            <>
+            <span>
               <BungieImage
                 className={s.attributeIcon}
                 src={getIconSrc(damageTypeDef)}
               />{" "}
               {damageTypeDef.displayProperties?.name}
-            </>
+            </span>
           )}
+
           {ammoType && (
-            <>
+            <span data-ammo-type>
               <BungieImage className={s.attributeIcon} src={ammoType.icon} />{" "}
               {ammoType.name}
-            </>
+            </span>
+          )}
+
+          {isCraftable && (
+            <span>
+              <Image alt="" src={craftableIcon} className={s.attributeIcon} />{" "}
+              Craftable
+            </span>
           )}
         </Attributes>
       </div>
@@ -82,13 +112,7 @@ const WeaponHeader: React.FC<WeaponHeaderProps> = ({
 };
 
 function Attributes({ children }: { children: React.ReactNode }) {
-  return (
-    <div className={s.attributes}>
-      {React.Children.map(children, (child) => (
-        <div className={s.attribute}>{child}</div>
-      ))}
-    </div>
-  );
+  return <div className={s.attributes}>{children}</div>;
 }
 
 export default WeaponHeader;

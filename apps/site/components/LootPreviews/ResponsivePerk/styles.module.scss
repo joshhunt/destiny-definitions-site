@@ -1,0 +1,56 @@
+.smallPerk {
+  display: grid;
+  column-gap: 8px;
+  grid-template-columns: calc(6 * 8px);
+}
+
+.smallPerkIcon {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.name {
+  display: none;
+  // grid-area: b;
+  font-size: 14px;
+}
+
+.description {
+  display: none;
+  grid-area: c;
+  font-size: 14px;
+  white-space: pre-line;
+  color: var(--text-fade-color);
+}
+
+.enhancedPerkIcon {
+  background: rgba(yellow, 0.2);
+  border-radius: 100px;
+}
+
+@media (min-width: 1335px) {
+  .smallPerk {
+    // background-color: green;
+
+    grid-template-rows: auto auto;
+    grid-template-columns: calc(6 * 8px) auto;
+    grid-template-areas:
+      "a b"
+      "a c";
+  }
+
+  .smallPerkIcon {
+    grid-area: a;
+  }
+
+  .name {
+    display: block;
+    grid-area: b;
+  }
+
+  .description {
+    display: block;
+    grid-area: c;
+  }
+}

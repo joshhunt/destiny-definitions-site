@@ -1,7 +1,7 @@
 import { DestinyInventoryItemDefinition } from "@destiny-definitions/common";
 import React, { useState } from "react";
 import cx from "classnames";
-import { getDescription, getIconSrc } from "../../../lib/utils";
+import { getDescription, getDisplayName, getIconSrc } from "../../../lib/utils";
 import BungieImage from "../../BungieImage";
 import s from "./styles.module.scss";
 import {
@@ -18,12 +18,12 @@ import {
 } from "@floating-ui/react";
 import PerkTooltip from "../PerkTooltip";
 
-interface SmallPerkProps {
+interface ResponsivePerkProps {
   perkItem: DestinyInventoryItemDefinition;
   enhancedPerkItem: DestinyInventoryItemDefinition | undefined;
 }
 
-const SmallPerk: React.FC<SmallPerkProps> = ({
+const ResponsivePerk: React.FC<ResponsivePerkProps> = ({
   perkItem,
   enhancedPerkItem,
 }) => {
@@ -63,7 +63,11 @@ const SmallPerk: React.FC<SmallPerkProps> = ({
           )}
           src={getIconSrc(perkItem)}
         />
+
+        <div className={s.name}>{getDisplayName(perkItem)}</div>
+        <div className={s.description}>{perkItem.itemTypeDisplayName}</div>
       </div>
+
       {isOpen && (
         <div
           ref={refs.setFloating}
@@ -74,6 +78,7 @@ const SmallPerk: React.FC<SmallPerkProps> = ({
             left: x ?? 0,
             width: "max-content",
             whiteSpace: "pre-line",
+            zIndex: 999,
           }}
         >
           <PerkTooltip
@@ -86,4 +91,4 @@ const SmallPerk: React.FC<SmallPerkProps> = ({
   );
 };
 
-export default SmallPerk;
+export default ResponsivePerk;

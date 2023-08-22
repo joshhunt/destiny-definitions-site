@@ -40,16 +40,13 @@ const LargePerk: React.FC<LargePerkProps> = ({
         {getDisplayName(perkItem)}
       </div>
 
-      {!noDescription &&
-        ((sandboxPerks?.length ?? 0) > 0 ? (
-          <div className={s.largePerkDescription}>
-            {sandboxPerks?.map((v) => getDescription(v))}
-          </div>
-        ) : (
-          <div className={s.largePerkDescription}>
-            {getDescription(perkItem)}
-          </div>
-        ))}
+      {(sandboxPerks?.length ?? 0) > 0 ? (
+        <div className={s.largePerkDescription}>
+          {sandboxPerks?.map((v) => getDescription(v))}
+        </div>
+      ) : (
+        <div className={s.largePerkDescription}>{getDescription(perkItem)}</div>
+      )}
     </div>
   );
 };

@@ -13,7 +13,7 @@ import {
   SocketCategory,
   useWeaponSockets,
 } from "./hooks";
-import SmallPerk from "../SmallPerk";
+import ResponsivePerk from "../ResponsivePerk";
 
 interface WeaponPerksProps {
   item: DestinyInventoryItemDefinition;
@@ -68,29 +68,19 @@ const SocketCategoryRenderer: React.FC<SocketCategoryRendererProps> = ({
   );
 };
 
-function LargePerkList({
-  perks,
-  noDescription,
-}: {
-  perks: DestinyInventoryItemDefinition[];
-  noDescription?: boolean;
-}) {
+function LargePerkList({ perks }: { perks: DestinyInventoryItemDefinition[] }) {
   return (
     <div className={s.largePerkList}>
       {perks.map((perkItem) => (
-        <LargePerk
-          key={perkItem.hash}
-          perkItem={perkItem}
-          noDescription={noDescription}
-        />
+        <LargePerk key={perkItem.hash} perkItem={perkItem} />
       ))}
     </div>
   );
 }
 
-const SocketCategoryLargePerk: React.FC<
-  SocketCategoryRendererProps & { noDescription?: boolean }
-> = ({ category, noDescription }) => {
+const SocketCategoryLargePerk: React.FC<SocketCategoryRendererProps> = ({
+  category,
+}) => {
   const plugs = category.sockets.map((v) => v.initialPlug).filter(notEmpty);
 
   return (
@@ -99,7 +89,7 @@ const SocketCategoryLargePerk: React.FC<
         {category.category?.displayProperties?.name}
       </WeaponHeading>
 
-      <LargePerkList perks={plugs} noDescription={noDescription} />
+      <LargePerkList perks={plugs} />
     </div>
   );
 };
@@ -115,7 +105,7 @@ const SocketCategoryPerks: React.FC<SocketCategoryRendererProps> = ({
   const socketsHaveOptions = category.sockets.some((v) => v.plugOptions);
 
   if (!socketsHaveOptions) {
-    return <SocketCategoryLargePerk category={category} noDescription={true} />;
+    return <SocketCategoryLargePerk category={category} />;
   }
 
   return (
@@ -124,7 +114,7 @@ const SocketCategoryPerks: React.FC<SocketCategoryRendererProps> = ({
         {category.category?.displayProperties?.name}
       </WeaponHeading>
 
-      <div data-category-perks className={s.horizontalSockets}>
+      <div className={s.horizontalSockets}>
         {category.sockets.map(({ plugOptions, initialPlug }, index) => {
           const plugItems = [...(plugOptions ?? []), initialPlug]
             .filter(notEmpty)
@@ -154,10 +144,14 @@ const SocketCategoryPerks: React.FC<SocketCategoryRendererProps> = ({
             }
           }
 
+          if (deduped.length === 0) {
+            return null;
+          }
+
           return (
             <div key={index} className={s.smallPerkList}>
               {deduped.map((plugItem) => (
-                <SmallPerk
+                <ResponsivePerk
                   key={plugItem.perk.hash}
                   perkItem={plugItem.perk}
                   enhancedPerkItem={plugItem.enhancedPerk}

@@ -10,12 +10,12 @@
 
 @media (min-width: 900px) {
   .detailsSplit {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 350px auto;
   }
 }
 
-@media (min-width: 1200px) {
-  .detailsSplit {
-    grid-template-columns: 1fr 2fr;
-  }
-}
+// @media (min-width: 1200px) {
+//   .detailsSplit {
+//     grid-template-columns: 350px auto;
+//   }
+// }
