@@ -14,8 +14,8 @@ processes = []
   SWAP = true
   SHOW_LORE = true
 
-[build.args]
-  SWAP=true
+# [build.args]
+#   SWAP=true
 
 [mounts]
   source="destiny_definitions_archive_volume"
