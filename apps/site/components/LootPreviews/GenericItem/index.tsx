@@ -7,6 +7,7 @@ import { getIconSrc, getDisplayName } from "../../../lib/utils";
 import BungieImage from "../../BungieImage";
 import s from "./styles.module.scss";
 import RedactedText from "../Redacted";
+import cx from "classnames";
 
 interface GenericItemProps {
   perkItem: DestinyInventoryItemDefinition;
@@ -16,9 +17,16 @@ interface GenericItemProps {
 
 const GenericItem: React.FC<GenericItemProps> = ({ perkItem }) => {
   const name = getDisplayName(perkItem) ?? "";
+  const isEmblem = perkItem.itemCategoryHashes?.includes(19);
+  const emblemBg = isEmblem
+    ? perkItem.displayProperties?.iconSequences?.[6]?.frames?.[0]
+    : undefined;
 
   return (
-    <div className={s.largePerk}>
+    <div
+      className={cx(s.largePerk, emblemBg && s.emblem)}
+      style={emblemBg ? { backgroundImage: `url("${emblemBg}")` } : undefined}
+    >
       <BungieImage className={s.largePerkIcon} src={getIconSrc(perkItem)} />
 
       <div className={s.largePerkName} style={{ fontWeight: 500 }}>

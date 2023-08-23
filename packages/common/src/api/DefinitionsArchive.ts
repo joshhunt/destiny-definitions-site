@@ -188,12 +188,35 @@ export class DefinitionsArchive {
             tableName as DestinyManifestComponentName
           ]?.[def.hash];
 
-        if (additionalDef) {
-          if ((additionalDef as any).displayProperties?.icon) {
-            (additionalDef as any).displayProperties.icon = `${
-              this.altDefsUrlBase
-            }${(additionalDef as any).displayProperties.icon}`;
+        if (additionalDef && this.altDefsUrlBase) {
+          // @ts-expect-error
+          if (additionalDef.displayProperties?.icon) {
+            // @ts-expect-error
+            additionalDef.displayProperties.icon = fixIcon(
+              this.altDefsUrlBase,
+              // @ts-expect-error
+              additionalDef.displayProperties.icon
+            );
           }
+
+          // @ts-expect-error
+          if (additionalDef.displayProperties?.iconSequences) {
+            // @ts-expect-error
+            additionalDef.displayProperties.iconSequences =
+              // @ts-expect-error
+              additionalDef.displayProperties.iconSequences.map((seq) => {
+                if (!seq.frames) {
+                  return seq;
+                }
+                return {
+                  ...seq,
+                  frames: seq.frames.map((v: string) =>
+                    fixIcon(this.altDefsUrlBase!, v)
+                  ),
+                };
+              });
+          }
+
           merge(def, additionalDef);
         }
       }
@@ -203,6 +226,10 @@ export class DefinitionsArchive {
 
     return [null, definitions];
   }
+}
+
+function fixIcon(base: string, path: string) {
+  return base + path.replace(/\\/g, "/");
 }
 
 async function fileExists(path: string) {

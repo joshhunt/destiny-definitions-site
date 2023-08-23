@@ -6,6 +6,8 @@
   grid-template-areas:
     "a b"
     "a c";
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
 .largePerkIcon {
@@ -24,4 +26,12 @@
   font-size: 14px;
   white-space: pre-line;
   color: var(--text-fade-color);
+}
+
+.emblem .largePerkIcon {
+  opacity: 0;
+}
+
+.emblem {
+  text-shadow: 0 1px 5px black;
 }

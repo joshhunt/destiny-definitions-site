@@ -36,7 +36,10 @@ const ARMOR_HASHES = [
   2130010697, 1964816829, 1497538390,
 ];
 
+const CONTEST_EMBLEM = 54004489;
+
 const COSMETICS_HASHES = [
+  CONTEST_EMBLEM, // contest emblem
   54004488, // emblem,
   1934481780, // vehicle
   634576124, // shader
@@ -148,6 +151,12 @@ export const getServerSideProps: GetServerSideProps<
     },
     itemTypeDisplayName: "Seal title",
   });
+
+  const contestEmblem = cosmetics.find((v) => v.hash === CONTEST_EMBLEM);
+  if (contestEmblem) {
+    /// @ts-expect-error
+    contestEmblem.itemTypeDisplayName = "Contest emblem";
+  }
 
   const loreHashes = uniq([
     ...armor.map((v) => v.loreHash),
