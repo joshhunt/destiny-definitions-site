@@ -4,6 +4,7 @@ app = "destiny-definitions-archive"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
+primary_region = "ord"
 
 [env]
   PORT = "8080"
@@ -20,6 +21,7 @@ processes = []
 [mounts]
   source="defs_archive_data"
   destination="/data"
+  initial_size = "40gb"
 
 [experimental]
   allowed_public_ports = []
