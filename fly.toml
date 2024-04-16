@@ -18,7 +18,7 @@ processes = []
 #   SWAP=true
 
 [mounts]
-  source="destiny_definitions_archive_volume"
+  source="defs_archive_data"
   destination="/data"
 
 [experimental]
