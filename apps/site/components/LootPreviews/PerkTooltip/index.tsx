@@ -24,7 +24,7 @@ const PerkTooltip: React.FC<PerkTooltipProps> = ({
 
         {enhancedPerkItem && (
           <p className={s.availableEnhanced}>
-            Also available as an enhanced perk for weapon crafting.
+            ★ Also available as an enhanced perk for weapon crafting.
           </p>
         )}
       </div>

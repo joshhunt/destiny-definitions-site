@@ -1,7 +1,7 @@
 import { DestinyInventoryItemDefinition } from "@destiny-definitions/common";
 import React, { useState } from "react";
 import cx from "classnames";
-import { getDescription, getDisplayName, getIconSrc } from "../../../lib/utils";
+import { getDisplayName, getIconSrc } from "../../../lib/utils";
 import BungieImage from "../../BungieImage";
 import s from "./styles.module.scss";
 import {
@@ -63,6 +63,8 @@ const ResponsivePerk: React.FC<ResponsivePerkProps> = ({
           )}
           src={getIconSrc(perkItem)}
         />
+
+        {enhancedPerkItem && <div className={s.enhancedBadge}>★</div>}
 
         <div className={s.name}>{getDisplayName(perkItem)}</div>
         <div className={s.description}>{perkItem.itemTypeDisplayName}</div>

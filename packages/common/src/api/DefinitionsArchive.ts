@@ -180,7 +180,7 @@ export class DefinitionsArchive {
     const definitions: Record<string, any> = {};
 
     for (const row of queryResult) {
-      const def = JSON.parse(row.json);
+      let def = JSON.parse(row.json);
 
       if (def.redacted) {
         const additionalDef =
@@ -189,34 +189,7 @@ export class DefinitionsArchive {
           ]?.[def.hash];
 
         if (additionalDef && this.altDefsUrlBase) {
-          // @ts-expect-error
-          if (additionalDef.displayProperties?.icon) {
-            // @ts-expect-error
-            additionalDef.displayProperties.icon = fixIcon(
-              this.altDefsUrlBase,
-              // @ts-expect-error
-              additionalDef.displayProperties.icon
-            );
-          }
-
-          // @ts-expect-error
-          if (additionalDef.displayProperties?.iconSequences) {
-            // @ts-expect-error
-            additionalDef.displayProperties.iconSequences =
-              // @ts-expect-error
-              additionalDef.displayProperties.iconSequences.map((seq) => {
-                if (!seq.frames) {
-                  return seq;
-                }
-                return {
-                  ...seq,
-                  frames: seq.frames.map((v: string) =>
-                    fixIcon(this.altDefsUrlBase!, v)
-                  ),
-                };
-              });
-          }
-
+          processAdditionalDefinition(additionalDef, this.altDefsUrlBase);
           merge(def, additionalDef);
         }
       }
@@ -224,7 +197,46 @@ export class DefinitionsArchive {
       definitions[def.hash] = def;
     }
 
+    // Add defs missing from the database
+    for (const hash of hashes) {
+      if (definitions[hash]) {
+        continue;
+      }
+
+      const additionalDef =
+        this.additionalDefinitions[tableName as DestinyManifestComponentName]?.[
+          hash
+        ];
+
+      if (additionalDef && this.altDefsUrlBase) {
+        processAdditionalDefinition(additionalDef, this.altDefsUrlBase);
+        definitions[additionalDef.hash!] = additionalDef;
+      }
+    }
+
     return [null, definitions];
+  }
+}
+
+function processAdditionalDefinition(additionalDef: any, urlBase: string) {
+  if (additionalDef.displayProperties?.icon) {
+    additionalDef.displayProperties.icon = fixIcon(
+      urlBase,
+      additionalDef.displayProperties.icon
+    );
+  }
+
+  if (additionalDef.displayProperties?.iconSequences) {
+    additionalDef.displayProperties.iconSequences =
+      additionalDef.displayProperties.iconSequences.map((seq: any) => {
+        if (!seq.frames) {
+          return seq;
+        }
+        return {
+          ...seq,
+          frames: seq.frames.map((v: string) => fixIcon(urlBase!, v)),
+        };
+      });
   }
 }
 

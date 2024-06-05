@@ -49,24 +49,7 @@ const WeaponHeader: React.FC<WeaponHeaderProps> = ({
 
   const ammoType = AMMO_TYPE[item.equippingBlock?.ammoType ?? -1];
 
-  const isCraftable = useMemo(() => {
-    for (const socket of item.sockets?.socketEntries ?? []) {
-      const plugSet =
-        otherDefinitions.DestinyPlugSetDefinition?.[
-          socket.reusablePlugSetHash ?? -1
-        ];
-
-      for (const plugSetItem of plugSet?.reusablePlugItems ?? []) {
-        const plugItem =
-          otherDefinitions.DestinyInventoryItemDefinition?.[
-            plugSetItem?.plugItemHash ?? -1
-          ];
-        if (plugItem?.inventory?.tierType === 3) {
-          return true;
-        }
-      }
-    }
-  }, [item, otherDefinitions]);
+  const isCraftable = Boolean(item.inventory?.recipeItemHash);
 
   return (
     <div className={s.itemSummary}>

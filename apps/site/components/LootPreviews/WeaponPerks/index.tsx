@@ -129,12 +129,14 @@ const SocketCategoryPerks: React.FC<SocketCategoryRendererProps> = ({
           for (const perk of plugItems) {
             const tierType = perk.inventory?.tierType ?? 0;
 
-            if (tierType === 3) {
+            const isEnhanced =
+              tierType === 3 || perk.itemTypeDisplayName === "Enhanced Trait";
+
+            if (isEnhanced) {
               const basicPerk = deduped.find(
                 (v) =>
                   v.perk.displayProperties?.name ===
-                    perk.displayProperties?.name &&
-                  v.perk.inventory?.tierType === 2
+                  perk.displayProperties?.name
               );
               if (basicPerk) {
                 basicPerk.enhancedPerk = perk;

@@ -2,6 +2,15 @@
   display: grid;
   column-gap: 8px;
   grid-template-columns: calc(6 * 8px);
+  position: relative;
+}
+
+.enhancedBadge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: hsl(48, 71%, 51%);
+  line-height: 1;
 }
 
 .smallPerkIcon {
