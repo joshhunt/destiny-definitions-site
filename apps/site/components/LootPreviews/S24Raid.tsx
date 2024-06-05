@@ -119,15 +119,19 @@ export default function S24LootPreview(props: S24LootPreviewPageProps) {
                   <WeaponHeading>{className}</WeaponHeading>
 
                   <div className={s.gearList}>
-                    {sortBy(armorForClass, armorSorter).map((item) => (
-                      <a
-                        key={item.hash}
-                        className={s.invisibleLink}
-                        href={`#item_${item.hash}`}
-                      >
+                    {sortBy(armorForClass, armorSorter).map((item) =>
+                      item.loreHash ? (
+                        <a
+                          key={item.hash}
+                          className={s.invisibleLink}
+                          href={`#item_${item.hash}`}
+                        >
+                          <ItemSummary item={item} />
+                        </a>
+                      ) : (
                         <ItemSummary item={item} />
-                      </a>
-                    ))}
+                      )
+                    )}
                   </div>
                 </div>
               );
