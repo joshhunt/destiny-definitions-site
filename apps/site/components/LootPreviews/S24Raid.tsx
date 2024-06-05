@@ -129,7 +129,7 @@ export default function S24LootPreview(props: S24LootPreviewPageProps) {
                           <ItemSummary item={item} />
                         </a>
                       ) : (
-                        <ItemSummary item={item} />
+                        <ItemSummary key={item.hash} item={item} />
                       )
                     )}
                   </div>
