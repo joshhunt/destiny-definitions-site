@@ -25,7 +25,13 @@ const PNodeTableName = "DestinyPresentationNodeDefinition" as const;
 const RecordTableName = "DestinyRecordDefinition" as const;
 
 const WEAPON_HASHES = [
-  859869931, 1258168956, 1770490683, 445197843, 535198113, 3569407878,
+  3284383335, // exotic
+  859869931,
+  1258168956,
+  1770490683,
+  445197843,
+  535198113,
+  3569407878,
 ];
 
 const ARMOR_HASHES = [
