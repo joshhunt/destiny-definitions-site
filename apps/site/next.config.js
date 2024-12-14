@@ -7,7 +7,11 @@ const withTM = nextTranspileModules([
 ]);
 
 module.exports = withTM({
-  output: "standalone",
+  output: "export",
+  distDir: "dist",
+  images: {
+    unoptimized: true,
+  },
   experimental: {
     isrMemoryCacheSize: 0,
   },

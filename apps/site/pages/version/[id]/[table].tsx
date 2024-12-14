@@ -28,6 +28,7 @@ import {
 import { MissingDefinitionTable } from "@destiny-definitions/common/src/api/errors";
 import { createTableDiffForPage } from "../../../lib/tablePageUtils";
 import log from "../../../lib/log";
+import { getPathData } from "../../../lib/getPathData";
 
 export default DefinitionDiffPage;
 
@@ -38,8 +39,22 @@ interface Params {
   [key: string]: any;
 }
 
-export const getStaticPaths: GetStaticPaths<Params> = async () => {
-  return { paths: [], fallback: "blocking" };
+export const getStaticPaths: GetStaticPaths = async () => {
+  const pathData = await getPathData();
+
+  return {
+    paths: pathData.flatMap((version) => {
+      return version.diffSummary.map((diff) => {
+        return {
+          params: {
+            id: version.id,
+            table: diff.tableName,
+          },
+        };
+      });
+    }),
+    fallback: "blocking",
+  };
 };
 
 export const getStaticProps: GetStaticProps<

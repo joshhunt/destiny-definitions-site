@@ -25,16 +25,24 @@ export default function Home({ versions, pagination }: IndexPageProps) {
   return (
     <div className={s.root}>
       <div className={s.versionList}>
+        <div>
+          <p>
+            The Destiny Definition Archive has been retired, and won't recieve
+            any new updates or list new definitions.{" "}
+            <a style={{ color: "inherit" }} href="https://destiny.report">
+              Read more.
+            </a>
+          </p>
+        </div>
+        <br /> <br />
         {versions.map((versionSummary) => {
           return (
             <Version key={versionSummary.id} versionSummary={versionSummary} />
           );
         })}
       </div>
-
       <br />
       <br />
-
       <div className={s.pagination}>
         {hasPrevPage && (
           <Link className={s.paginationLink} href={`/${currentPage - 1}`}>

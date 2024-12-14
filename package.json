@@ -12,5 +12,8 @@
   },
   "devDependencies": {
     "turbo": "1.9.9"
+  },
+  "dependencies": {
+    "@types/node": "18.11.9"
   }
 }

@@ -1,4 +1,5 @@
 import { GetStaticProps, GetStaticPaths } from "next";
+import { readFile } from "fs/promises";
 
 import s from "./styles.module.scss";
 import Version from "../../components/Version";
@@ -10,6 +11,8 @@ import {
   makeMetaProps,
 } from "../../lib/serverUtils";
 import log from "../../lib/log";
+import path from "path";
+import { getPathData } from "../../lib/getPathData";
 
 interface VersionIndexStaticProps {
   version: ManifestVersionSummary;
@@ -24,7 +27,16 @@ export default function VersionIndex({ version }: VersionIndexStaticProps) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  return { paths: [], fallback: "blocking" };
+  const pathData = await getPathData();
+
+  return {
+    paths: pathData.map((p) => ({
+      params: {
+        id: p.id,
+      },
+    })),
+    fallback: "blocking",
+  };
 };
 
 export const getStaticProps: GetStaticProps<VersionIndexStaticProps> = async (

@@ -3,6 +3,7 @@ import duration from "../../../../lib/duration";
 import DefinitionDiffPageWrapper, {
   getStaticProps as origGetStaticProps,
 } from "../[table]";
+import { getPathData } from "../../../../lib/getPathData";
 
 const validDiffType = [
   "added",
@@ -21,8 +22,27 @@ interface Params {
 
 export default DefinitionDiffPageWrapper;
 
-export const getStaticPaths: GetStaticPaths<Params> = async () => {
-  return { paths: [], fallback: "blocking" };
+export const getStaticPaths: GetStaticPaths = async () => {
+  const pathData = await getPathData();
+
+  return {
+    paths: pathData.flatMap((version) => {
+      return version.diffSummary.flatMap((diff) => {
+        return Object.entries(diff.summary)
+          .filter(([diffType, ids]) => ids.length > 100)
+          .map(([diffType, ids]) => {
+            return {
+              params: {
+                id: version.id,
+                table: diff.tableName,
+                diffType: diffType,
+              },
+            };
+          });
+      });
+    }),
+    fallback: "blocking",
+  };
 };
 
 export const getStaticProps: typeof origGetStaticProps = async (context) => {

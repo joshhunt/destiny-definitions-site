@@ -42,20 +42,11 @@ function Footer({
       )}
 
       <p>
-        Follow{" "}
+        Site once maintained ({sarcasm}) by{" "}
         <a
           target="_blank"
           rel="me"
-          href="https://botsin.space/@destinyapi"
-          style={{ color: "inherit" }}
-        >
-          destinyapi
-        </a>{" "}
-        on Mastodon. Site maintained ({sarcasm}) by{" "}
-        <a
-          target="_blank"
-          rel="me"
-          href="https://hachyderm.io/@joshhunt"
+          href="https://bsky.app/profile/joshhunt.dev"
           style={{ color: "inherit" }}
         >
           joshhunt

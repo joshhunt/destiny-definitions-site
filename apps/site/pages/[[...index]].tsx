@@ -9,7 +9,21 @@ import { IndexPageProps } from "../components/IndexPage";
 import IndexPage from "../components/IndexPage";
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  return { paths: [], fallback: "blocking" };
+  const s3Client = S3Archive.newFromEnvVars();
+  const indexData = await s3Client.getVersionHistory();
+  indexData.reverse();
+
+  const totalPages = Math.ceil(indexData.length / PAGE_SIZE);
+
+  const paths: { params: { index?: string[] } }[] = [];
+
+  for (let i = 1; i <= totalPages; i++) {
+    paths.push({ params: { index: [i.toString()] } });
+  }
+
+  paths.push({ params: { index: [] } });
+
+  return { paths: paths, fallback: "blocking" };
 };
 const PAGE_SIZE = 10;
 

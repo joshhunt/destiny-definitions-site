@@ -7,3 +7,4 @@ node_modules
 __volume
 .turbo
 tsconfig.tsbuildinfo
+/apps/site/out
